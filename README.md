@@ -8,13 +8,19 @@ An Android application for Concordia students to start their semester with a ban
 
 ## Changelogs
 
+Release 1
+
+Release 2
+
+Release 3
+
 ## Contributing
 
 Karim El Assaad @kayram2710  
 Zachariya Javeri @zachariyajaveri  
 Jananaa Mahathevan @jananaa  
 Ryan Mazari @damle22  
-Jean Naima @  
+Jean Naima @jeannaima  
 Steven Pong @steven-pong  
 Gabriel Rodriguez @gabrielrodriguezzz  
 Harun Slahaldin Omar @omar-haha  
