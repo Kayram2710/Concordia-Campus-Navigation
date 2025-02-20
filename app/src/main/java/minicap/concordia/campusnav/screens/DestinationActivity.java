@@ -11,6 +11,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import minicap.concordia.campusnav.R;
 import minicap.concordia.campusnav.databinding.ActivityDestinationBinding;
 
 public class DestinationActivity extends FragmentActivity implements OnMapReadyCallback {
