@@ -13,6 +13,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import minicap.concordia.campusnav.R;
 import minicap.concordia.campusnav.databinding.ActivityDestinationBinding;
+import minicap.concordia.campusnav.databinding.ActivityMapsBinding;
+import minicap.concordia.campusnav.helpers.CoordinateResHelper;
 
 public class DestinationActivity extends FragmentActivity implements OnMapReadyCallback {
 
