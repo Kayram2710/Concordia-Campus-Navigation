@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Mini Capstone</string>
     <string name="title_activity_maps">MapsActivity</string>
+    <string name="loyola_campus">Loyola (LOY)\nMontreal West Campus</string>
+    <string name="sgw_campus">Sir George Williams (SGW)\nDowntown Campus</string>
+    <string name="dark_mode">Dark Mode</string>
 </resources>

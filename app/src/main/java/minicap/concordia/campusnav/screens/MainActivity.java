@@ -13,7 +13,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import minicap.concordia.campusnav.R;
-import minicap.concordia.campusnav.beans.Building;
 import minicap.concordia.campusnav.helpers.CoordinateResHelper;
 
 public class MainActivity extends AppCompatActivity {
