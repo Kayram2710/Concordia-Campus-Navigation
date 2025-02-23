@@ -1,5 +1,6 @@
 package minicap.concordia.campusnav.screens;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -32,6 +33,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private double startingLat;
     private double startingLng;
 
+    // most recent latLng clicked
+    private LatLng lastClickedMapLocation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +59,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         } else {
             // start map
             initializeMap();
+
         }
     }
 
@@ -80,7 +85,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     @Override
+    /*
+     * When the map is ready to be used
+     */
     public void onMapReady(GoogleMap googleMap) {
+
         mMap = googleMap;
 
         LatLng concordia = new LatLng(startingLat, startingLng);
@@ -91,9 +100,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // track location layer
         enableMyLocation();
+
+
+        //Listener for when the user clicks on the map
+        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+
+            @Override
+            public void onMapClick(@NonNull LatLng latLng) {
+
+                // update last clicked latLng
+                setLastClickedMapLocation(latLng);
+
+                // clear all markers on the map
+                mMap.clear();
+
+                // add new marker to the map
+                mMap.addMarker(new MarkerOptions().position(latLng).title("Placeholder"));
+
+            }
+
+        });
+
     }
 
     private void enableMyLocation() {
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true); // layer
@@ -102,4 +133,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Toast.makeText(this, "Location permission not granted", Toast.LENGTH_SHORT).show();
         }
     }
+
+    /**
+     * Set the last clicked latLng
+     * @param latLng lastClickedMapLocation
+     */
+    public void setLastClickedMapLocation(LatLng latLng){
+
+        lastClickedMapLocation = latLng;
+
+    }
+
+    /**
+     * Get the last clicked latLng
+     * @return lastClickedMapLocation
+     */
+    public LatLng getLastClickedMapLocation() {
+
+        return lastClickedMapLocation;
+
+    }
+
 }
