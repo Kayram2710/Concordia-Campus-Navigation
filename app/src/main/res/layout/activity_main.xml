@@ -4,28 +4,130 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/concordia_red"
+    android:foregroundTint="@color/black"
+    android:textAlignment="center"
     tools:context=".screens.MainActivity">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineVertMID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineTOP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.125" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineBOT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.875" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineMID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/sgw_campus"
+        android:paddingLeft="1dp"
+        android:paddingRight="1dp"
+        android:paddingBottom="2dp"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineMID"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guidelineTOP"
+        app:srcCompat="@drawable/sgw" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/loyola_campus"
+        android:paddingLeft="1dp"
+        android:paddingTop="2dp"
+        android:paddingRight="1dp"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toTopOf="@id/guidelineBOT"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guidelineMID"
+        app:srcCompat="@drawable/loyola" />
 
     <Button
         android:id="@+id/viewLoyCampusButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Loyola campus"
-        app:layout_constraintBottom_toTopOf="@+id/viewSGWCampusButton"
+        android:backgroundTint="@color/concordia_yellow"
+        android:elevation="8dp"
+        android:fontFamily="@font/inter"
+        android:text="@string/loyola_campus"
+        android:textColor="@color/black"
+        android:textColorLink="@color/white"
+        android:textStyle="bold"
+        android:translationZ="10dp"
+        app:cornerRadius="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineBOT"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/guidelineMID" />
 
     <Button
         android:id="@+id/viewSGWCampusButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="SGW Campus"
+        android:backgroundTint="@color/concordia_yellow"
+        android:elevation="8dp"
+        android:fontFamily="@font/inter"
+        android:text="@string/sgw_campus"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:translationZ="10dp"
+        app:cornerRadius="0dp"
+        app:layout_constraintBottom_toTopOf="@id/guidelineMID"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guidelineTOP" />
+
+    <Switch
+        android:id="@+id/switch_darkmode"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:switchPadding="8dp"
+        android:text="@string/dark_mode"
+        android:textAlignment="textEnd"
+        android:textColor="@color/white"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guidelineVertMID"
+        app:layout_constraintTop_toTopOf="@id/guidelineBOT" />
+
+    <ImageButton
+        android:id="@+id/viewLanguageButton"
+        android:layout_width="119dp"
+        android:layout_height="54dp"
+        android:background="@color/concordia_red"
+        android:contentDescription="change_language"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineTOP"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.858"
+        app:layout_constraintStart_toStartOf="@+id/guidelineVertMID"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.563" />
+        app:srcCompat="@drawable/engbutton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
