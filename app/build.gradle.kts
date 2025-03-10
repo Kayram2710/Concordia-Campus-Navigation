@@ -1,4 +1,6 @@
 plugins {
+    jacoco
+    id("org.sonarqube") version "3.5.0.2730"
     id("com.android.application")
     id("com.google.gms.google-services")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
