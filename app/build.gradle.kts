@@ -2,6 +2,8 @@ plugins {
     id("com.android.application")
     id("com.google.gms.google-services")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    // Added from my branch:
+    id("org.jetbrains.kotlin.android")
 }
 
 android {
@@ -33,11 +35,17 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+    // Merge extra build features from my branch (dataBinding enabled)
     buildFeatures {
+        dataBinding = true   // added from my branch
         viewBinding = true
         buildConfig = true
     }
-    testOptions{
+    // Add Kotlin compiler options from my branch
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+    testOptions {
         unitTests.isReturnDefaultValues = true
         unitTests.isIncludeAndroidResources = true
     }
@@ -53,6 +61,12 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore")
     implementation("com.google.android.gms:play-services-location:21.3.0")
     implementation("com.google.maps.android:android-maps-utils:3.10.0")
+
+    // Additional dependencies from my branch:
+    implementation("androidx.legacy:legacy-support-v4:1.0.0")
+    implementation("androidx.recyclerview:recyclerview:1.3.0")
+    implementation("androidx.core:core-ktx:1.15.0")
+
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
@@ -62,3 +76,7 @@ dependencies {
     testImplementation("org.mockito:mockito-core:5.16.0")
     testImplementation("org.json:json:20250107")
 }
+
+
+
+
