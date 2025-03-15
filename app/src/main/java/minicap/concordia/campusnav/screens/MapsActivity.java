@@ -185,7 +185,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         ImageButton classScheduleRedirect = findViewById(R.id.classScheduleRedirect);
         ImageButton directionsRedirect = findViewById(R.id.directionsRedirect);
         ImageButton campusMapRedirect = findViewById(R.id.campusMapRedirect);
-        MainMenuController menu = new MainMenuController(slidingMenu, openMenuButton, closeMenuButton, classScheduleRedirect, directionsRedirect, campusMapRedirect);
+        MainMenuController menu = new MainMenuController(this, slidingMenu, openMenuButton, closeMenuButton, classScheduleRedirect, directionsRedirect, campusMapRedirect);
 
 
         searchText.setOnFocusChangeListener(new View.OnFocusChangeListener() {

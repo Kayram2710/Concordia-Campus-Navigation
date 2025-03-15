@@ -12,4 +12,8 @@
     <string name="starting_point_search_hint">Choose starting point</string>
     <string name="your_location">Your location</string>
     <string name="your_destination">Your destination</string>
+    <string name="menu">Menu</string>
+    <string name="class_schedule">Class Schedule</string>
+    <string name="currently_loaded_google_calendar">Currently Loaded: Google Calendar Winter 2025... @link</string>
+    <string name="import_calendar">Import</string>
 </resources>

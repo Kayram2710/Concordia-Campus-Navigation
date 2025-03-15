@@ -51,6 +51,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".screens.ClassScheduleActivity"
+            android:exported="false"
+            android:label="Class Schedule" />
+
     </application>
 
 </manifest>

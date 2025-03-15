@@ -1,10 +1,13 @@
 package minicap.concordia.campusnav.screens;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.widget.ImageButton;
 
 public class MainMenuController {
 
+    Context context;
     View slidingMenu;
     ImageButton openMenuButton;
     ImageButton closeMenuButton;
@@ -13,7 +16,8 @@ public class MainMenuController {
     ImageButton campusMapRedirect;
 
     //This passes
-    public MainMenuController(View slidingMenu, ImageButton openMenuButton, ImageButton closeMenuButton, ImageButton classScheduleRedirect, ImageButton directionsRedirect, ImageButton campusMapRedirect){
+    public MainMenuController(Context context, View slidingMenu, ImageButton openMenuButton, ImageButton closeMenuButton, ImageButton classScheduleRedirect, ImageButton directionsRedirect, ImageButton campusMapRedirect){
+        this.context = context;
         this.slidingMenu = slidingMenu;
         this.openMenuButton = openMenuButton;
         this.closeMenuButton = closeMenuButton;
@@ -48,6 +52,17 @@ public class MainMenuController {
                 openCampusMap();
             }
         });
+
+        classScheduleRedirect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openClassSchedule();}
+            });
+    }
+
+    public void openClassSchedule() {
+        Intent intent = new Intent(context, ClassScheduleActivity.class);
+        context.startActivity(intent);
     }
 
     public void openCampusMap(){
