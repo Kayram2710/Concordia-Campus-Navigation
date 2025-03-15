@@ -8,11 +8,15 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
-
 import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import minicap.concordia.campusnav.R;
+
+//to be removed
+import minicap.concordia.campusnav.buildingmanager.enumerations.BuildingName;
+import minicap.concordia.campusnav.components.BuildingInfoBottomSheetFragment;
+
 import minicap.concordia.campusnav.buildingmanager.ConcordiaBuildingManager;
 import minicap.concordia.campusnav.buildingmanager.entities.Campus;
 import minicap.concordia.campusnav.buildingmanager.enumerations.CampusName;
@@ -49,8 +53,7 @@ public class MainActivity extends AppCompatActivity {
                 i.putExtra(MapsActivity.KEY_STARTING_LNG, coords.longitude);
                 i.putExtra(MapsActivity.KEY_CAMPUS_NOT_SELECTED, "LOY");
                 i.putExtra(MapsActivity.KEY_SHOW_SGW, true);
-                startActivity(i);
-            }
+                startActivity(i);            }
         });
 
         Button loyCampusBtn = (Button)findViewById(R.id.viewLoyCampusButton);

@@ -15,7 +15,7 @@
         android:layout_height="match_parent"
         android:visibility="gone" />
 
-    <!-- FrameLayout to contain the ConstraintLayout from main -->
+    <!-- Main Content Container from the main branch -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -172,10 +172,18 @@
                 app:layout_constraintEnd_toEndOf="@+id/searchArea"
                 app:layout_constraintStart_toStartOf="@+id/searchArea"
                 app:layout_constraintTop_toTopOf="@+id/searchArea" />
+
+            <!-- Added from your branch: a container for the Building Selector Fragment -->
+            <FrameLayout
+                android:id="@+id/buildingSelectorContainer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"/>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>
 
-    <!-- Bottom Sheet -->
+    <!-- Bottom Sheet from the main branch -->
     <LinearLayout
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
@@ -185,7 +193,7 @@
         android:padding="10dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-        <!-- Bottom Sheet Content (from CAP-96-130-CreateBuildingGetDirectionsMenu) -->
+        <!-- Bottom Sheet Content -->
         <View
             android:layout_width="100dp"
             android:layout_height="2dp"

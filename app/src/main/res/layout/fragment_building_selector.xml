@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/buildingSelectorRoot"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.95"
+        android:background="@color/light_burgundy"
+        tools:context=".components.BuildingSelectorFragment">
+
+        <!-- Search Bar Container -->
+        <LinearLayout
+            android:id="@+id/search_bar_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="26dp"
+            android:background="@drawable/rectangle_32"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <!-- EditText for Search -->
+            <EditText
+                android:id="@+id/searchBar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:hint="Search campus facility..."
+                android:inputType="text"
+                android:padding="4dp"
+                android:textColor="@color/black"
+                android:textColorHint="@color/black" />
+
+            <!-- Optional: Search Icon -->
+            <ImageView
+                android:id="@+id/iv_search_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="Search icon"
+                android:src="@drawable/search_button" />
+        </LinearLayout>
+
+        <!-- Thin yellow line below the search bar -->
+        <View
+            android:id="@+id/line_searchbar_sgw"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="20dp"
+            android:background="@color/yellow"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/search_bar_container" />
+
+        <!-- SGW Title -->
+        <TextView
+            android:id="@+id/tv_sgw_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="SGW Buildings:"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/line_searchbar_sgw" />
+
+        <!-- RecyclerView for SGW (2 columns) -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/sgwRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:padding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_sgw_title" />
+
+        <!-- Yellow line between SGW and Loyola -->
+        <View
+            android:id="@+id/line_sgw_loyola"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="20dp"
+            android:background="@color/yellow"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/sgwRecyclerView" />
+
+        <!-- Loyola Title -->
+        <TextView
+            android:id="@+id/tv_loyola_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="Loyola Buildings:"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/line_sgw_loyola" />
+
+        <!-- RecyclerView for Loyola (2 columns) -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/loyRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:padding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_loyola_title" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

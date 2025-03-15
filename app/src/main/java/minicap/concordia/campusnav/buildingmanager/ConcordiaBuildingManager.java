@@ -19,8 +19,8 @@ public class ConcordiaBuildingManager {
     private HashMap<BuildingName, Building> buildings;
     private HashMap<CampusName, Campus> campuses;
     private ArrayList<OutdoorPOI> outdoorPOIs;
-    private ConcordiaBuildingManager()
-    {
+
+    private ConcordiaBuildingManager() {
         buildings = new HashMap<>();
         campuses = new HashMap<>();
         outdoorPOIs = new ArrayList<>();
@@ -31,10 +31,8 @@ public class ConcordiaBuildingManager {
      * Gets the instance of ConcordiaBuildingManager
      * @return The current instance of ConcordiaBuildingManager
      */
-    public static ConcordiaBuildingManager getInstance()
-    {
-        if(mInstance == null)
-        {
+    public static ConcordiaBuildingManager getInstance() {
+        if (mInstance == null) {
             mInstance = new ConcordiaBuildingManager();
         }
         return mInstance;
@@ -169,5 +167,13 @@ public class ConcordiaBuildingManager {
         campuses = BuildingManagerInitializationHelper.createCampuses();
         buildings = BuildingManagerInitializationHelper.createBuildings();
         outdoorPOIs = BuildingManagerInitializationHelper.createOutdoorPOIs();
+    }
+
+    /**
+     * Returns an ArrayList of all Buildings (combining all campus buildings).
+     * @return A list of every Building stored in this manager.
+     */
+    public ArrayList<Building> getAllBuildings() {
+        return new ArrayList<>(buildings.values());
     }
 }

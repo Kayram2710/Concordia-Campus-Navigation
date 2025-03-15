@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.ListResourceBundle;
 import java.util.Map;
 
+import minicap.concordia.campusnav.R;
 import minicap.concordia.campusnav.buildingmanager.entities.Building;
 import minicap.concordia.campusnav.buildingmanager.entities.BuildingFloor;
 import minicap.concordia.campusnav.buildingmanager.entities.Campus;
@@ -52,8 +53,11 @@ public class BuildingResource_en_CA extends ListResourceBundle {
                                 entry("9", new BuildingFloor("9", BuildingName.HALL, "none"))
                         )),
                         45.49701f,
-                        -73.57877f)
-                },
+                        -73.57877f,
+                        R.drawable.hallbuilding,
+                        "1455 De Maisonneuve Blvd W, Montreal, QC H3G 1M8",
+                        BuildingName.HALL
+                )},
                 {
                     "BuildingJMSB", new Building(
                         "John Molson School of Business",
@@ -64,8 +68,11 @@ public class BuildingResource_en_CA extends ListResourceBundle {
                                 entry("S2", new BuildingFloor("S2", BuildingName.MOLSON_SCHOOL_OF_BUSINESS, "none"))
                         )),
                         45.45863f,
-                        -73.57906f)
-                },
+                        -73.57906f,
+                        0,
+                        "1455 De Maisonneuve Blvd W, Montreal, QC H3G 1M8",
+                        BuildingName.MOLSON_SCHOOL_OF_BUSINESS
+                )},
                 {
                     "BuildingCC", new Building(
                         "Loyola Central building",
@@ -75,8 +82,11 @@ public class BuildingResource_en_CA extends ListResourceBundle {
                                 entry("1", new BuildingFloor("1", BuildingName.LOYOLA_CENTRAL_BUILDING, "none"))
                         )),
                         45.45863f,
-                        -73.64066f)
-                },
+                        -73.64066f,
+                        0,
+                        "1455 De Maisonneuve Blvd W, Montreal, QC H3G 1M8",
+                        BuildingName.LOYOLA_CENTRAL_BUILDING
+                )},
                 {
                     "BuildingVL", new Building(
                         "Vanier library building",
@@ -87,8 +97,11 @@ public class BuildingResource_en_CA extends ListResourceBundle {
                                 entry("2", new BuildingFloor("2", BuildingName.VANIER_LIBRARY, "none"))
                         )),
                         45.45891f,
-                        -73.63888f)
-                },
+                        -73.63888f,
+                        0,
+                        "1455 De Maisonneuve Blvd W, Montreal, QC H3G 1M8",
+                        BuildingName.VANIER_LIBRARY
+                )},
                 {
                     "BuildingVE", new Building(
                         "Vanier Extension Building",
@@ -99,8 +112,11 @@ public class BuildingResource_en_CA extends ListResourceBundle {
                                 entry("2", new BuildingFloor("2", BuildingName.VANIER_EXTENSION, "none"))
                         )),
                         45.45891f,
-                        -73.63888f)
-                }
+                        -73.63888f,
+                        0,
+                        "1455 De Maisonneuve Blvd W, Montreal, QC H3G 1M8",
+                        BuildingName.VANIER_EXTENSION
+                )}
         };
     }
 }
