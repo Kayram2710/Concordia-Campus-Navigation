@@ -7,12 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-
 import minicap.concordia.campusnav.R;
-
-//to be removed
-import minicap.concordia.campusnav.buildingmanager.enumerations.BuildingName;
-import minicap.concordia.campusnav.components.BuildingInfoBottomSheetFragment;
 
 import minicap.concordia.campusnav.buildingmanager.ConcordiaBuildingManager;
 import minicap.concordia.campusnav.buildingmanager.entities.Campus;
@@ -32,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
         subscribeButtons(this);
     }
-
+    
     protected void subscribeButtons(Context appContext) {
 
         Button sgwCampusBtn = (Button)findViewById(R.id.viewSGWCampusButton);

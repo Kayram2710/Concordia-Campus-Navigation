@@ -119,6 +119,9 @@ public class MapsActivity extends FragmentActivity
 
     private Fragment curMapFragment;
 
+    private String eventAddress;
+
+
     // We use this to launch and capture the results of the search location activity
     private ActivityResultLauncher<Intent> searchLocationLauncher;
 
@@ -143,6 +146,7 @@ public class MapsActivity extends FragmentActivity
             showSGW = bundle.getBoolean(KEY_SHOW_SGW);
             runBus = bundle.getBoolean("OPEN_BUS", false);
             runDir = bundle.getBoolean("OPEN_DIR", false);
+            eventAddress = bundle.getString("EVENT_ADDRESS", "");
         }
 
         // Hook up the Buildings button to show the BuildingSelectorFragment
@@ -558,6 +562,33 @@ public class MapsActivity extends FragmentActivity
             isSwitchingMap = false;
             drawPath();
         }
+
+        // If we got an eventAddress, let's geocode it
+        if (eventAddress != null && !eventAddress.isEmpty()) {
+            geocodeAndSetDestination(eventAddress);
+        }
+    }
+
+    /**
+     * Gets the coordinates for the corresponding address string and sets the destination on the map
+     * @param addressString The address that is being searched for
+     */
+    private void geocodeAndSetDestination(String addressString) {
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+
+        geocoder.getFromLocationName(addressString, 1, new Geocoder.GeocodeListener() {
+            @Override
+            public void onGeocode(@NonNull List<Address> addresses) {
+                if (!addresses.isEmpty()) {
+                    Address addr = addresses.get(0);
+                    double lat = addr.getLatitude();
+                    double lng = addr.getLongitude();
+                    setDestination(addressString, new MapCoordinates(lat, lng));
+                } else {
+                    Log.d(MAPS_ACTIVITY_TAG, "Could not find location for: " + addressString);
+                }
+            }
+        });
     }
 
     @Override

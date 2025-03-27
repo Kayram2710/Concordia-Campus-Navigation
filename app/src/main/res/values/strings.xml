@@ -16,4 +16,5 @@
     <string name="class_schedule">Class Schedule</string>
     <string name="currently_loaded_google_calendar">Currently Loaded: Google Calendar Winter 2025... @link</string>
     <string name="import_calendar">Import</string>
+    <string name="go_to_class">Go to Class</string>
 </resources>
