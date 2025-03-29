@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "minicap.concordia.campusnav"
-        minSdk = 24
+        minSdk = 33
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
@@ -57,7 +57,7 @@ android {
         jvmTarget = "21"
     }
 
-    packagingOptions {
+    packaging {
         resources {
             excludes += "META-INF/DEPENDENCIES"
             excludes += "META-INF/NOTICE"
@@ -86,7 +86,7 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
-    testImplementation("org.robolectric:robolectric:4.10")
+    testImplementation("org.robolectric:robolectric:4.14.1")
     testImplementation("com.squareup.okhttp3:okhttp:4.9.3")
     testImplementation("com.google.code.gson:gson:2.10.1")
     testImplementation("org.mockito:mockito-core:5.16.0")

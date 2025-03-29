@@ -39,8 +39,7 @@ public class MainActivity extends AppCompatActivity {
                 MapCoordinates campusCoordinates = sgwCampus.getLocation();
 
                 Intent i = new Intent(MainActivity.this, MapsActivity.class);
-                i.putExtra(MapsActivity.KEY_STARTING_LAT, campusCoordinates.getLat());
-                i.putExtra(MapsActivity.KEY_STARTING_LNG, campusCoordinates.getLng());
+                i.putExtra(MapsActivity.KEY_STARTING_COORDS, campusCoordinates);
                 i.putExtra(MapsActivity.KEY_CAMPUS_NOT_SELECTED, "LOY");
                 i.putExtra(MapsActivity.KEY_SHOW_SGW, true);
                 startActivity(i);
@@ -56,8 +55,7 @@ public class MainActivity extends AppCompatActivity {
                 MapCoordinates campusCoordinates = loyolaCampus.getLocation();
 
                 Intent i = new Intent(MainActivity.this, MapsActivity.class);
-                i.putExtra(MapsActivity.KEY_STARTING_LAT, campusCoordinates.getLat());
-                i.putExtra(MapsActivity.KEY_STARTING_LNG, campusCoordinates.getLng());
+                i.putExtra(MapsActivity.KEY_STARTING_COORDS, campusCoordinates);
                 i.putExtra(MapsActivity.KEY_CAMPUS_NOT_SELECTED, "SGW");
                 i.putExtra(MapsActivity.KEY_SHOW_SGW, false);
                 startActivity(i);

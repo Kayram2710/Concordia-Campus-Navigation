@@ -21,7 +21,7 @@ import minicap.concordia.campusnav.components.BuildingAdapter;
 import org.robolectric.RuntimeEnvironment;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = 28)
+@Config(sdk = 33)
 public class BuildingAdapterTests {
 
     private Building mockBuilding;

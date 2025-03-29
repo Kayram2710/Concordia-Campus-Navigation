@@ -10,7 +10,7 @@ public class POI extends Location {
     private boolean isAccessibilityFeature;
 
     //This constructor is protected because it should only be called deriving classes
-    protected POI(String name, POIType type, boolean isAccessibilityFeature, float latitude, float longitude){
+    protected POI(String name, POIType type, boolean isAccessibilityFeature, double latitude, double longitude){
         super(latitude, longitude);
         this.poiName = name;
         this.poiType = type;

@@ -12,8 +12,10 @@ import minicap.concordia.campusnav.buildingmanager.ConcordiaBuildingManager;
 import minicap.concordia.campusnav.buildingmanager.entities.Building;
 import minicap.concordia.campusnav.buildingmanager.entities.BuildingFloor;
 import minicap.concordia.campusnav.buildingmanager.entities.Campus;
+import minicap.concordia.campusnav.buildingmanager.entities.poi.IndoorPOI;
 import minicap.concordia.campusnav.buildingmanager.enumerations.BuildingName;
 import minicap.concordia.campusnav.buildingmanager.enumerations.CampusName;
+import minicap.concordia.campusnav.buildingmanager.enumerations.POIType;
 import minicap.concordia.campusnav.map.MapCoordinates;
 
 
@@ -121,5 +123,205 @@ public class ConcordiaBuildingManagerTests {
 
         Assert.assertEquals(expectedCoords.getLat(), actualCoords.getLat(), 0.0001);
         Assert.assertEquals(expectedCoords.getLng(), actualCoords.getLng(), 0.0001);
+    }
+
+    @Test
+    public void BuildingManager_GetBuildingByName_ReturnsCorrectly() {
+        ConcordiaBuildingManager manager = ConcordiaBuildingManager.getInstance();
+
+        Building expected = manager.getBuilding(BuildingName.HALL);
+
+        List<Building> actuals = manager.searchBuildingsByName("hall");
+
+        Assert.assertEquals(1, actuals.size());
+
+        Building actualHall = actuals.get(0);
+
+        Assert.assertEquals(expected.getBuildingName(), actualHall.getBuildingName());
+        Assert.assertEquals(expected.getBuildingAddress(), actualHall.getBuildingAddress());
+        Assert.assertEquals(expected.getBuildingIdentifier(), actualHall.getBuildingIdentifier());
+        Assert.assertEquals(expected.getBuildingImageRes(), actualHall.getBuildingImageRes());
+        Assert.assertEquals(expected.getDescription(), actualHall.getDescription());
+        Assert.assertEquals(expected.getAssociatedCampus(), actualHall.getAssociatedCampus());
+        Assert.assertEquals(expected.getFloors(), actualHall.getFloors());
+    }
+
+    @Test
+    public void BuildingManager_GetAllBuildings() {
+        ConcordiaBuildingManager manager = ConcordiaBuildingManager.getInstance();
+
+        int expectedNumberOfBuildings = BuildingName.values().length;
+
+        List<Building> actual = manager.getAllBuildings();
+
+        Assert.assertEquals(expectedNumberOfBuildings, actual.size());
+    }
+
+    @Test
+    public void BuildingName_GetResourceName() {
+        // BuildingName.values respects the order that the enum values are defined (top to bottom)
+        String[] expectedResourceNames = new String[] {
+                "BuildingHall",
+                "BuildingJMSB",
+                "BuildingVL",
+                "BuildingVE",
+                "BuildingCC"
+        };
+        int i = 0;
+        for(BuildingName name : BuildingName.values()) {
+            String actual = name.getResourceName();
+
+            Assert.assertEquals(expectedResourceNames[i], actual);
+            i++;
+        }
+    }
+
+    @Test
+    public void CampusName_GetResourceName() {
+        //CampusName.values respects the order that enum values are defined (top to bottom)
+        String[] expectedResourceNames = new String[] {
+                "CampusSGW",
+                "CampusLoyola"
+        };
+        int i = 0;
+        for(CampusName name : CampusName.values()) {
+            String actual = name.getResourceName();
+
+            Assert.assertEquals(expectedResourceNames[i], actual);
+            i++;
+        }
+    }
+
+    @Test
+    public void Building_GetFloors() {
+        int expectedNumberOfFloors = 11;
+        BuildingName expectedAssociatedBuilding = BuildingName.HALL;
+
+        ConcordiaBuildingManager manager = ConcordiaBuildingManager.getInstance();
+        Building actualHall = manager.getBuilding(BuildingName.HALL);
+        Collection<BuildingFloor> actualFloors = actualHall.getFloors();
+
+        Assert.assertEquals(expectedNumberOfFloors, actualFloors.size());
+
+        for(BuildingFloor floor : actualFloors) {
+            Assert.assertEquals(expectedAssociatedBuilding, floor.getAssociatedBuilding());
+        }
+    }
+
+    @Test
+    public void Building_GetSingleFloor() {
+        BuildingName expectedAssociatedBuilding = BuildingName.HALL;
+        String expectedFloorName = "1";
+
+        ConcordiaBuildingManager manager = ConcordiaBuildingManager.getInstance();
+        Building actualHall = manager.getBuilding(BuildingName.HALL);
+        BuildingFloor actualFloor = actualHall.getFloor("1");
+
+        Assert.assertEquals(expectedAssociatedBuilding, actualFloor.getAssociatedBuilding());
+        Assert.assertEquals(expectedFloorName, actualFloor.getFloorName());
+    }
+
+    @Test
+    public void Building_GetIdentifier() {
+        BuildingName expectedIdentifier = BuildingName.MOLSON_SCHOOL_OF_BUSINESS;
+
+        ConcordiaBuildingManager manager = ConcordiaBuildingManager.getInstance();
+
+        Building actual = manager.getBuilding(BuildingName.MOLSON_SCHOOL_OF_BUSINESS);
+
+        Assert.assertEquals(expectedIdentifier, actual.getBuildingIdentifier());
+    }
+
+    @Test
+    public void BuildingFloor_GetAllPOIs() {
+        int expectedNumberOfPOIs = 3;
+        BuildingName expectedAssociatedBuilding = BuildingName.HALL;
+        String expectedFloorName = "1";
+
+        ConcordiaBuildingManager manager = ConcordiaBuildingManager.getInstance();
+        Building actualBuilding = manager.getBuilding(BuildingName.HALL);
+
+        BuildingFloor actualFloor = actualBuilding.getFloor("1");
+        List<IndoorPOI> actualPOIs = actualFloor.getAllPOIsForFloor();
+
+        Assert.assertEquals(expectedNumberOfPOIs, actualPOIs.size());
+
+        for(IndoorPOI poi : actualPOIs) {
+            Assert.assertEquals(expectedAssociatedBuilding, poi.getAssociatedBuilding());
+            Assert.assertEquals(expectedFloorName, poi.getFloorName());
+        }
+    }
+
+    @Test
+    public void BuildingFloor_GetPOIOfTypeClassroom() {
+        int expectedClassroomPOIs = 1;
+        String expectedFloorName = "1";
+        BuildingName expectedAssociatedBuilding = BuildingName.HALL;
+        POIType expectedPOIType = POIType.CLASS_ROOM;
+
+        ConcordiaBuildingManager manager = ConcordiaBuildingManager.getInstance();
+        Building actualBuilding = manager.getBuilding(BuildingName.HALL);
+
+        BuildingFloor actualFloor = actualBuilding.getFloor("1");
+        List<IndoorPOI> actualPOIs = actualFloor.getPOIsOfType(POIType.CLASS_ROOM);
+
+        Assert.assertEquals(expectedClassroomPOIs, actualPOIs.size());
+
+        for(IndoorPOI poi : actualPOIs) {
+            Assert.assertEquals(expectedAssociatedBuilding, poi.getAssociatedBuilding());
+            Assert.assertEquals(expectedPOIType, poi.getPOIType());
+            Assert.assertEquals(expectedFloorName, poi.getFloorName());
+        }
+    }
+
+    @Test
+    public void BuildingFloor_GetAccessibilityPOIs() {
+        int expectedAccessibilityPOIs = 1;
+        String expectedFloorName = "1";
+        BuildingName expectedAssociatedBuilding = BuildingName.HALL;
+        boolean expectedAccessibilityFlag = true;
+
+        ConcordiaBuildingManager manager = ConcordiaBuildingManager.getInstance();
+        Building actualBuilding = manager.getBuilding(BuildingName.HALL);
+
+        BuildingFloor actualFloor = actualBuilding.getFloor("1");
+        List<IndoorPOI> actualPOIs = actualFloor.getAccessibilityPOIs();
+
+        Assert.assertEquals(expectedAccessibilityPOIs, actualPOIs.size());
+
+        for(IndoorPOI poi : actualPOIs) {
+            Assert.assertEquals(expectedAssociatedBuilding, poi.getAssociatedBuilding());
+            Assert.assertEquals(expectedFloorName, poi.getFloorName());
+            Assert.assertEquals(expectedAccessibilityFlag, poi.getIsAccessibilityFeature());
+        }
+    }
+
+    @Test
+    public void IndoorPOI_GetPOIName() {
+        List<String> expectedPOINames = new ArrayList<>(Arrays.asList(
+                "Test A",
+                "Test 2",
+                "Test Accessibility"
+        ));
+
+        int expectedNumberPOIs = expectedPOINames.size();
+
+        String expectedFloorName = "1";
+        BuildingName expectedAssociatedBuilding = BuildingName.HALL;
+
+        ConcordiaBuildingManager manager = ConcordiaBuildingManager.getInstance();
+        Building actualBuilding = manager.getBuilding(BuildingName.HALL);
+
+        BuildingFloor actualFloor = actualBuilding.getFloor("1");
+        List<IndoorPOI> actualPOIs = actualFloor.getAllPOIsForFloor();
+
+        Assert.assertEquals(expectedNumberPOIs, actualPOIs.size());
+
+        int i = 0;
+        for(IndoorPOI poi : actualPOIs) {
+            Assert.assertEquals(expectedAssociatedBuilding, poi.getAssociatedBuilding());
+            Assert.assertEquals(expectedFloorName, poi.getFloorName());
+            Assert.assertTrue(expectedPOINames.contains(poi.getPoiName()));
+        }
     }
 }
