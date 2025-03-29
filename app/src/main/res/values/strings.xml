@@ -7,7 +7,6 @@
     <string name="go_to">Go To</string>
     <string name="english">ENG</string>
     <string name="estimated_time">Estimated time: %1$s</string>
-    <string name="current_location">Current location</string>
     <string name="destination_search_hint">Choose destination</string>
     <string name="starting_point_search_hint">Choose starting point</string>
     <string name="your_location">Your location</string>
@@ -17,4 +16,11 @@
     <string name="currently_loaded_google_calendar">Currently Loaded: Google Calendar Winter 2025... @link</string>
     <string name="import_calendar">Import</string>
     <string name="go_to_class">Go to Class</string>
+    <string name="current_location">Current location</string>
+    <string name="eta_format">%s</string>
+    <string name="location_permission_required">Location permission required for navigation</string>
+    <string name="route_fetch_failed">Failed to fetch route</string>
+    <string name="route_parse_error">Error parsing route data</string>
+    <string name="ETAtemp">3min</string>
+    <string name="timeEstimateTemp">1.5km - 23:21</string>
 </resources>

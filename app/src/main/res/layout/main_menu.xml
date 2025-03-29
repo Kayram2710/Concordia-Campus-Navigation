@@ -7,6 +7,10 @@
     android:layout_height="match_parent"
     app:layout_behavior="com.google.android.material.sidesheet.SideSheetBehavior"><![CDATA[>
 
+
+
+
+
     ]]>
 
     <ImageView
@@ -72,6 +76,18 @@
         app:layout_constraintTop_toBottomOf="@+id/campusMapRedirect" />
 
     <ImageButton
+        android:id="@+id/busScheduleRedirect"
+        android:layout_width="272dp"
+        android:layout_height="73dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="-10dp"
+        android:background="@color/light_burgundy"
+        android:scaleType="centerInside"
+        android:src="@drawable/bus"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/directionsRedirect" />
+
+    <ImageButton
         android:id="@+id/classScheduleRedirect"
         android:layout_width="272dp"
         android:layout_height="73dp"
@@ -81,19 +97,7 @@
         android:scaleType="centerInside"
         android:src="@drawable/class_schedule"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/directionsRedirect" />
-
-    <ImageButton
-        android:id="@+id/busScheduleRedirect"
-        android:layout_width="272dp"
-        android:layout_height="73dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="52dp"
-        android:background="@color/light_burgundy"
-        android:scaleType="centerInside"
-        android:src="@drawable/bus"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/directionsRedirect" />
+        app:layout_constraintTop_toBottomOf="@+id/busScheduleRedirect" />
 
     <ImageButton
         android:id="@+id/viewLanguageButton"
