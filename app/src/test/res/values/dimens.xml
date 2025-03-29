@@ -1,0 +1,8 @@
+<resources>
+    <!-- Test-only dimension values -->
+    <dimen name="sgw_hall_building_lat">45.5017</dimen>
+    <dimen name="sgw_hall_building_lng">-73.5673</dimen>
+
+    <dimen name="loy_hu_building_lat">12.3456</dimen>
+    <dimen name="loy_hu_building_lng">-65.4321</dimen>
+</resources>

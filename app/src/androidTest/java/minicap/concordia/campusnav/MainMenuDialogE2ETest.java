@@ -7,9 +7,9 @@ import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
-import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.isRoot;
 
 import android.view.View;
 
@@ -41,8 +41,7 @@ import minicap.concordia.campusnav.screens.MapsActivity;
 @LargeTest
 public class MainMenuDialogE2ETest {
 
-    // One bug that we had before was that the screen remained blocked at the 'ALLOW GOOGLE MAP TO ACCESS YOUR LOCATION'.
-    // To solve it we grant permission straight away so the E2E test is not failing due to location access.
+    // Grant location permission so the test doesn't fail on permission dialogs.
     @Rule
     public GrantPermissionRule grantPermissionRule = GrantPermissionRule.grant(android.Manifest.permission.ACCESS_FINE_LOCATION);
 
@@ -68,52 +67,52 @@ public class MainMenuDialogE2ETest {
 
     @Test
     public void testMainMenuDialogFlow() {
-        // Displaying the MainMenuDialog
+        // Display the MainMenuDialog
         scenario.onActivity(activity -> {
             mainMenuDialog = new MainMenuDialog(activity);
             mainMenuDialog.show();
         });
 
-        // This step is optional but we are just waiting for animation
-        onView(isRoot()).perform(waitFor(500));
+        // Wait longer (2000ms) to allow the dialog to fully appear and get focus.
+        onView(isRoot()).perform(waitFor(2000));
 
-        // We verify that the dialog is displayed
+        // Verify that the dialog is displayed by checking for the close button.
         onView(withId(R.id.closeMenu))
                 .inRoot(isDialog())
                 .check(matches(isDisplayed()));
 
-        // We click on the 'classScheduleRedirect' button
+        // Click on the 'classScheduleRedirect' button in the dialog.
         onView(withId(R.id.classScheduleRedirect))
                 .inRoot(isDialog())
                 .perform(click());
 
-        // We check if the ClassScheduleActivity is launched
+        // Verify that the ClassScheduleActivity is launched.
         intended(hasComponent(ClassScheduleActivity.class.getName()));
 
-        // We press back to return to MainActivity
+        // Press back to return to MainActivity.
         pressBackUnconditionally();
 
-        // Showing the dialog menu again
+        // Show the dialog menu again.
         scenario.onActivity(activity -> {
             mainMenuDialog = new MainMenuDialog(activity);
             mainMenuDialog.show();
         });
 
-        // This is again optional, we wait again
-        onView(isRoot()).perform(waitFor(500));
+        // Wait again for the dialog to get focus.
+        onView(isRoot()).perform(waitFor(2000));
 
-        // We click on 'campusMapRedirect' button
+        // Click on the 'campusMapRedirect' button.
         onView(withId(R.id.campusMapRedirect))
                 .inRoot(isDialog())
                 .perform(click());
 
-        // We verify MapsActivity is launched
+        // Verify that MapsActivity is launched.
         intended(hasComponent(MapsActivity.class.getName()));
 
-        // We press back to return to MainActivity
+        // Press back to return to MainActivity.
         pressBackUnconditionally();
 
-        // We close the dialog menu if it's still visible (this step is also optional)
+        // Close the dialog if it's still visible.
         scenario.onActivity(activity -> {
             if (mainMenuDialog.isShowing()) {
                 mainMenuDialog.close();
@@ -122,10 +121,10 @@ public class MainMenuDialogE2ETest {
     }
 
     /**
-     * A helper ViewAction to wait for a specific amount of time on the main thread. This will
-     * allow Espresso to wait for at least 'ms' seconds before performing the next action.
+     * A helper ViewAction to wait for a specific amount of time on the main thread.
+     * This allows Espresso to wait before performing the next action.
      */
-    private ViewAction waitFor(long ms) {
+    private ViewAction waitFor(final long ms) {
         return new ViewAction() {
             @Override
             public Matcher<View> getConstraints() {

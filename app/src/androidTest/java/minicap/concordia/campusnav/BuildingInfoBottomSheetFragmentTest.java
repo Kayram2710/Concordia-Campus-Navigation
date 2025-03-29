@@ -127,8 +127,15 @@ public class BuildingInfoBottomSheetFragmentTest {
                     @Override
                     public void directionButtonOnClick(Building building) {
                         wasCalled[0] = true;
-                        assertEquals("Latitude mismatch", expectedBuilding.getLocation()[0], building.getLocation()[0], 0.0001);
-                        assertEquals("Longitude mismatch", expectedBuilding.getLocation()[1], building.getLocation()[1], 0.0001);
+                        assertEquals("Latitude mismatch",
+                                expectedBuilding.getLocation().getLat(),
+                                building.getLocation().getLat(),
+                                0.0001);
+
+                        assertEquals("Longitude mismatch",
+                                expectedBuilding.getLocation().getLng(),
+                                building.getLocation().getLng(),
+                                0.0001);
                     }
                 };
 
