@@ -127,6 +127,12 @@ android {
         androidTestImplementation("androidx.test.espresso:espresso-contrib:3.6.1")
         androidTestImplementation("androidx.test.espresso:espresso-intents:3.6.1")
         androidTestImplementation("androidx.fragment:fragment-testing:1.5.7")
+
+        testImplementation("org.conscrypt:conscrypt-openjdk-uber:2.5.2")
+
+        testImplementation("junit:junit:4.13.2")
+
+
     }
 
 // Jacoco coverage task (for local tests)
@@ -170,3 +176,5 @@ android {
     }
 
 }
+
+

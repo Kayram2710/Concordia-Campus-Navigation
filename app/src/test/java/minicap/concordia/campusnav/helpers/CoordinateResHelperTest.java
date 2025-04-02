@@ -1,6 +1,8 @@
 package minicap.concordia.campusnav.helpers;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import android.content.Context;
 import android.content.ContextWrapper;
@@ -17,13 +19,17 @@ import org.robolectric.RuntimeEnvironment;
 
 import minicap.concordia.campusnav.R;
 
+/**
+ * Expanded test for CoordinateResHelper to achieve full coverage.
+ */
 @RunWith(RobolectricTestRunner.class)
 public class CoordinateResHelperTest {
 
     private Context context;
 
     /**
-     * A fake Resources subclass that overrides getValue() for our specific dimension IDs.
+     * A fake Resources subclass that overrides getValue() for our specific dimension IDs
+     * and throws NotFoundException for any unknown ID.
      */
     private static class FakeResources extends Resources {
         public FakeResources(Resources original) {
@@ -43,9 +49,10 @@ public class CoordinateResHelperTest {
                 outValue.data = Float.floatToIntBits(12.3456f);
             } else if (id == R.dimen.loy_hu_building_lng) {
                 outValue.type = TypedValue.TYPE_FLOAT;
-                outValue.data = Float.floatToIntBits(-73.0f); // dummy value for completeness
+                outValue.data = Float.floatToIntBits(-73.0f);
             } else {
-                super.getValue(id, outValue, resolveRefs);
+                // For any other resource ID, simulate a missing resource
+                throw new NotFoundException("FakeResources could not find resource ID: " + id);
             }
         }
     }
@@ -54,7 +61,7 @@ public class CoordinateResHelperTest {
      * A ContextWrapper that returns our FakeResources.
      */
     private static class FakeContext extends ContextWrapper {
-        private Resources resources;
+        private final Resources resources;
 
         public FakeContext(Context base) {
             super(base);
@@ -69,36 +76,77 @@ public class CoordinateResHelperTest {
 
     @Before
     public void setUp() {
-        // Get the Robolectric application context and wrap it.
+        // Wrap the Robolectric application context with our FakeContext
         Context appContext = RuntimeEnvironment.getApplication();
         context = new FakeContext(appContext);
     }
 
+    // ------------------------------------------------------------------------
+    // Tests for getCoordsForGoogleMaps
+    // ------------------------------------------------------------------------
+
     @Test
     public void testGetCoordsForGoogleMaps_validIds_returnsLatLng() {
-        // Use the SGW hall building coordinates.
-        int[] coords = new int[] {
+        int[] coords = {
                 R.dimen.sgw_hall_building_lat,
                 R.dimen.sgw_hall_building_lng
         };
 
-        // This should now return the values we set in FakeResources.
         LatLng result = CoordinateResHelper.getCoordsForGoogleMaps(context, coords);
-
         assertEquals(45.5017, result.latitude, 0.0001);
         assertEquals(-73.5673, result.longitude, 0.0001);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testGetCoordsForGoogleMaps_invalidArray_throwsException() {
-        // Passing an array with only one element should throw an exception.
+        // Only one element => should throw IllegalArgumentException
         CoordinateResHelper.getCoordsForGoogleMaps(context, new int[] { R.dimen.sgw_hall_building_lat });
     }
 
     @Test
+    public void testGetCoordsForGoogleMaps_nonExistentResource_throwsNotFound() {
+        // Provide IDs that our FakeResources won't recognize => should throw NotFoundException
+        int[] coords = { 999999, 888888 };
+
+        try {
+            CoordinateResHelper.getCoordsForGoogleMaps(context, coords);
+            fail("Expected a Resources.NotFoundException for unknown resource IDs");
+        } catch (Resources.NotFoundException e) {
+            // success
+        }
+    }
+
+    // ------------------------------------------------------------------------
+    // Tests for getFloat
+    // ------------------------------------------------------------------------
+
+    @Test
     public void testGetFloat_validResource_returnsFloat() {
-        // This should return the value we set for loy_hu_building_lat.
         float result = CoordinateResHelper.getFloat(context, R.dimen.loy_hu_building_lat);
         assertEquals(12.3456f, result, 0.0001f);
+    }
+
+    @Test
+    public void testGetFloat_nonExistentResource_throwsNotFound() {
+        try {
+            CoordinateResHelper.getFloat(context, 777777);
+            fail("Expected a Resources.NotFoundException for unknown resource ID");
+        } catch (Resources.NotFoundException e) {
+            // success
+        }
+    }
+
+    // ------------------------------------------------------------------------
+    // Test for static inner class BuildingNames to cover its lines
+    // ------------------------------------------------------------------------
+
+    @Test
+    public void testBuildingNames_staticArrays() {
+        int[] sgwArray = CoordinateResHelper.BuildingNames.SGWHallBuilding;
+        int[] loyArray = CoordinateResHelper.BuildingNames.LoyHUBuilding;
+        assertNotNull("SGWHallBuilding array should not be null", sgwArray);
+        assertNotNull("LoyHUBuilding array should not be null", loyArray);
+        assertEquals("SGWHallBuilding array should have 2 elements", 2, sgwArray.length);
+        assertEquals("LoyHUBuilding array should have 2 elements", 2, loyArray.length);
     }
 }

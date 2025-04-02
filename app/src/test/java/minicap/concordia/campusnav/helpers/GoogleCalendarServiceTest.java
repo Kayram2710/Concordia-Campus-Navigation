@@ -1,43 +1,36 @@
 package minicap.concordia.campusnav.helpers;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import android.content.Context;
 
-import androidx.test.core.app.ApplicationProvider;
-
 import com.google.api.services.calendar.Calendar;
-
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
+import org.mockito.Mockito;
 
-import minicap.concordia.campusnav.helpers.GoogleCalendarService;
+import java.lang.reflect.Field;
 
-@RunWith(RobolectricTestRunner.class)
-@Config(sdk = 28) // or another supported Robolectric API level
 public class GoogleCalendarServiceTest {
 
-    private Context context;
-
-    @Before
-    public void setUp() {
-        // Robolectric-provided context
-        context = ApplicationProvider.getApplicationContext();
-    }
-
     @Test
-    public void testGetCalendarService_returnsNonNullCalendar() {
-        // Call the static method
-        Calendar calendarService = GoogleCalendarService.getCalendarService(context);
+    public void testGetCalendarServiceCoversAllLines() throws Exception {
+        // Mock a simple Context (no Robolectric needed)
+        Context mockContext = Mockito.mock(Context.class);
 
-        // Verify it's not null
-        assertNotNull("Calendar service should not be null", calendarService);
+        // 1) Call the service method
+        Calendar calendar = GoogleCalendarService.getCalendarService(mockContext);
+        assertNotNull("Calendar should not be null", calendar);
+        assertEquals("Campus Navigation App", calendar.getApplicationName());
 
-        // Check that the application name is set
-        assertEquals("Campus Navigation App", calendarService.getApplicationName());
+        // 2) Reflectively access the private static fields to ensure coverage of their lines
+        Field transportField = GoogleCalendarService.class.getDeclaredField("HTTP_TRANSPORT");
+        transportField.setAccessible(true);
+        Object transportVal = transportField.get(null);
+        assertNotNull("HTTP_TRANSPORT should not be null", transportVal);
+
+        Field jsonFactoryField = GoogleCalendarService.class.getDeclaredField("JSON_FACTORY");
+        jsonFactoryField.setAccessible(true);
+        Object jsonFactoryVal = jsonFactoryField.get(null);
+        assertNotNull("JSON_FACTORY should not be null", jsonFactoryVal);
     }
 }
