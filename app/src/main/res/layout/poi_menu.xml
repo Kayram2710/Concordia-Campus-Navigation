@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HorizontalScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:scrollbars="none"
+    android:clipToPadding="false"
+    android:paddingEnd="20dp"
+    android:layout_marginTop="100dp"
+    android:layout_alignParentStart="true">
+
+        <LinearLayout
+            android:id="@+id/poi"
+            android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:weightSum="5">
+
+        <!-- Restaurant item -->
+        <LinearLayout
+            android:id="@+id/RestaurantPOI"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/rectangle_poi"
+            android:padding="5dp"
+            android:layout_marginEnd="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground">
+                <ImageView
+                    android:id="@+id/vector"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_restaurant"
+                    android:layout_gravity="center_vertical"/>
+
+                <TextView
+                    android:id="@+id/restaurants"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/restaurants"
+                    android:textSize="15sp"
+                    android:textColor="#000000"
+                    android:gravity="center_vertical"
+                    android:alpha="0.62"
+                    android:layout_marginStart="5dp"/>
+        </LinearLayout>
+
+        <!-- Coffee item -->
+        <LinearLayout
+            android:id="@+id/CoffeePOI"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/rectangle_poi"
+            android:foreground="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="5dp"
+            android:layout_marginEnd="10dp">
+
+                <ImageView
+                    android:id="@+id/coffee_img"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_coffee"
+                    android:layout_gravity="center_vertical"/>
+
+                <TextView
+                    android:id="@+id/coffee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/coffee"
+                    android:textSize="15sp"
+                    android:textColor="#000000"
+                    android:gravity="center_vertical"
+                    android:alpha="0.62"
+                    android:layout_marginStart="5dp"/>
+        </LinearLayout>
+
+        <!-- Fountain item -->
+        <LinearLayout
+            android:id="@+id/FountainPOI"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/rectangle_poi"
+            android:padding="5dp"
+            android:layout_marginEnd="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground">
+
+                <ImageView
+                    android:id="@+id/fountain_img"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_fountain"
+                    android:layout_gravity="center_vertical"/>
+
+                <TextView
+                    android:id="@+id/fountain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/fountain"
+                    android:textSize="15sp"
+                    android:textColor="#000000"
+                    android:gravity="center_vertical"
+                    android:alpha="0.62"
+                    android:layout_marginStart="5dp"/>
+        </LinearLayout>
+
+        <!-- Elevator item -->
+        <LinearLayout
+            android:id="@+id/ElevatorPOI"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/rectangle_poi"
+            android:padding="5dp"
+            android:layout_marginEnd="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground">
+
+                <ImageView
+                    android:id="@+id/elevator_img"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_elevator"
+                    android:layout_gravity="center_vertical"/>
+
+                <TextView
+                    android:id="@+id/elevator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/elevator"
+                    android:textSize="15sp"
+                    android:textColor="#000000"
+                    android:gravity="center_vertical"
+                    android:alpha="0.62"
+                    android:layout_marginStart="5dp"/>
+        </LinearLayout>
+
+        <!-- Washroom item -->
+        <LinearLayout
+            android:id="@+id/WashroomPOI"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rectangle_poi"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground">
+
+                <ImageView
+                    android:id="@+id/washroom_img"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_washroom" />
+
+                <TextView
+                    android:id="@+id/washroom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:alpha="0.62"
+                    android:gravity="center_vertical"
+                    android:text="@string/washroom"
+                    android:textColor="#000000"
+                    android:textSize="15sp" />
+        </LinearLayout>
+
+</LinearLayout>
+    </HorizontalScrollView>

@@ -1,9 +1,11 @@
 package minicap.concordia.campusnav.map;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+
 
 import com.mappedin.sdk.MPIMapView;
 import com.mappedin.sdk.listeners.MPIMapClickListener;
@@ -17,6 +19,8 @@ import com.mappedin.sdk.models.MPINavigatable;
 import com.mappedin.sdk.models.MPIState;
 import com.mappedin.sdk.web.MPIOptions;
 
+import minicap.concordia.campusnav.buildingmanager.entities.poi.OutdoorPOI;
+import minicap.concordia.campusnav.buildingmanager.enumerations.POIType;
 import minicap.concordia.campusnav.components.MappedInFragment;
 import minicap.concordia.campusnav.map.enums.MapColors;
 import minicap.concordia.campusnav.map.helpers.MapColorConversionHelper;
@@ -36,6 +40,11 @@ public class InternalMappedIn extends AbstractMap implements MPIMapViewListener,
         mappedInFragment = MappedInFragment.newInstance(this, this);
 
         return mappedInFragment;
+    }
+
+    @Override
+    public void addMarker(OutdoorPOI opoi) {
+        //TODO
     }
 
     @Override
@@ -84,6 +93,11 @@ public class InternalMappedIn extends AbstractMap implements MPIMapViewListener,
     }
 
     @Override
+    public void displayPOI(MapCoordinates origin, POIType type) {
+
+    }
+
+    @Override
     public void centerOnCoordinates(MapCoordinates newCameraPosition) {
 
     }
@@ -102,6 +116,11 @@ public class InternalMappedIn extends AbstractMap implements MPIMapViewListener,
             curMap.getBlueDotManager().disable();
         }
         return true;
+    }
+
+    @Override
+    public void setStyle(Context context, int resourceID) {
+        //Not used
     }
 
     @Override

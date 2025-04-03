@@ -86,10 +86,10 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/shuttleScheduleView"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_marginTop="500dp"
-                android:layout_marginEnd="320dp"
+                android:layout_width="69dp"
+                android:layout_height="75dp"
+                android:layout_marginTop="368dp"
+                android:layout_marginEnd="16dp"
                 app:backgroundTint="@color/light_burgundy"
                 app:cornerRadius="100dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -97,13 +97,14 @@
 
             <ImageView
                 android:id="@+id/shuttleBusIcon"
-                android:layout_width="54dp"
-                android:layout_height="54dp"
-                android:layout_marginEnd="8dp"
+                android:layout_width="46dp"
+                android:layout_height="43dp"
+                android:layout_marginEnd="12dp"
                 android:src="@drawable/ic_shuttle"
                 app:layout_constraintBottom_toBottomOf="@+id/shuttleScheduleView"
                 app:layout_constraintEnd_toEndOf="@+id/shuttleScheduleView"
-                app:layout_constraintTop_toTopOf="@+id/shuttleScheduleView" />
+                app:layout_constraintTop_toTopOf="@+id/shuttleScheduleView"
+                app:layout_constraintVertical_bias="0.562" />
 
             <ImageView
                 android:id="@+id/campusIcon"
@@ -198,11 +199,11 @@
                 android:id="@+id/buildingSelectorContainer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>
-
+    <include layout="@layout/poi_menu" />
     <include layout="@layout/directions_sheet" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

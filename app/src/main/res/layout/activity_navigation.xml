@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/navigation_map"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ImageView
+        android:id="@+id/navBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:src="@drawable/navbar" />
+
+    <ImageButton
+        android:id="@+id/exitButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="28dp"
+        android:background="@color/light_burgundy"
+        app:layout_constraintEnd_toEndOf="@+id/navBar"
+        app:layout_constraintTop_toTopOf="@+id/navBar"
+        android:src="@drawable/exitbutton" />
+
+    <TextView
+        android:id="@+id/eta_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/inter"
+        android:text="@string/ETAtemp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/navBar"
+        app:layout_constraintTop_toTopOf="@+id/navBar" />
+
+    <ImageButton
+        android:id="@+id/mainMenu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="28dp"
+        android:background="#00FFFFFF"
+        app:layout_constraintStart_toStartOf="@+id/navigation_map"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/menubuttonstandalone" />
+
+    <TextView
+        android:id="@+id/statsText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/inter"
+        android:text="@string/timeEstimateTemp"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/eta_text"
+        app:layout_constraintTop_toBottomOf="@+id/eta_text" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

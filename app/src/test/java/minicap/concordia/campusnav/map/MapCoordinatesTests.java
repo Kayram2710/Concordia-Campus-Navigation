@@ -1,5 +1,8 @@
 package minicap.concordia.campusnav.map;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.mappedin.sdk.models.MPIMap;
 
@@ -113,5 +116,60 @@ public class MapCoordinatesTests {
         Assert.assertEquals(expectedLng, actual.getLongitude(), 0.0001);
         Assert.assertEquals(expectedX, actual.getX(), 0.0001);
         Assert.assertEquals(expectedY, actual.getY(), 0.0001);
+    }
+
+    @Test
+    public void testWriteToParcel() {
+        double expectedLat = 12;
+        double expectedLng = 20;
+        double expectedX = 15;
+        double expectedY = 27;
+
+        MapCoordinates expected = new MapCoordinates(expectedLat, expectedLng, expectedX, expectedY);
+        Parcel parcelMock = Mockito.mock(Parcel.class);
+
+        expected.writeToParcel(parcelMock, 0);
+
+        Mockito.verify(parcelMock, Mockito.atLeast(4)).writeDouble(Mockito.anyDouble());
+    }
+
+    @Test
+    public void testDescribeContents() {
+        int expectedDescribeContents = 0;
+        double expectedLat = 12;
+        double expectedLng = 20;
+        double expectedX = 15;
+        double expectedY = 27;
+
+        MapCoordinates actual = new MapCoordinates(expectedLat, expectedLng, expectedX, expectedY);
+
+        Assert.assertEquals(expectedDescribeContents, actual.describeContents());
+    }
+
+    @Test
+    public void testCreatorCreateFromParcel() {
+        double expectedLat = 12;
+        double expectedLng = 20;
+        double expectedX = 15;
+        double expectedY = 27;
+
+        Parcel parcelMock = Mockito.mock(Parcel.class);
+        Mockito.when(parcelMock.readDouble()).thenReturn(expectedLat, expectedLng, expectedX, expectedY);
+
+        MapCoordinates actual = MapCoordinates.CREATOR.createFromParcel(parcelMock);
+
+        Assert.assertEquals(expectedLat, actual.getLat(), 0.00001);
+        Assert.assertEquals(expectedLng, actual.getLng(), 0.00001);
+        Assert.assertEquals(expectedX, actual.getX(), 0.00001);
+        Assert.assertEquals(expectedY, actual.getY(), 0.00001);
+    }
+
+    @Test
+    public void testCreatorNewArray() {
+        int expectedSize = 2;
+
+        MapCoordinates[] actual = MapCoordinates.CREATOR.newArray(expectedSize);
+
+        Assert.assertEquals(expectedSize, actual.length);
     }
 }

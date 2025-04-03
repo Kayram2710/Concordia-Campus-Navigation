@@ -1,6 +1,7 @@
 package minicap.concordia.campusnav.buildingmanager.entities;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import minicap.concordia.campusnav.buildingmanager.entities.poi.IndoorPOI;
 import minicap.concordia.campusnav.buildingmanager.enumerations.BuildingName;
@@ -9,7 +10,7 @@ import minicap.concordia.campusnav.buildingmanager.enumerations.POIType;
 public class BuildingFloor {
     private final String floorName;
     private final BuildingName associatedBuilding;
-    private final ArrayList<IndoorPOI> floorPOIs;
+    private final List<IndoorPOI> floorPOIs;
     private final String floorPlanResource;
 
     public BuildingFloor(String floorName, BuildingName building, String floorPlan){
@@ -23,7 +24,7 @@ public class BuildingFloor {
      * Gets all points of interest for the current floor
      * @return ArrayList of IndoorPOI
      */
-    public ArrayList<IndoorPOI> getAllPOIsForFloor() {
+    public List<IndoorPOI> getAllPOIsForFloor() {
         return floorPOIs;
     }
 
@@ -78,5 +79,14 @@ public class BuildingFloor {
      */
     public BuildingName getAssociatedBuilding() {
         return associatedBuilding;
+    }
+
+    /**
+     * Sets the IndoorPOIs for this floor
+     * @param newPOIs The new list of IndoorPOIs
+     */
+    public void setFloorPOIs(List<IndoorPOI> newPOIs) {
+        this.floorPOIs.clear();
+        this.floorPOIs.addAll(newPOIs);
     }
 }

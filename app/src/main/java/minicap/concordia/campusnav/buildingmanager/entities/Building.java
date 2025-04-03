@@ -33,13 +33,26 @@ public class Building extends Location{
     }
 
 
+    /**
+     * Gets the BuildingName that represents this building
+     * @return BuildingName enum that represents the current building
+     */
     public BuildingName getBuildingIdentifier() {
         return buildingIdentifier;
     }
+
+    /**
+     * Gets the address for this building
+     * @return String address
+     */
     public String getBuildingAddress() {
         return buildingAddress;
     }
 
+    /**
+     * Gets image resource for this building
+     * @return resource id of image
+     */
     public int getBuildingImageRes() {
         return buildingImageRes;
     }
@@ -65,6 +78,15 @@ public class Building extends Location{
      */
     public Collection<BuildingFloor> getFloors() {
         return floors.values();
+    }
+
+    /**
+     * Gets a single floor from the building
+     * @param floorName The name of the floor
+     * @return The BuildingFloor object associated with this floor
+     */
+    public BuildingFloor getFloor(String floorName) {
+        return floors.get(floorName);
     }
 
     /**

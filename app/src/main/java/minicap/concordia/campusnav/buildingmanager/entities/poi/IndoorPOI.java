@@ -8,7 +8,7 @@ public class IndoorPOI extends POI {
     private BuildingName associatedBuilding;
     private String floorName;
 
-    public IndoorPOI(String name, POIType type, BuildingName associatedBuilding, String floorName, boolean isAccessibilityFeature, float latitude, float longitude) {
+    public IndoorPOI(String name, POIType type, BuildingName associatedBuilding, String floorName, boolean isAccessibilityFeature, double latitude, double longitude) {
         super(name, type, isAccessibilityFeature, latitude, longitude);
         this.associatedBuilding = associatedBuilding;
         this.floorName = floorName;

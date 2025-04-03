@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
@@ -35,10 +36,14 @@ public class InternalGoogleMapsTests {
     @Mock
     private GoogleMap mapMock;
 
+    @Mock
+    private UiSettings uiSettingsMock;
+
     @Before
     public void setup() {
         Mockito.reset(mockListener);
         Mockito.reset(mapMock);
+        Mockito.when(mapMock.getUiSettings()).thenReturn(uiSettingsMock);
     }
 
     @Test

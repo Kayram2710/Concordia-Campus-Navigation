@@ -1,216 +1,265 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
-        android:layout_height="360dp"
+        android:layout_height="384dp"
         android:background="@color/light_burgundy"
-        android:orientation="vertical"
-        android:padding="10dp"
+        android:backgroundTint="@color/light_burgundy"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-        <!-- Bottom Sheet Content (from CAP-96-130-CreateBuildingGetDirectionsMenu) -->
         <View
+            android:id="@+id/widgetIcon"
             android:layout_width="100dp"
             android:layout_height="2dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/yellow"
             android:clickable="false"
             android:focusable="false"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="20dp"
-            android:background="@color/yellow" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="4dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/white"
-                android:orientation="horizontal"
-                android:padding="16dp">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_person"
-                    app:tint="@color/black" />
-
-                <EditText
-                    android:id="@+id/yourLocationEditText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:hint="@string/your_location"
-                    android:inputType="text" />
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_arrow_down"
-                    app:tint="@color/black" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- End Location Card -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="4dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/white"
-                android:orientation="horizontal"
-                android:padding="16dp">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_destination"
-                    app:tint="@color/black" />
-
-                <EditText
-                    android:id="@+id/destinationText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ems="10"
-                    android:hint="@string/your_destination"
-                    android:inputType="text" />
-
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- Separator -->
         <View
-            android:layout_width="match_parent"
+            android:id="@+id/seperator"
+            android:layout_width="0dp"
             android:layout_height="1dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="13dp"
+            android:background="@color/yellow"
+            android:clickable="false"
+            android:focusable="false"
+            app:layout_constraintBottom_toTopOf="@+id/routeOptionsText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/locationCard"
+            android:layout_width="0dp"
+            android:layout_height="55dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/rectangle_area"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.382"
+            app:layout_constraintStart_toEndOf="@+id/currentLocationPin"
+            app:layout_constraintTop_toBottomOf="@+id/widgetIcon" />
+
+        <TextView
+            android:id="@+id/routeOptionsText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="60dp"
+            android:text="Route Options"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@+id/routes"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/currentLocationPin"
+            android:layout_width="37dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="12dp"
+            android:src="@drawable/person"
+            app:layout_constraintBottom_toBottomOf="@+id/locationCard"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/yourLocationEditText" />
+
+        <EditText
+            android:id="@+id/yourLocationEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/your_location"
+            android:inputType="text"
+            app:layout_constraintBottom_toBottomOf="@+id/locationCard"
+            app:layout_constraintEnd_toEndOf="@+id/locationCard"
+            app:layout_constraintHorizontal_bias="0.25"
+            app:layout_constraintStart_toStartOf="@+id/locationCard"
+            app:layout_constraintTop_toTopOf="@+id/locationCard" />
+
+        <ImageView
+            android:id="@+id/arrow"
+            android:layout_width="29dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:src="@drawable/line_15"
+            app:layout_constraintBottom_toTopOf="@+id/DirectionPin"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/currentLocationPin" />
+
+        <ImageView
+            android:id="@+id/DirectionPin"
+            android:layout_width="36dp"
+            android:layout_height="41dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginBottom="32dp"
+            android:src="@drawable/location_on"
+            app:layout_constraintBottom_toTopOf="@+id/seperator"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/destinationCard"
+            app:layout_constraintVertical_bias="0.642" />
+
+        <ImageView
+            android:id="@+id/EstimatedTime"
+            android:layout_width="277dp"
+            android:layout_height="46dp"
+            android:layout_marginStart="10dp"
             android:layout_marginBottom="16dp"
-            android:background="@color/yellow" />
+            android:src="@drawable/rectangle_area"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-        <!-- Route Options -->
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/estimatedTime"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal">
+            android:layout_marginStart="12dp"
+            android:text="Estimated time: 3 minutes"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="@+id/EstimatedTime"
+            app:layout_constraintStart_toEndOf="@+id/clockIcon"
+            app:layout_constraintTop_toTopOf="@+id/EstimatedTime" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:text="Route Options"
-                android:textColor="@android:color/white"
-                android:textSize="18sp" />
-        </LinearLayout>
+        <ImageView
+            android:id="@+id/clockIcon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/ic_clock"
+            app:layout_constraintBottom_toBottomOf="@+id/EstimatedTime"
+            app:layout_constraintStart_toStartOf="@+id/EstimatedTime"
+            app:layout_constraintTop_toTopOf="@+id/EstimatedTime" />
 
-        <!-- Route Buttons -->
+        <ImageView
+            android:id="@+id/destinationCard"
+            android:layout_width="0dp"
+            android:layout_height="55dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="32dp"
+            android:src="@drawable/rectangle_area"
+            app:layout_constraintBottom_toTopOf="@+id/seperator"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/DirectionPin" />
+
+        <ImageButton
+            android:id="@+id/startRoute"
+            android:layout_width="98dp"
+            android:layout_height="44dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@color/light_burgundy"
+            android:scaleType="centerInside"
+            android:src="@drawable/confirmation_button"
+            app:layout_constraintBottom_toBottomOf="@+id/EstimatedTime"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/EstimatedTime"
+            app:layout_constraintTop_toTopOf="@+id/EstimatedTime" />
+
+        <EditText
+            android:id="@+id/destinationText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="@string/your_destination"
+            android:inputType="text"
+            app:layout_constraintBottom_toBottomOf="@+id/destinationCard"
+            app:layout_constraintEnd_toEndOf="@+id/destinationCard"
+            app:layout_constraintHorizontal_bias="0.25"
+            app:layout_constraintStart_toStartOf="@+id/destinationCard"
+            app:layout_constraintTop_toTopOf="@+id/destinationCard" />
+
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/routes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/EstimatedTime"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent">
 
             <!-- Walk Button -->
-            <ImageButton
-                android:id="@+id/walkButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@drawable/button_selector"
-                android:clickable="true"
-                android:focusable="true"
-                android:padding="12dp"
-                android:src="@drawable/ic_walk"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/wheelchairButton"
-                app:layout_constraintHorizontal_chainStyle="spread"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
 
             <!-- Wheelchair Button -->
-            <ImageButton
-                android:id="@+id/wheelchairButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@drawable/button_selector"
-                android:clickable="true"
-                android:focusable="true"
-                android:padding="12dp"
-                android:src="@drawable/ic_wheelchair"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/carButton"
-                app:layout_constraintStart_toEndOf="@+id/walkButton"
-                app:layout_constraintTop_toTopOf="parent" />
 
             <!-- Car Button -->
-            <ImageButton
-                android:id="@+id/carButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@drawable/button_selector"
-                android:clickable="true"
-                android:focusable="true"
-                android:padding="12dp"
-                android:src="@drawable/ic_car"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/transitButton"
-                app:layout_constraintStart_toEndOf="@+id/wheelchairButton"
-                app:layout_constraintTop_toTopOf="parent" />
 
             <!-- Transit Button -->
-            <ImageButton
-                android:id="@+id/transitButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@drawable/button_selector"
-                android:clickable="true"
-                android:focusable="true"
-                android:padding="12dp"
-                android:src="@drawable/ic_transit"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/carButton"
-                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- Time Estimate Card -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="8dp"
-            app:cardElevation="4dp">
+        <ImageButton
+            android:id="@+id/transitButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="40dp"
+            android:background="@drawable/button_selector"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="12dp"
+            android:src="@drawable/ic_transit"
+            app:layout_constraintBottom_toBottomOf="@+id/carButton"
+            app:layout_constraintStart_toEndOf="@+id/carButton"
+            app:layout_constraintTop_toTopOf="@+id/carButton" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/white"
-                android:orientation="horizontal"
-                android:padding="16dp">
+        <ImageButton
+            android:id="@+id/carButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="40dp"
+            android:background="@drawable/button_selector"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="12dp"
+            android:src="@drawable/ic_car"
+            app:layout_constraintBottom_toBottomOf="@+id/wheelchairButton"
+            app:layout_constraintStart_toEndOf="@+id/wheelchairButton"
+            app:layout_constraintTop_toTopOf="@+id/wheelchairButton" />
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_clock"
-                    app:tint="@color/black" />
+        <ImageButton
+            android:id="@+id/wheelchairButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="40dp"
+            android:background="@drawable/button_selector"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="12dp"
+            android:src="@drawable/ic_wheelchair"
+            app:layout_constraintBottom_toBottomOf="@+id/walkButton"
+            app:layout_constraintStart_toEndOf="@+id/walkButton"
+            app:layout_constraintTop_toTopOf="@+id/walkButton" />
 
-                <TextView
-                    android:id="@+id/estimatedTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:text="Estimated time: 3 minutes"
-                    android:textColor="@color/black" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-    </LinearLayout>
+        <ImageButton
+            android:id="@+id/walkButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginBottom="14dp"
+            android:background="@drawable/button_selector"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="12dp"
+            android:src="@drawable/ic_walk"
+            app:layout_constraintBottom_toTopOf="@+id/EstimatedTime"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/routeOptionsText" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

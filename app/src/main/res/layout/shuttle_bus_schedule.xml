@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <!-- Bottom Sheet for Shuttle Bus Schedule -->
     <LinearLayout
         android:id="@+id/shuttle_schedule"
@@ -15,13 +14,11 @@
         android:orientation="vertical"
         android:padding="10dp">
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical">
-
 
             <!-- Drag Handle -->
             <View
@@ -32,14 +29,12 @@
                 android:layout_gravity="center_horizontal"
                 android:background="@color/yellow" />
 
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
                 android:orientation="horizontal">
-
 
                 <!-- Shuttle logo and Title -->
                 <ImageView
@@ -50,7 +45,6 @@
                     android:padding="5dp"
                     android:src="@drawable/ic_transit" />
 
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -59,10 +53,7 @@
                     android:textColor="@color/white"
                     android:textSize="19sp"
                     android:textStyle="bold" />
-
-
             </LinearLayout>
-
 
             <!-- Separator -->
             <View
@@ -71,10 +62,16 @@
                 android:layout_marginTop="10dp"
                 android:background="@color/yellow" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SGW to LOY"
+                android:textColor="@color/yellow"
+                android:textSize="19sp"
+                android:textStyle="bold"
+                android:layout_marginTop="15dp"/>
 
             <!-- SGW Departures -->
-
-
             <!-- Grid Timetable -->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -82,7 +79,6 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="15dp"
                 android:orientation="horizontal">
-
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -93,9 +89,9 @@
                     android:textSize="19sp"
                     android:textStyle="bold" />
 
-
                 <!-- Mon-thurs Button -->
                 <Button
+                    android:id="@+id/sgwMonThursButton"
                     android:layout_width="102dp"
                     android:layout_height="36dp"
                     android:layout_marginLeft="5dp"
@@ -106,9 +102,9 @@
                     android:text="Mon-Thurs"
                     android:textColor="@color/black" />
 
-
                 <!-- Fri Button -->
                 <Button
+                    android:id="@+id/sgwFridayButton"
                     android:layout_width="102dp"
                     android:layout_height="36dp"
                     android:layout_marginLeft="5dp"
@@ -118,98 +114,96 @@
                     android:focusable="true"
                     android:text="Friday"
                     android:textColor="@color/black" />
-
-
             </LinearLayout>
 
             <GridLayout
+                android:id="@+id/sgwGridLayout"
                 android:layout_width="match_parent"
-                android:layout_height="249dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:background="@color/white"
-                android:columnCount="5"
+                android:columnCount="6"
                 android:orientation="horizontal"
-                android:padding="10dp"
-                android:rowCount="6" />
-
-
+                android:rowCount="6"
+                android:useDefaultMargins="false"/>
         </LinearLayout>
 
-
-        <!-- Separator -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_marginTop="20dp"
-            android:background="@color/yellow" />
-
-
         <!-- LOY Departures -->
-
-
-        <!-- Grid Timetable -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="15dp"
-            android:orientation="horizontal">
+            android:gravity="center"
+            android:orientation="vertical">
 
-
-            <!-- Mon-thurs Button -->
-
-
-            <!-- Mon-thurs Button -->
-
-
-            <!-- Fri Button -->
+            <!-- Separator -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/yellow" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:text="LOY Depatures"
-                android:textColor="@color/white"
+                android:text="LOY to SGW"
+                android:textColor="@color/yellow"
                 android:textSize="19sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_marginTop="15dp"/>
 
-            <Button
-                android:layout_width="102dp"
-                android:layout_height="36dp"
+
+            <!-- Grid Timetable -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:background="@drawable/button_selector"
-                android:clickable="true"
-                android:focusable="true"
-                android:text="Mon-Thurs"
-                android:textColor="@color/black" />
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal">
 
-            <Button
-                android:layout_width="102dp"
-                android:layout_height="36dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:background="@drawable/button_selector"
-                android:clickable="true"
-                android:focusable="true"
-                android:text="Friday"
-                android:textColor="@color/black" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:text="LOY Depatures"
+                    android:textColor="@color/white"
+                    android:textSize="19sp"
+                    android:textStyle="bold" />
 
+                <Button
+                    android:id="@+id/loyMonThursButton"
+                    android:layout_width="102dp"
+                    android:layout_height="36dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/button_selector"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:text="Mon-Thurs"
+                    android:textColor="@color/black" />
 
+                <Button
+                    android:id="@+id/loyFridayButton"
+                    android:layout_width="102dp"
+                    android:layout_height="36dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:background="@drawable/button_selector"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:text="Friday"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <GridLayout
+                android:id="@+id/loyGridLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@color/white"
+                android:columnCount="6"
+                android:orientation="horizontal"
+                android:rowCount="6"
+                android:useDefaultMargins="false"/>
         </LinearLayout>
-
-        <GridLayout
-            android:layout_width="match_parent"
-            android:layout_height="249dp"
-            android:layout_marginTop="20dp"
-            android:background="@color/white"
-            android:columnCount="5"
-            android:orientation="horizontal"
-            android:padding="10dp"
-            android:rowCount="6" />
-
-
     </LinearLayout>
-
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

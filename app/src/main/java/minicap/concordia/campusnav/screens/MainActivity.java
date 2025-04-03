@@ -7,21 +7,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-
 import minicap.concordia.campusnav.R;
-
-//to be removed
-import minicap.concordia.campusnav.buildingmanager.enumerations.BuildingName;
-import minicap.concordia.campusnav.components.BuildingInfoBottomSheetFragment;
 
 import minicap.concordia.campusnav.buildingmanager.ConcordiaBuildingManager;
 import minicap.concordia.campusnav.buildingmanager.entities.Campus;
 import minicap.concordia.campusnav.buildingmanager.enumerations.CampusName;
 import minicap.concordia.campusnav.map.MapCoordinates;
+import minicap.concordia.campusnav.savedstates.States;
 
 public class MainActivity extends AppCompatActivity {
 
     private ConcordiaBuildingManager buildingManager;
+
+    private final States states = States.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
         subscribeButtons(this);
     }
-
+    
     protected void subscribeButtons(Context appContext) {
 
         Button sgwCampusBtn = (Button)findViewById(R.id.viewSGWCampusButton);
@@ -41,14 +39,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Campus sgwCampus = buildingManager.getCampus(CampusName.SGW);
-                MapCoordinates campusCoordinates = sgwCampus.getLocation();
+                states.setCampus(sgwCampus);
 
-                Intent i = new Intent(MainActivity.this, MapsActivity.class);
-                i.putExtra(MapsActivity.KEY_STARTING_LAT, campusCoordinates.getLat());
-                i.putExtra(MapsActivity.KEY_STARTING_LNG, campusCoordinates.getLng());
-                i.putExtra(MapsActivity.KEY_CAMPUS_NOT_SELECTED, "LOY");
-                i.putExtra(MapsActivity.KEY_SHOW_SGW, true);
-                startActivity(i);
+                openIntent();
             }
         });
 
@@ -58,15 +51,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Campus loyolaCampus = buildingManager.getCampus(CampusName.LOYOLA);
-                MapCoordinates campusCoordinates = loyolaCampus.getLocation();
+                states.setCampus(loyolaCampus);
 
-                Intent i = new Intent(MainActivity.this, MapsActivity.class);
-                i.putExtra(MapsActivity.KEY_STARTING_LAT, campusCoordinates.getLat());
-                i.putExtra(MapsActivity.KEY_STARTING_LNG, campusCoordinates.getLng());
-                i.putExtra(MapsActivity.KEY_CAMPUS_NOT_SELECTED, "SGW");
-                i.putExtra(MapsActivity.KEY_SHOW_SGW, false);
-                startActivity(i);
+                openIntent();
             }
         });
+    }
+
+    private void openIntent(){
+        Campus campus = states.getCampus();
+        MapCoordinates campusCoordinates = campus.getLocation();
+
+        Intent i = new Intent(MainActivity.this, MapsActivity.class);
+        startActivity(i);
     }
 }

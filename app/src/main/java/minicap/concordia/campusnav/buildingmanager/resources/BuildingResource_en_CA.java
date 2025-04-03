@@ -15,13 +15,19 @@ import minicap.concordia.campusnav.buildingmanager.entities.Campus;
 import minicap.concordia.campusnav.buildingmanager.enumerations.BuildingName;
 import minicap.concordia.campusnav.buildingmanager.enumerations.CampusName;
 
+/**
+ * Notes for maintainability:
+ *   If you add a building, use the BuildingName.getResourceName() method to make it standard
+ *   Also, add the building to the list in the BuildingManagerInitializationHelper.createBuildings()
+ *   If you add a floor to a building, add the corresponding entry in IndoorPOIResource, or you will get a MissingResourceException
+ */
 public class BuildingResource_en_CA extends ListResourceBundle {
 
     @Override
     protected Object[][] getContents() {
         return new Object[][]{
                 {
-                    "CampusSGW", new Campus(
+                    CampusName.SGW.getResourceName(), new Campus(
                         "Sir George William campus",
                         new ArrayList<BuildingName>(Arrays.asList(
                                 BuildingName.HALL,
@@ -31,7 +37,7 @@ public class BuildingResource_en_CA extends ListResourceBundle {
                         -73.57877)
                 },
                 {
-                    "CampusLoyola", new Campus(
+                    CampusName.LOYOLA.getResourceName(), new Campus(
                         "Loyola campus",
                         new ArrayList<BuildingName>(Arrays.asList(
                                 BuildingName.LOYOLA_CENTRAL_BUILDING,
@@ -42,7 +48,7 @@ public class BuildingResource_en_CA extends ListResourceBundle {
                         -73.64188)
                 },
                 {
-                    "BuildingHall", new Building(
+                    BuildingName.HALL.getResourceName(), new Building(
                         "Hall building",
                         "The Henry F. Hall Building is a high-density hub, located on De Maisonneuve Boulevard, on Concordia’s downtown Sir-George-Williams Campus.\nThe cube-like structure was completed in 1966. Its exterior is made of pre-fabricated, stressed concrete, a feature of the brutalist movement, often associated with French architect Le Corbusier.",
                         CampusName.SGW,
@@ -66,7 +72,7 @@ public class BuildingResource_en_CA extends ListResourceBundle {
                         BuildingName.HALL
                 )},
                 {
-                    "BuildingJMSB", new Building(
+                    BuildingName.MOLSON_SCHOOL_OF_BUSINESS.getResourceName(), new Building(
                         "John Molson School of Business",
                         "In 2009 the John Molson Building officially opened on the corner of Guy and de Maisonneuve. It includes digitally equipped teaching amphitheatres and classrooms, faculty and graduate student offices, the Office of the Dean, student and faculty social space, as well as space for privatized programs. Special features also include case study rooms designed for group work, and laboratories for consumer behaviour research.",
                         CampusName.SGW,
@@ -96,7 +102,7 @@ public class BuildingResource_en_CA extends ListResourceBundle {
                         BuildingName.MOLSON_SCHOOL_OF_BUSINESS
                 )},
                 {
-                    "BuildingCC", new Building(
+                    BuildingName.LOYOLA_CENTRAL_BUILDING.getResourceName(), new Building(
                         "Loyola Central building",
                         "The first storey of the Central Building was occupied in 1945, but the completed building was officially opened in 1947, and it held classrooms, the library on nearly all of the top floor, a gymnasium, and student bedrooms at the south end of the second floor. The Guadagni Lounge in the former library space is named for Franco Guadagni, Loyola professor from 1942 until his death in 1964. He was the only Engineering faculty member from 1942 until 1959, and also taught all the Chemistry courses between 1942 and 1953.",
                         CampusName.LOYOLA,
@@ -110,7 +116,7 @@ public class BuildingResource_en_CA extends ListResourceBundle {
                         BuildingName.LOYOLA_CENTRAL_BUILDING
                 )},
                 {
-                    "BuildingVL", new Building(
+                    BuildingName.VANIER_LIBRARY.getResourceName(), new Building(
                         "Vanier library building",
                         "The library is named after Major-General the Right Honourable Georges Philias Vanier, distinguished lawyer, soldier, diplomat, and Governor-General of Canada 1959-67. Vanier was a Loyola graduate (1906) and the recipient of the first Loyola Medal in 1963. In 1966 a 4.1-metre plaster replica of Michelangelo’s David was installed in the Vanier Library, a gift of Simpson's Department Store. It became a Loyola landmark and was the object of a number of student hi-jinks over the years, including painting it emerald green for St. Patrick‘s Day in 1967, and adorning it with fig leaves, hats, banana peels, and diapers.",
                         CampusName.LOYOLA,
@@ -126,7 +132,7 @@ public class BuildingResource_en_CA extends ListResourceBundle {
                         BuildingName.VANIER_LIBRARY
                 )},
                 {
-                    "BuildingVE", new Building(
+                    BuildingName.VANIER_EXTENSION.getResourceName(), new Building(
                         "Vanier Extension Building",
                         "The original Vanier Library Building (1964) has been called the Vanier Extension since the new Vanier Library opened in 1989. During the spring and summer of 2005 the second and third floors (3,257 sq. metres) of the older building were renovated and refitted to accommodate the specific needs of the Department of Applied Human Sciences. The new facilities include digitally equipped multi-functional classrooms that can be set up for traditional teaching, workshops, or seminars.",
                         CampusName.LOYOLA,

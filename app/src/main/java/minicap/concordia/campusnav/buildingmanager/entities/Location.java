@@ -22,10 +22,18 @@ public class Location
         return coordinates;
     }
 
+    /**
+     * Gets the latitude of the location
+     * @return double representing latitude
+     */
     public double getLatitude() {
         return latitude;
     }
 
+    /**
+     * Gets the longitude of the location
+     * @return double representing longitude
+     */
     public double getLongitude() {
         return longitude;
     }
