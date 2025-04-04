@@ -21,6 +21,7 @@ import minicap.concordia.campusnav.CalendarService.EventAdapter;
 import minicap.concordia.campusnav.CalendarService.EventItem;
 import minicap.concordia.campusnav.R;
 import minicap.concordia.campusnav.components.MainMenuDialog;
+import minicap.concordia.campusnav.savedstates.States;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -49,6 +50,8 @@ public class ClassScheduleActivity extends FragmentActivity implements MainMenuD
 
     private GoogleSignInClient googleSignInClient;
     private EventAdapter eventAdapter;
+
+    private final States states = States.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,8 +93,10 @@ public class ClassScheduleActivity extends FragmentActivity implements MainMenuD
     }
 
     public void showMainMenuDialog() {
-        MainMenuDialog dialog = new MainMenuDialog(this);
-        dialog.show();
+        if(!states.isMenuOpen()) {
+            MainMenuDialog dialog = new MainMenuDialog(this);
+            dialog.show();
+        }
     }
 
     private void signIn() {

@@ -1,17 +1,24 @@
 package minicap.concordia.campusnav.components.placeholder
 
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.GridLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import minicap.concordia.campusnav.R
 import minicap.concordia.campusnav.databinding.ShuttleBusScheduleBinding
 import minicap.concordia.campusnav.helpers.ScheduleFetcher
 import minicap.concordia.campusnav.components.ShuttleSchedule
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+
 
 class ShuttleBusScheduleFragment : BottomSheetDialogFragment() {
 
@@ -40,18 +47,30 @@ class ShuttleBusScheduleFragment : BottomSheetDialogFragment() {
         val loyFridayButton: Button = binding.root.findViewById(R.id.loyFridayButton)
 
         sgwMonThursButton.setOnClickListener {
+            sgwMonThursButton.isSelected = true
+            sgwFridayButton.isSelected = false
+
             filterSchedule("SGW", "Monday-Thursday")
         }
 
         sgwFridayButton.setOnClickListener {
+            sgwMonThursButton.isSelected = false
+            sgwFridayButton.isSelected = true
+
             filterSchedule("SGW", "Friday")
         }
 
         loyMonThursButton.setOnClickListener {
+            loyMonThursButton.isSelected = true
+            loyFridayButton.isSelected = false
+
             filterSchedule("Loyola", "Monday-Thursday")
         }
 
         loyFridayButton.setOnClickListener {
+            loyMonThursButton.isSelected = false
+            loyFridayButton.isSelected = true
+
             filterSchedule("Loyola", "Friday")
         }
 
@@ -89,25 +108,93 @@ class ShuttleBusScheduleFragment : BottomSheetDialogFragment() {
         // Clear the GridLayout for the specified campus
         gridLayout.removeAllViews()
 
+        // Get the current time
+        val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
+        val currentTime = try {
+            sdf.parse(sdf.format(Date()))
+        } catch (e: Exception) {
+            return
+        }
+
+        // Next upcoming time
+        val sortedTimes = schedules.flatMap { it.departureTimes }
+            .mapNotNull { time ->
+                try {
+                    sdf.parse(time)
+                } catch (e: Exception) {
+                    null
+                }
+            }
+            .filter { it.after(currentTime) }.sorted()
+
         // Populate the GridLayout with the schedule data
         for (schedule in schedules) {
             if (schedule.campus != campus) continue
 
+            // Background for time slots
             for (time in schedule.departureTimes) {
                 val textView = TextView(requireContext()).apply {
                     text = time
                     textSize = 16f
                     setTextColor(resources.getColor(android.R.color.black))
+                    setPadding(16,16,16,16)
+                    gravity = Gravity.CENTER
+
+                    // Set background color based on time
+                    val timeDate = try {
+                        sdf.parse(time)
+                    } catch (e: Exception) {
+                        null
+                    }
+                    val shapeDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.shuttle_time_background) as GradientDrawable
+                    val backgroundColor = when {
+                        timeDate == null -> ContextCompat.getColor(requireContext(),R.color.white)// Past times
+                        timeDate < currentTime -> ContextCompat.getColor(requireContext(),R.color.gray)// Past times
+                        timeDate == sortedTimes.getOrNull(0)  -> ContextCompat.getColor(requireContext(),R.color.pink) // Current time
+                        timeDate == sortedTimes.getOrNull(1) -> ContextCompat.getColor(requireContext(),R.color.yellow) // Upcoming time
+                        else -> ContextCompat.getColor(requireContext(),R.color.white) // Default
+                    }
+                    shapeDrawable.setColor(backgroundColor)
+                    background = shapeDrawable
                 }
 
                 // Set margins for the TextView
                 val layoutParams = GridLayout.LayoutParams().apply {
-                    setMargins(8, 8, 8, 8) // Set margins for left, top, right, bottom
+                    width = 0
+                    height = GridLayout.LayoutParams.WRAP_CONTENT
+                    columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
+                    rowSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
+                    setMargins(0, 0, 0, 0)
                 }
                 textView.layoutParams = layoutParams
 
                 gridLayout.addView(textView)
             }
+        }
+
+        // Add empty slots to fill out Grid
+        val emptySlots = if (schedules.any {it.day == "Monday-Thursday"}) 2 else 1
+        repeat(emptySlots){
+            val emptyTextView = TextView(requireContext()).apply {
+                text = ""
+                textSize = 16f
+                setTextColor(resources.getColor(android.R.color.black))
+                setBackgroundResource(R.drawable.shuttle_time_background)
+                setPadding(16,16,16,16)
+                gravity = Gravity.CENTER
+            }
+
+            // Set margins for the TextView
+            val emptyLayoutParams = GridLayout.LayoutParams().apply {
+                width = 0
+                height = GridLayout.LayoutParams.WRAP_CONTENT
+                columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
+                rowSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f)
+                setMargins(0, 0, 0, 0)
+            }
+            emptyTextView.layoutParams = emptyLayoutParams
+
+            gridLayout.addView(emptyTextView)
         }
     }
 

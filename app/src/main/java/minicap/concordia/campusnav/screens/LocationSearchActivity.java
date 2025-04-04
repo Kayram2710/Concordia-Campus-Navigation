@@ -23,13 +23,14 @@ import java.util.List;
 import minicap.concordia.campusnav.R;
 import minicap.concordia.campusnav.buildingmanager.ConcordiaBuildingManager;
 import minicap.concordia.campusnav.buildingmanager.entities.Building;
-import minicap.concordia.campusnav.buildingmanager.enumerations.CampusName;
+import minicap.concordia.campusnav.buildingmanager.entities.BuildingFloor;
+import minicap.concordia.campusnav.buildingmanager.entities.poi.IndoorPOI;
+import minicap.concordia.campusnav.buildingmanager.enumerations.POIType;
 import minicap.concordia.campusnav.map.MapCoordinates;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -38,19 +39,20 @@ public class LocationSearchActivity extends AppCompatActivity {
     public static final String KEY_PREVIOUS_INPUT_STRING = "previous_input";
     public static final String KEY_IS_STARTING_LOCATION = "is_starting_location";
 
-    public static final String KEY_RETURN_CHOSEN_LOCATION = "return_chosen_location";
-    public static final String KEY_RETURN_BOOL_CURRENT_LOCATION = "return_current_location";
+    public static final String KEY_RETURN_CHOSEN_LOCATION_STRING = "return_chosen_location";
+    public static final String KEY_RETURN_IS_CURRENT_LOCATION_BOOL = "return_current_location";
     public static final String KEY_RETURN_BOOL_IS_DESTINATION = "return_is_destination";
 
-    public static final String KEY_RETURN_CHOSEN_LAT = "return_chosen_latitude";
-    public static final String KEY_RETURN_CHOSEN_LNG = "return_chosen_longitude";
+    public static final String KEY_RETURN_BOOL_IS_INDOORS = "return_is_indoors";
+
+    public static final String KEY_RETURN_CHOSEN_COORDS = "return_chosen_coordinates";
     private EditText searchInput;
     private RecyclerView resultsRecyclerView;
     private LocationAdapter adapter;
 
     private boolean isStartLocation = false;
 
-    private List<Building> locations = new ArrayList<>();
+    private List<LocationItem> locations = new ArrayList<>();
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -73,12 +75,13 @@ public class LocationSearchActivity extends AppCompatActivity {
             currentLocationButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    MapCoordinates dummyData = new MapCoordinates(0, 0);
                     Intent returnData = new Intent();
-                    returnData.putExtra(KEY_RETURN_CHOSEN_LOCATION, "");
-                    returnData.putExtra(KEY_RETURN_BOOL_CURRENT_LOCATION, true);
+                    returnData.putExtra(KEY_RETURN_CHOSEN_LOCATION_STRING, "");
+                    returnData.putExtra(KEY_RETURN_IS_CURRENT_LOCATION_BOOL, true);
                     returnData.putExtra(KEY_RETURN_BOOL_IS_DESTINATION, false);
-                    returnData.putExtra(KEY_RETURN_CHOSEN_LAT, 0f);
-                    returnData.putExtra(KEY_RETURN_CHOSEN_LNG, 0f);
+                    returnData.putExtra(KEY_RETURN_CHOSEN_COORDS, dummyData);
+                    returnData.putExtra(KEY_RETURN_BOOL_IS_INDOORS, false);
                     setResult(RESULT_OK, returnData);
                     finish();
                 }
@@ -132,8 +135,26 @@ public class LocationSearchActivity extends AppCompatActivity {
     private void setDefaultLocationList() {
         ConcordiaBuildingManager manager = ConcordiaBuildingManager.getInstance();
 
-        locations.addAll(manager.getBuildingsForCampus(CampusName.SGW));
-        locations.addAll(manager.getBuildingsForCampus(CampusName.LOYOLA));
+        List<Building> buildings = manager.getAllBuildings();
+        List<IndoorPOI> poisToAdd = new ArrayList<>();
+
+        //We want the buildings to be at the top, so that all the classrooms don't take up the screen
+        for(Building cur : buildings) {
+            LocationItem building = new LocationItem(cur.getBuildingName(), cur.getLocation());
+
+            locations.add(building);
+
+            for(BuildingFloor floor : cur.getFloors()) {
+                List<IndoorPOI> indoorPOIs = floor.getPOIsOfType(POIType.CLASS_ROOM);
+
+                poisToAdd.addAll(indoorPOIs);
+            }
+        }
+
+        for(IndoorPOI poi : poisToAdd) {
+            LocationItem item = new LocationItem(poi.getPoiName(), poi.getLocation(), true);
+            locations.add(item);
+        }
 
         resultsRecyclerView = findViewById(R.id.results_recycler_view);
 
@@ -143,14 +164,14 @@ public class LocationSearchActivity extends AppCompatActivity {
 
         adapter.setOnClickListener(new LocationAdapter.OnItemClickedListener() {
             @Override
-            public void onClick(String buildingName, MapCoordinates coordinates) {
+            public void onClick(String locationName, MapCoordinates coordinates, boolean isIndoors) {
                 runOnUiThread(() -> {
                     Intent returnData = new Intent();
-                    returnData.putExtra(KEY_RETURN_CHOSEN_LOCATION, buildingName);
-                    returnData.putExtra(KEY_RETURN_BOOL_CURRENT_LOCATION, false);
+                    returnData.putExtra(KEY_RETURN_CHOSEN_LOCATION_STRING, locationName);
+                    returnData.putExtra(KEY_RETURN_IS_CURRENT_LOCATION_BOOL, false);
                     returnData.putExtra(KEY_RETURN_BOOL_IS_DESTINATION, !isStartLocation);
-                    returnData.putExtra(KEY_RETURN_CHOSEN_LAT, coordinates.getLat());
-                    returnData.putExtra(KEY_RETURN_CHOSEN_LNG, coordinates.getLng());
+                    returnData.putExtra(KEY_RETURN_CHOSEN_COORDS, coordinates);
+                    returnData.putExtra(KEY_RETURN_BOOL_IS_INDOORS, isIndoors);
                     setResult(RESULT_OK, returnData);
                     finish();
                 });
@@ -161,14 +182,14 @@ public class LocationSearchActivity extends AppCompatActivity {
 
 
 class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHolder> {
-    private final List<Building> locations = new ArrayList<>();
+    private final List<LocationItem> allLocations = new ArrayList<>();
 
-    private List<Building> filteredLocations = new ArrayList<>();
+    private List<LocationItem> filteredLocations = new ArrayList<>();
 
     private OnItemClickedListener onClickListener;
 
-    public LocationAdapter(List<Building> locations) {
-        this.locations.addAll(locations);
+    public LocationAdapter(List<LocationItem> locations) {
+        this.allLocations.addAll(locations);
         this.filteredLocations.addAll(locations);
     }
 
@@ -185,12 +206,12 @@ class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Building cur = filteredLocations.get(position);
-        holder.locationText.setText(cur.getBuildingName());
+        LocationItem cur = filteredLocations.get(position);
+        holder.locationText.setText(cur.getLocationName());
         holder.locationText.setTextColor(Color.parseColor("#FFFFFF"));
         holder.itemView.setOnClickListener(v -> {
             if(onClickListener != null) {
-                onClickListener.onClick(cur.getBuildingName(), cur.getLocation());
+                onClickListener.onClick(cur.getLocationName(), cur.getCoordinates(), cur.getIsIndoors());
             }
         });
     }
@@ -203,13 +224,13 @@ class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHolder> {
     public void filter(String filterText) {
         filteredLocations.clear();
         if(filterText.isBlank() || filterText.isEmpty()) {
-            filteredLocations.addAll(locations);
+            filteredLocations.addAll(allLocations);
         }
         else {
             String lowerFilterText = filterText.toLowerCase();
-            for(Building building: locations) {
-                if(building.getBuildingName().toLowerCase().contains(lowerFilterText)) {
-                    filteredLocations.add(building);
+            for(LocationItem item: allLocations) {
+                if(item.getLocationName().toLowerCase().contains(lowerFilterText)) {
+                    filteredLocations.add(item);
                 }
             }
         }
@@ -226,6 +247,36 @@ class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHolder> {
     }
 
     public interface OnItemClickedListener {
-        void onClick(String buildingName, MapCoordinates coordinates);
+        void onClick(String locationName, MapCoordinates coordinates, boolean isIndoors);
+    }
+}
+
+class LocationItem {
+    private String locationName;
+
+    private MapCoordinates coordinates;
+
+    private boolean isIndoors;
+
+    public LocationItem(String name, MapCoordinates coordinates) {
+        this(name, coordinates, false);
+    }
+
+    public LocationItem(String name, MapCoordinates coordinates, boolean isIndoors) {
+        this.locationName = name;
+        this.coordinates = coordinates;
+        this.isIndoors = isIndoors;
+    }
+
+    public String getLocationName() {
+        return locationName;
+    }
+
+    public MapCoordinates getCoordinates() {
+        return coordinates;
+    }
+
+    public boolean getIsIndoors() {
+        return isIndoors;
     }
 }

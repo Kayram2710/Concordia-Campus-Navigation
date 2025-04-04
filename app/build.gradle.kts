@@ -11,14 +11,14 @@ android {
 
     defaultConfig {
         applicationId = "minicap.concordia.campusnav"
-        minSdk = 24
+        minSdk = 33
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testApplicationId = "minicap.concordia.campusnav.tests"
-
+        vectorDrawables.useSupportLibrary = true
         manifestPlaceholders["MAPS_API_KEY"] = properties["MAPS_API_KEY"] ?: ""
         manifestPlaceholders["WEB_CLIENT_ID"] = properties["WEB_CLIENT_ID"] ?: ""
 
@@ -34,10 +34,6 @@ android {
                 "proguard-rules.pro"
             )
         }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
     }
     buildFeatures {
 
@@ -57,7 +53,7 @@ android {
         jvmTarget = "21"
     }
 
-    packagingOptions {
+    packaging {
         resources {
             excludes += "META-INF/DEPENDENCIES"
             excludes += "META-INF/NOTICE"
@@ -82,11 +78,12 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview:1.3.0")
     implementation("androidx.core:core-ktx:1.15.0")
     implementation("androidx.test.espresso:espresso-intents:3.6.1")
+    implementation("com.google.android.gms:play-services-location:21.3.0")
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
-    testImplementation("org.robolectric:robolectric:4.10")
+    testImplementation("org.robolectric:robolectric:4.14.1")
     testImplementation("com.squareup.okhttp3:okhttp:4.9.3")
     testImplementation("com.google.code.gson:gson:2.10.1")
     testImplementation("org.mockito:mockito-core:5.16.0")

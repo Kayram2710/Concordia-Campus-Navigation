@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.google.android.gms.maps.model.Polyline;
@@ -35,22 +37,25 @@ public class InternalGoogleMapsTests {
     @Mock
     private GoogleMap mapMock;
 
+    @Mock
+    private UiSettings uiSettingsMock;
+
     @Before
     public void setup() {
         Mockito.reset(mockListener);
         Mockito.reset(mapMock);
+        Mockito.when(mapMock.getUiSettings()).thenReturn(uiSettingsMock);
     }
 
     @Test
     public void testCenterOnCoordinates() {
         GoogleMap mapMock = Mockito.mock(GoogleMap.class);
-        MapCoordinates updatedCoors = new MapCoordinates(1,1);
-        float defaultZoom = 18;
-
+        MapCoordinates updatedCoors = new MapCoordinates(1, 1);
         CameraUpdate mockUpdate = Mockito.mock(CameraUpdate.class);
+        AbstractMap.MapUpdateListener mockListener = Mockito.mock(AbstractMap.MapUpdateListener.class);
 
         try (MockedStatic<CameraUpdateFactory> staticMock = Mockito.mockStatic(CameraUpdateFactory.class)) {
-            staticMock.when(() -> CameraUpdateFactory.newLatLngZoom(updatedCoors.toGoogleMapsLatLng(), defaultZoom))
+            staticMock.when(() -> CameraUpdateFactory.newCameraPosition(Mockito.any(CameraPosition.class)))
                     .thenReturn(mockUpdate);
 
             InternalGoogleMaps igm = new InternalGoogleMaps(mockListener);
@@ -58,7 +63,7 @@ public class InternalGoogleMapsTests {
 
             igm.centerOnCoordinates(updatedCoors);
 
-            Mockito.verify(mapMock).animateCamera(mockUpdate);
+            Mockito.verify(mapMock).animateCamera(mockUpdate, 200, null);
         } catch (Exception e) {
             Assert.fail("Assertion failure or exception during test: " + e.getMessage());
         }

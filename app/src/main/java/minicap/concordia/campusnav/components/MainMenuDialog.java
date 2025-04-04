@@ -1,6 +1,7 @@
 package minicap.concordia.campusnav.components;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import minicap.concordia.campusnav.buildingmanager.ConcordiaBuildingManager;
 import minicap.concordia.campusnav.buildingmanager.entities.Campus;
 import minicap.concordia.campusnav.buildingmanager.enumerations.CampusName;
 import minicap.concordia.campusnav.map.MapCoordinates;
+import minicap.concordia.campusnav.savedstates.States;
 import minicap.concordia.campusnav.screens.ClassScheduleActivity;
 import minicap.concordia.campusnav.screens.MainActivity;
 import minicap.concordia.campusnav.screens.MapsActivity;
@@ -35,6 +37,7 @@ public class MainMenuDialog extends SideSheetDialog {
     Switch switchDarkMode;
     SharedPreferences sharedPreferences;
     Context context;
+    private final States states = States.getInstance();
 
     public interface MainMenuListener {
     }
@@ -57,6 +60,7 @@ public class MainMenuDialog extends SideSheetDialog {
         initializeViews(view);
         setupDarkMode();
         populateButtons();
+        states.toggleMenu(true);
     }
 
 
@@ -129,17 +133,8 @@ public class MainMenuDialog extends SideSheetDialog {
     }
 
     public Intent campusMapRoutine(){
-        ConcordiaBuildingManager buildingManager = ConcordiaBuildingManager.getInstance();
-        Campus sgwCampus = buildingManager.getCampus(CampusName.SGW);
-        MapCoordinates campusCoordinates = sgwCampus.getLocation();
-
-        Intent intent = new Intent(context, MapsActivity.class);
-        intent.putExtra(MapsActivity.KEY_STARTING_LAT, campusCoordinates.getLat());
-        intent.putExtra(MapsActivity.KEY_STARTING_LNG, campusCoordinates.getLng());
-        intent.putExtra(MapsActivity.KEY_CAMPUS_NOT_SELECTED, "LOY");
-        intent.putExtra(MapsActivity.KEY_SHOW_SGW, true);
-
-        return intent;
+        states.toggleMenu(false);
+        return new Intent(context, MapsActivity.class);
     }
 
     public void openBusSchedule(){
@@ -159,6 +154,7 @@ public class MainMenuDialog extends SideSheetDialog {
     }
 
     public void openClassSchedule() {
+        states.toggleMenu(false);
         Intent intent = new Intent(context, ClassScheduleActivity.class);
         context.startActivity(intent);
     }
@@ -170,6 +166,12 @@ public class MainMenuDialog extends SideSheetDialog {
 
     public void close(){
         cancel();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        states.toggleMenu(false);
     }
 
 }
