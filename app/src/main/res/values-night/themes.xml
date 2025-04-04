@@ -6,5 +6,6 @@
         <item name="colorOnBackground">@color/white</item>
         <item name="colorSurface">@color/gray</item>
         <item name="colorOnSurface">@color/white</item>
+        <item name="android:statusBarColor">@color/concordia_red</item>
     </style>
 </resources>
