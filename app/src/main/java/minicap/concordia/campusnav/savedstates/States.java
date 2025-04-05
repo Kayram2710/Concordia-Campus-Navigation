@@ -17,6 +17,8 @@ public class States {
 
     private boolean menuOpen = false;
 
+    private String selectedCalendarId;
+
     private static final States instance = new States();
 
     private States(){}
@@ -69,5 +71,12 @@ public class States {
 
     public void toggleMenu(boolean state){
         menuOpen = state;
+    }
+
+    public void setSelectedCalendarId(String calendarId) {
+        this.selectedCalendarId = calendarId;
+    }
+    public String getSelectedCalendarId() {
+        return this.selectedCalendarId;
     }
 }

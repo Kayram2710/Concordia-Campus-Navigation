@@ -60,17 +60,23 @@
         android:overScrollMode="always"
         android:background="@android:color/white" />
 
-    <!-- Existing footer text -->
-    <TextView
-        android:id="@+id/footer_text"
-        android:layout_width="0dp"
+
+    <!-- "Select Calendar" button using MaterialButton -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_select_calendar"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginBottom="16dp"
-        android:fontFamily="sans-serif-light"
+
+        android:backgroundTint="@android:color/white"
+        android:elevation="4dp"
         android:text="@string/currently_loaded_google_calendar"
-        android:textColor="@android:color/white"
-        android:textSize="14sp"
+        android:textColor="@color/concordia_red"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:cornerFamily="rounded"
+        app:iconPadding="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/button_import_calendar"
         app:layout_constraintHorizontal_bias="0"
