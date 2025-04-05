@@ -19,6 +19,8 @@ import com.mappedin.sdk.models.MPINavigatable;
 import com.mappedin.sdk.models.MPIState;
 import com.mappedin.sdk.web.MPIOptions;
 
+import minicap.concordia.campusnav.buildingmanager.entities.poi.OutdoorPOI;
+import minicap.concordia.campusnav.buildingmanager.enumerations.POIType;
 import minicap.concordia.campusnav.components.MappedInFragment;
 import minicap.concordia.campusnav.map.enums.MapColors;
 import minicap.concordia.campusnav.map.helpers.MapColorConversionHelper;
@@ -38,6 +40,11 @@ public class InternalMappedIn extends AbstractMap implements MPIMapViewListener,
         mappedInFragment = MappedInFragment.newInstance(this, this);
 
         return mappedInFragment;
+    }
+
+    @Override
+    public void addMarker(OutdoorPOI opoi) {
+        //TODO
     }
 
     @Override
@@ -82,6 +89,11 @@ public class InternalMappedIn extends AbstractMap implements MPIMapViewListener,
 
     @Override
     public void displayRoute(MapCoordinates origin, MapCoordinates destination, String travelMode) {
+
+    }
+
+    @Override
+    public void displayPOI(MapCoordinates origin, POIType type) {
 
     }
 

@@ -72,8 +72,8 @@ public class ConcordiaBuildingManagerTests {
                                                         "In 2009 the John Molson Building officially opened on the corner of Guy and de Maisonneuve. It includes digitally equipped teaching amphitheatres and classrooms, faculty and graduate student offices, the Office of the Dean, student and faculty social space, as well as space for privatized programs. Special features also include case study rooms designed for group work, and laboratories for consumer behaviour research."};
         CampusName expectedAssociatedCampus = CampusName.SGW;
         int[] expectedNumberOfFloors = new int[] { 11, 17 };
-        float[] expectedLatitudes = new float[] { 45.49701f, 45.45863f };
-        float[] expectedLongitudes = new float[] { -73.57877f, -73.57906f };
+        float[] expectedLatitudes = new float[] { 45.49701f, 45.495323f };
+        float[] expectedLongitudes = new float[] { -73.57877f, -73.579229f };
 
         List<Building> actualBuildings = manager.getBuildingsForCampus(CampusName.SGW);
 

@@ -23,4 +23,10 @@
     <string name="route_parse_error">Error parsing route data</string>
     <string name="ETAtemp">3min</string>
     <string name="timeEstimateTemp">1.5km - 23:21</string>
+    <string name="building_information">placeholder</string>
+    <string name="restaurants">Restaurants</string>
+    <string name="washroom">Washroom</string>
+    <string name="coffee">Coffee</string>
+    <string name="fountain">Fountain</string>
+    <string name="elevator">Elevator</string>
 </resources>

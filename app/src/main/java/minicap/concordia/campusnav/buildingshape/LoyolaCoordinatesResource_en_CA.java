@@ -55,6 +55,7 @@ public class LoyolaCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.45829641009854, -73.63984306968938)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // BB Annex
@@ -66,6 +67,7 @@ public class LoyolaCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.45972534483462, -73.63925473424426)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
 
                 },
 
@@ -78,11 +80,12 @@ public class LoyolaCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.45969336222569, -73.63916689189585)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
 
                 },
 
                 // CC Building
-                {"ccBuilding", new PolygonOptions()
+                {"Loyola Central Building", new PolygonOptions()
                         .add(
                                 new LatLng(45.45852800969131, -73.64068050109675),
                                 new LatLng(45.45844563657765, -73.64045821025437),
@@ -140,6 +143,7 @@ public class LoyolaCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.45764888844366, -73.6406462453465)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // DO Dome
@@ -151,6 +155,7 @@ public class LoyolaCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.45736741073922, -73.63711538540369)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // FC Building
@@ -210,6 +215,7 @@ public class LoyolaCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.45875200514123, -73.63962793434459)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // GE Building
@@ -227,6 +233,7 @@ public class LoyolaCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.4569486287696, -73.64075360676179)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // HA Building
@@ -242,6 +249,7 @@ public class LoyolaCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.459439117865976, -73.64157172632058)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // HB Building
@@ -263,6 +271,7 @@ public class LoyolaCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.45952837593631, -73.64201341597172)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // HC Building
@@ -278,6 +287,7 @@ public class LoyolaCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.45980315215688, -73.64208479507255)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // HU Building
@@ -289,6 +299,7 @@ public class LoyolaCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.45843901584813, -73.64213915952462)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // JR Residence
@@ -314,6 +325,7 @@ public class LoyolaCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.458565461175716, -73.6433735307032)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // PC Building
@@ -325,6 +337,7 @@ public class LoyolaCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.457023072446916, -73.63784905144043)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // PS Building
@@ -357,10 +370,11 @@ public class LoyolaCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.459867466435014, -73.64025349817301)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // PT, SC, VE, VL (Vanier Library) Building
-                {"vanierBuilding", new PolygonOptions()
+                {"Vanier Library/Extension Building", new PolygonOptions()
                         .add(
                                 new LatLng(45.459109821843455, -73.63942270194411),
                                 new LatLng(45.45921518522731, -73.63934317638098),
@@ -406,6 +420,7 @@ public class LoyolaCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.45897822550873, -73.6391236987095)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // Py Building
@@ -432,6 +447,7 @@ public class LoyolaCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.45880973714646, -73.64085444444684)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // RA Building
@@ -447,6 +463,7 @@ public class LoyolaCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.45696737934236, -73.6379348356741)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // RF Building
@@ -478,6 +495,7 @@ public class LoyolaCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.458807050575466, -73.64114540152548)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // SI Building
@@ -527,6 +545,7 @@ public class LoyolaCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.457973020842445, -73.64206503968852)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // SP Building
@@ -565,6 +584,7 @@ public class LoyolaCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.45767303540217, -73.64194452877162)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // TA Building
@@ -580,6 +600,7 @@ public class LoyolaCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.45997986676809, -73.64098275009397)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 }
         };
     }

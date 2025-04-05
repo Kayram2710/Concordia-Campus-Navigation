@@ -31,9 +31,10 @@
                 android:layout_marginStart="-50dp"
                 android:layout_marginTop="588dp"
                 android:backgroundTint="@color/light_burgundy"
+                android:layout_marginBottom="100dp"
                 app:cornerRadius="14sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
                 android:id="@+id/goTo"
@@ -74,26 +75,15 @@
                 app:layout_constraintTop_toTopOf="@+id/goTo" />
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/buildingView"
-                android:layout_width="100dp"
-                android:layout_height="107dp"
-                android:layout_marginTop="560dp"
-                android:layout_marginEnd="16dp"
-                app:backgroundTint="@color/light_burgundy"
-                app:cornerRadius="100dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.google.android.material.button.MaterialButton
                 android:id="@+id/shuttleScheduleView"
                 android:layout_width="69dp"
                 android:layout_height="75dp"
-                android:layout_marginTop="368dp"
                 android:layout_marginEnd="16dp"
+                android:layout_marginBottom="12dp"
                 app:backgroundTint="@color/light_burgundy"
                 app:cornerRadius="100dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintBottom_toTopOf="@+id/locationTracker"
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <ImageView
                 android:id="@+id/shuttleBusIcon"
@@ -106,25 +96,15 @@
                 app:layout_constraintTop_toTopOf="@+id/shuttleScheduleView"
                 app:layout_constraintVertical_bias="0.562" />
 
-            <ImageView
-                android:id="@+id/campusIcon"
-                android:layout_width="47dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="28dp"
-                android:layout_marginEnd="28dp"
-                android:src="@drawable/university"
-                app:layout_constraintEnd_toEndOf="@+id/buildingView"
-                app:layout_constraintTop_toTopOf="@+id/buildingView" />
-
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/locationTracker"
                 android:layout_width="70dp"
                 android:layout_height="77dp"
-                android:layout_marginTop="456dp"
                 android:layout_marginEnd="16dp"
+                android:layout_marginBottom="220dp"
                 app:backgroundTint="@color/light_burgundy"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <ImageView
                 android:id="@+id/nav"
@@ -136,6 +116,27 @@
                 android:src="@drawable/navigation"
                 app:layout_constraintEnd_toEndOf="@+id/locationTracker"
                 app:layout_constraintTop_toTopOf="@+id/locationTracker" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buildingView"
+                android:layout_width="100dp"
+                android:layout_height="107dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="100dp"
+                app:backgroundTint="@color/light_burgundy"
+                app:cornerRadius="100dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <ImageView
+                android:id="@+id/campusIcon"
+                android:layout_width="47dp"
+                android:layout_height="50dp"
+                android:src="@drawable/university"
+                app:layout_constraintBottom_toBottomOf="@+id/buildingView"
+                app:layout_constraintEnd_toEndOf="@+id/buildingView"
+                app:layout_constraintStart_toStartOf="@+id/buildingView"
+                app:layout_constraintTop_toTopOf="@+id/buildingView" />
 
             <ImageView
                 android:id="@+id/menuBar"
@@ -151,13 +152,14 @@
 
             <ImageView
                 android:id="@+id/searchArea"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="60dp"
-                android:layout_marginTop="16dp"
+                android:layout_width="265dp"
+                android:layout_height="43dp"
                 android:importantForAccessibility="no"
                 android:src="@drawable/rectangle_32"
-                app:layout_constraintStart_toStartOf="@+id/menuBar"
+                app:layout_constraintBottom_toBottomOf="@+id/menuBar"
+                app:layout_constraintEnd_toEndOf="@+id/menuBar"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/menuButton"
                 app:layout_constraintTop_toTopOf="@+id/menuBar" />
 
             <ImageButton
@@ -169,15 +171,6 @@
                 android:backgroundTint="#009F3353"
                 android:src="@drawable/menu"
                 app:layout_constraintStart_toStartOf="@+id/menuBar"
-                app:layout_constraintTop_toTopOf="@+id/menuBar" />
-
-            <ImageButton
-                android:id="@+id/searchButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#00FFFFFF"
-                android:src="@drawable/search_button"
-                app:layout_constraintEnd_toEndOf="@+id/menuBar"
                 app:layout_constraintTop_toTopOf="@+id/menuBar" />
 
             <com.google.android.material.textfield.TextInputEditText
@@ -194,16 +187,20 @@
                 app:layout_constraintStart_toStartOf="@+id/searchArea"
                 app:layout_constraintTop_toTopOf="@+id/searchArea" />
 
-            <!-- Added from your branch: a container for the Building Selector Fragment -->
+            <include
+                android:id="@+id/directions_sheet"
+                layout="@layout/directions_sheet" />
+
             <FrameLayout
                 android:id="@+id/buildingSelectorContainer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone" />
+                android:visibility="gone" >
+
+            </FrameLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </FrameLayout>
-
-    <include layout="@layout/directions_sheet" />
+    <include layout="@layout/poi_menu" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

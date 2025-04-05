@@ -1,7 +1,10 @@
 package minicap.concordia.campusnav.buildingshape;
 
+import androidx.webkit.internal.ApiFeature;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.maps.android.PolyUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,13 +34,13 @@ public class CampusBuildingShapes
         sgwBuildingCoordinates.add((PolygonOptions) bundle.getObject("gmBuilding"));
         sgwBuildingCoordinates.add((PolygonOptions) bundle.getObject("gnBuilding"));
         sgwBuildingCoordinates.add((PolygonOptions) bundle.getObject("gsBuilding"));
-        sgwBuildingCoordinates.add((PolygonOptions) bundle.getObject("hallBuilding"));
+        sgwBuildingCoordinates.add((PolygonOptions) bundle.getObject("Hall Building"));
         sgwBuildingCoordinates.add((PolygonOptions) bundle.getObject("kAnnex"));
         sgwBuildingCoordinates.add((PolygonOptions) bundle.getObject("lbBuilding"));
         sgwBuildingCoordinates.add((PolygonOptions) bundle.getObject("ldBuilding"));
         sgwBuildingCoordinates.add((PolygonOptions) bundle.getObject("lsBuilding"));
         sgwBuildingCoordinates.add((PolygonOptions) bundle.getObject("mAnnex"));
-        sgwBuildingCoordinates.add((PolygonOptions) bundle.getObject("mbBuilding"));
+        sgwBuildingCoordinates.add((PolygonOptions) bundle.getObject("John Molson Building"));
         sgwBuildingCoordinates.add((PolygonOptions) bundle.getObject("miAnnex"));
         sgwBuildingCoordinates.add((PolygonOptions) bundle.getObject("muAnnex"));
         sgwBuildingCoordinates.add((PolygonOptions) bundle.getObject("pAnnex"));
@@ -62,7 +65,7 @@ public class CampusBuildingShapes
         loyolaBuildingCoordinates.add((PolygonOptions) bundle.getObject("adBuilding"));
         loyolaBuildingCoordinates.add((PolygonOptions) bundle.getObject("bbAnnex"));
         loyolaBuildingCoordinates.add((PolygonOptions) bundle.getObject("bhAnnex"));
-        loyolaBuildingCoordinates.add((PolygonOptions) bundle.getObject("ccBuilding"));
+        loyolaBuildingCoordinates.add((PolygonOptions) bundle.getObject("Loyola Central Building"));
         loyolaBuildingCoordinates.add((PolygonOptions) bundle.getObject("cjBuilding"));
         loyolaBuildingCoordinates.add((PolygonOptions) bundle.getObject("doDome"));
         loyolaBuildingCoordinates.add((PolygonOptions) bundle.getObject("fcBuilding"));
@@ -74,7 +77,7 @@ public class CampusBuildingShapes
         loyolaBuildingCoordinates.add((PolygonOptions) bundle.getObject("jrResidence"));
         loyolaBuildingCoordinates.add((PolygonOptions) bundle.getObject("pcBuilding"));
         loyolaBuildingCoordinates.add((PolygonOptions) bundle.getObject("psBuilding"));
-        loyolaBuildingCoordinates.add((PolygonOptions) bundle.getObject("vanierBuilding"));
+        loyolaBuildingCoordinates.add((PolygonOptions) bundle.getObject("Vanier Library/Extension Building"));
         loyolaBuildingCoordinates.add((PolygonOptions) bundle.getObject("pyBuilding"));
         loyolaBuildingCoordinates.add((PolygonOptions) bundle.getObject("raBuilding"));
         loyolaBuildingCoordinates.add((PolygonOptions) bundle.getObject("rfBuilding"));
@@ -90,5 +93,26 @@ public class CampusBuildingShapes
 
     public static List<PolygonOptions> getLoyolaBuildingCoordinates() {
         return loyolaBuildingCoordinates;
+    }
+
+    // method for building detections using polygon
+    public static String getBuildingNameAtLocation(LatLng location) {
+        ResourceBundle sgwBundle = ResourceBundle.getBundle("minicap.concordia.campusnav.buildingshape.SGWCoordinatesResource_en_CA");
+        for (String key : sgwBundle.keySet()) {
+            PolygonOptions polygon = (PolygonOptions) sgwBundle.getObject(key);
+            if(PolyUtil.containsLocation(location, polygon.getPoints(), true)) {
+                return key;
+            }
+        }
+
+        ResourceBundle loyBundle = ResourceBundle.getBundle("minicap.concordia.campusnav.buildingshape.LoyolaCoordinatesResource_en_CA");
+        for (String key : loyBundle.keySet()) {
+            PolygonOptions polygon = (PolygonOptions) loyBundle.getObject(key);
+            if(PolyUtil.containsLocation(location, polygon.getPoints(), true)) {
+                return key;
+            }
+        }
+
+        return null;
     }
 }

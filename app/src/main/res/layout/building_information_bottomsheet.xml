@@ -30,6 +30,7 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="16dp"
                 android:text="TextView"
+                android:textColor="@color/black"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -45,6 +46,7 @@
                 android:layout_marginEnd="16dp"
                 android:maxLines="2"
                 android:text="Address"
+                android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="italic"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -59,8 +61,11 @@
                 android:layout_marginTop="8dp"
                 android:focusable="true"
                 android:focusableInTouchMode="true"
+                android:nestedScrollingEnabled="true"
                 android:scrollbars="vertical"
-                android:text="The Henry F. Hall Building is a high-density hub, located on De Maisonneuve Boulevard, on Concordia’s downtown Sir-George-Williams Campus. The cube-like structure was completed in 1966. Its exterior is made of pre-fabricated, stressed concrete, a feature of the brutalist movement, often associated with French architect Le Corbusier."
+                android:isScrollContainer="true"
+                android:text="@string/building_information"
+                android:textColor="@color/black"
                 android:textAlignment="textStart"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="@+id/building_image"
@@ -121,19 +126,22 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginTop="16dp"
-        app:cardCornerRadius="50dp"
+        app:cardBackgroundColor="@color/white"
+        app:cardCornerRadius="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/card_divider">
 
         <ImageButton
             android:id="@+id/btn_directions"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:contentDescription="Directions button"
-            android:scaleType="fitXY"
-            android:visibility="visible"
-            app:srcCompat="@drawable/ic_directions" />
+            android:scaleType="centerInside"
+            android:padding="14dp"
+            android:background="@null"
+            android:src="@drawable/ic_directions"
+            app:tint="@null"/>
     </androidx.cardview.widget.CardView>
 
     <TextView

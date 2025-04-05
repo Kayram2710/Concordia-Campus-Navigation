@@ -18,7 +18,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testApplicationId = "minicap.concordia.campusnav.tests"
-
+        vectorDrawables.useSupportLibrary = true
         manifestPlaceholders["MAPS_API_KEY"] = properties["MAPS_API_KEY"] ?: ""
         manifestPlaceholders["WEB_CLIENT_ID"] = properties["WEB_CLIENT_ID"] ?: ""
 
@@ -34,10 +34,6 @@ android {
                 "proguard-rules.pro"
             )
         }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
     }
     buildFeatures {
 

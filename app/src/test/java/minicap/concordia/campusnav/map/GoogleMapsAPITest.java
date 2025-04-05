@@ -5,14 +5,19 @@ import com.google.gson.JsonObject;
 import com.google.maps.android.PolyUtil;
 
 import minicap.concordia.campusnav.BuildConfig;
+import minicap.concordia.campusnav.buildingmanager.entities.poi.OutdoorPOI;
+import minicap.concordia.campusnav.buildingmanager.enumerations.POIType;
 
 import org.json.JSONArray;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -24,9 +29,76 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
+import org.json.JSONException;
+import java.util.concurrent.Executors;
 
-@RunWith(RobolectricTestRunner.class)
+
+@RunWith(MockitoJUnitRunner.class)
 public class GoogleMapsAPITest {
+
+    @Mock
+    private FetchPathTask.OnRouteFetchedListener mockListener;
+
+    @Mock
+    private HttpURLConnection mockConnection;
+
+    @InjectMocks
+    private FetchPathTask fetchPathTask;
+
+    private LatLng testLocation;
+    private LatLng destinationLocation;
+
+    @Before
+    public void setUp() throws Exception {
+        MockitoAnnotations.initMocks(this);
+        testLocation = new LatLng(37.7749, -122.4194);
+        destinationLocation = new LatLng(40.7128, -74.0060);
+        fetchPathTask.executorService = Executors.newSingleThreadExecutor();
+    }
+
+    @Test
+    public void testParsePOI_validJson() throws JSONException {
+        String jsonResponse = "{\"places\":[{\"displayName\":{\"text\":\"Test Place\"},\"location\":{\"latitude\":37.7749,\"longitude\":-122.4194},\"accessibilityOptions\":{\"wheelchairAccessible\":true}}]}";
+        List<OutdoorPOI> result = fetchPathTask.parsePOI(jsonResponse, POIType.RESTAURANT);
+        assertEquals(1, result.size());
+        assertEquals("Test Place", result.get(0).getPoiName());
+        assertTrue(result.get(0).getIsAccessibilityFeature());
+    }
+
+    @Test
+    public void testParsePOI_missingFields() throws JSONException {
+        String jsonResponse = "{\"places\":[{\"location\":{\"latitude\":37.7749,\"longitude\":-122.4194}}]}";
+        List<OutdoorPOI> result = fetchPathTask.parsePOI(jsonResponse, POIType.RESTAURANT);
+        assertEquals(1, result.size());
+        assertEquals("Unknown Place", result.get(0).getPoiName());
+    }
+
+    @Test
+    public void testParsePOI_emptyJson() {
+        String jsonResponse = "{}";
+        List<OutdoorPOI> result = fetchPathTask.parsePOI(jsonResponse, POIType.RESTAURANT);
+        assertEquals(0, result.size());
+    }
+
+    @Test
+    public void testConvertSecondsToTime_hoursAndMinutes() {
+        assertEquals("2h30min", fetchPathTask.convertSecondsToTime("9000s"));
+    }
+
+    @Test
+    public void testConvertSecondsToTime_onlyMinutes() {
+        assertEquals("45min", fetchPathTask.convertSecondsToTime("2700s"));
+    }
+
+    @Test
+    public void testConvertSecondsToTime_exactHour() {
+        assertEquals("1h0min", fetchPathTask.convertSecondsToTime("3600s"));
+    }
+
+    @Test
+    public void testConvertSecondsToTime_zeroSeconds() {
+        assertEquals("0min", fetchPathTask.convertSecondsToTime("0s"));
+    }
 
     @Test
     public void testRoutesAPIConnection() {

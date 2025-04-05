@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import minicap.concordia.campusnav.R;
+import minicap.concordia.campusnav.buildingmanager.entities.poi.OutdoorPOI;
 
 public class NavigationGoogleMaps extends InternalGoogleMaps{
 
@@ -243,6 +244,11 @@ public class NavigationGoogleMaps extends InternalGoogleMaps{
                     Log.e("Navigation", "Route display error", e);
                     listener.onMapError("Error displaying route");
                 }
+            }
+
+            @Override
+            public void onPlacesFetched(List<OutdoorPOI> outdoorPOIS,  MapCoordinates location) {
+
             }
         }).fetchRoute(origin.toGoogleMapsLatLng(), destination.toGoogleMapsLatLng(), travelMode);
     }

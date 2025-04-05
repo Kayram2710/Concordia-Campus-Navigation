@@ -5,13 +5,7 @@
     android:id="@+id/sliding_menu"
     android:layout_width="300dp"
     android:layout_height="match_parent"
-    app:layout_behavior="com.google.android.material.sidesheet.SideSheetBehavior"><![CDATA[>
-
-
-
-
-
-    ]]>
+    app:layout_behavior="com.google.android.material.sidesheet.SideSheetBehavior">
 
     <ImageView
         android:id="@+id/imageView3"

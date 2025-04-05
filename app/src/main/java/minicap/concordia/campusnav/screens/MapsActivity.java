@@ -3,6 +3,9 @@ package minicap.concordia.campusnav.screens;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+import static minicap.concordia.campusnav.map.MapCoordinates.fromGoogleMapsMarker;
+
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
@@ -27,6 +30,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,18 +39,18 @@ import com.google.android.gms.location.LocationServices;
 import android.widget.EditText;
 
 import minicap.concordia.campusnav.R;
+import minicap.concordia.campusnav.buildingmanager.enumerations.POIType;
+import minicap.concordia.campusnav.buildingshape.CampusBuildingShapes;
 import minicap.concordia.campusnav.components.MainMenuDialog;
 import minicap.concordia.campusnav.components.placeholder.ShuttleBusScheduleFragment;
 
-import minicap.concordia.campusnav.databinding.ActivityMapsBinding;
-import minicap.concordia.campusnav.map.FetchPathTask;
 import minicap.concordia.campusnav.map.InternalGoogleMaps;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
-import org.json.JSONArray;
 
 import java.io.IOException;
 import java.util.List;
@@ -69,9 +73,6 @@ public class MapsActivity extends FragmentActivity
         implements AbstractMap.MapUpdateListener, BuildingInfoBottomSheetFragment.BuildingInfoListener, MainMenuDialog.MainMenuListener {
 
     private final String MAPS_ACTIVITY_TAG = "MapsActivity";
-    public static final String KEY_STARTING_COORDS = "starting_coords";
-    public static final String KEY_CAMPUS_NOT_SELECTED = "campus_not_selected";
-    public static final String KEY_SHOW_SGW = "show_sgw";
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
@@ -108,6 +109,10 @@ public class MapsActivity extends FragmentActivity
     private ImageButton transitButton;
     private ImageButton startRouteButton;
 
+    private Button buildingViewButton;
+    private int buildingViewButtonMargin;
+
+
     private BottomSheetBehavior<ConstraintLayout> bottomSheetBehavior;
 
     private FusedLocationProviderClient fusedLocationClient;
@@ -125,6 +130,9 @@ public class MapsActivity extends FragmentActivity
     private String eventAddress;
 
     private final States states = States.getInstance();
+
+    private ConstraintLayout.LayoutParams buildingViewParams;
+
 
 
     // We use this to launch and capture the results of the search location activity
@@ -161,12 +169,18 @@ public class MapsActivity extends FragmentActivity
         startingCoords = new MapCoordinates(startingLat, startingLng);
 
         // Hook up the Buildings button to show the BuildingSelectorFragment
-        Button buildingViewButton = findViewById(R.id.buildingView);
+        buildingViewButton = findViewById(R.id.buildingView);
         buildingViewButton.setOnClickListener(v -> showBuildingSelectorFragment());
+        buildingViewParams = (ConstraintLayout.LayoutParams) buildingViewButton.getLayoutParams();
+        buildingViewButtonMargin = buildingViewParams.bottomMargin;
 
         // Shuttle Button to show the Shuttle Bus Schedule
         Button shuttleScheduleView = findViewById(R.id.shuttleScheduleView);
         shuttleScheduleView.setOnClickListener(v -> showShuttleScheduleFragment());
+
+        // Location tracker button setup
+        MaterialButton locationButton = findViewById(R.id.locationTracker);
+        locationButton.setOnClickListener(v -> centerOnUserLocation());
 
         // Initialize BottomSheet
         ConstraintLayout bottomSheet = findViewById(R.id.bottom_sheet);
@@ -178,6 +192,21 @@ public class MapsActivity extends FragmentActivity
         bottomSheetBehavior.setFitToContents(true);
         bottomSheetBehavior.setHalfExpandedRatio(0.01f);
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+        //Adding bottom sheet call back to allow building view button to slide with bottom sheet
+        bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                if(newState == BottomSheetBehavior.STATE_EXPANDED){
+                    updateButtonMargin(bottomSheet, 1);
+                }
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                updateButtonMargin(bottomSheet, slideOffset);
+            }
+        });
 
         // Setup campus switching
         campusTextView = findViewById(R.id.ToCampus);
@@ -264,7 +293,28 @@ public class MapsActivity extends FragmentActivity
 
         if(runDir){
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            bottomSheet.post(() -> updateButtonMargin(bottomSheet, 1));
         }
+
+        //Setup POI buttons
+        LinearLayout restaurantButton = findViewById(R.id.RestaurantPOI);
+        LinearLayout coffeeButton = findViewById(R.id.CoffeePOI);
+        LinearLayout fountainButton = findViewById(R.id.FountainPOI);
+        LinearLayout elevatorButton = findViewById(R.id.ElevatorPOI);
+        LinearLayout washroomButton = findViewById(R.id.WashroomPOI);
+
+        // Set click listeners for each button
+        restaurantButton.setOnClickListener(view -> map.displayPOI(origin, POIType.RESTAURANT));
+        coffeeButton.setOnClickListener(view -> map.displayPOI(origin, POIType.COFFEE_SHOP));
+        //TODO handle Fountain, elevator and washroom (Indoor POI)
+    }
+
+    private void updateButtonMargin(View bottomSheet, float slideOffset){
+        int progress = (int)(slideOffset * bottomSheet.getHeight());
+        int finalProgress = (int)(progress * 0.8f);
+        int newMargin = buildingViewButtonMargin + finalProgress;
+        buildingViewParams.bottomMargin = Math.max(0, newMargin);
+        buildingViewButton.setLayoutParams(buildingViewParams);
     }
 
     /**
@@ -338,6 +388,7 @@ public class MapsActivity extends FragmentActivity
             boolean useCurrentLocation = returnData.getBoolean(LocationSearchActivity.KEY_RETURN_IS_CURRENT_LOCATION_BOOL);
             setStartingPoint(useCurrentLocation, returnedLocation, newCoords);
         }
+
     }
 
     /**
@@ -528,16 +579,20 @@ public class MapsActivity extends FragmentActivity
         if (fusedLocationClient == null) {
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         }
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationClient.getLastLocation()
                     .addOnSuccessListener(this, location -> {
                         if (location != null) {
                             //If you are emulating and need to change your current location, use the emulator controls.
                             origin = new MapCoordinates(location.getLatitude(), location.getLongitude());
                             hasUserLocationBeenSet = true;
-                            setStartingPoint(true, "", origin);
+
+                            String buildingName = CampusBuildingShapes.getBuildingNameAtLocation(origin.toGoogleMapsLatLng());
+                            if (buildingName != null) {
+                                Toast.makeText(this, "You're in: " + buildingName, Toast.LENGTH_LONG).show();
+                            } else {
+                                setStartingPoint(true, "", origin);
+                            }
                         }
                     });
         } else {
@@ -591,6 +646,7 @@ public class MapsActivity extends FragmentActivity
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
+    @SuppressLint("PotentialBehaviorOverride")
     @Override
     public void onMapReady() {
         if(isFirstTimeLoad) {
@@ -611,6 +667,17 @@ public class MapsActivity extends FragmentActivity
         // If we got an eventAddress, let's geocode it
         if (eventAddress != null && !eventAddress.isEmpty()) {
             geocodeAndSetDestination(eventAddress);
+        }
+
+        //Sets the onclick for POI Markers
+        if(currentMap == SupportedMaps.GOOGLE_MAPS){
+            ((InternalGoogleMaps)map).getmMap().setOnMarkerClickListener(marker -> {
+                if (marker.getTag() != null && "POI".equals(marker.getTag())) {
+                    setDestination(marker.getTitle(),fromGoogleMapsMarker(marker));
+                    drawPath();
+                }
+                return false;
+            });
         }
     }
     private void geocodeAndSetDestination(String addressString) {
@@ -650,8 +717,10 @@ public class MapsActivity extends FragmentActivity
     }
 
     public void showMainMenuDialog() {
-        MainMenuDialog dialog = new MainMenuDialog(this);
-        dialog.show();
+        if(!states.isMenuOpen()) {
+            MainMenuDialog dialog = new MainMenuDialog(this);
+            dialog.show();
+        }
     }
 
 
@@ -673,6 +742,16 @@ public class MapsActivity extends FragmentActivity
         MapCoordinates location = building.getLocation();
 
         setDestination(building.getBuildingName(), location);
+    }
+
+    // Replacing default Maps center location button functionality
+    private void centerOnUserLocation() {
+        if (origin != null) {
+            map.centerOnCoordinates(origin);
+        } else {
+            getUserLocationPath();
+            Toast.makeText(this, "Getting your location...", Toast.LENGTH_SHORT).show();
+        }
     }
 
 }

@@ -95,8 +95,8 @@ public class BuildingResource_en_CA extends ListResourceBundle {
                                 entry("14", new BuildingFloor("14", BuildingName.MOLSON_SCHOOL_OF_BUSINESS, "none")),
                                 entry("15", new BuildingFloor("15", BuildingName.MOLSON_SCHOOL_OF_BUSINESS, "none"))
                         )),
-                        45.45863,
-                        -73.57906,
+                        45.495323,
+                        -73.579229,
                         R.drawable.jmsb,
                         "1450 Guy Street Montreal, QC H3H 0A1",
                         BuildingName.MOLSON_SCHOOL_OF_BUSINESS

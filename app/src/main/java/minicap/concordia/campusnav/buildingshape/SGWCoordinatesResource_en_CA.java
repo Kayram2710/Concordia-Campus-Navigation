@@ -19,6 +19,7 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.49778722701939, -73.57947487103772)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // CI Annex
@@ -30,6 +31,7 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.49740561469915, -73.58003355403389)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // CL Annex
@@ -41,6 +43,7 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.494304720488955, -73.57905590636993)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // D Annex
@@ -56,6 +59,7 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.49762450901616, -73.57964489648347)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // EN Annex
@@ -69,6 +73,7 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.4969108294383, -73.57982599048115)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // ER Building
@@ -89,7 +94,8 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.496438322770715, -73.58036448101657),
                                 new LatLng(45.496430035985206, -73.58032605899771)
                         )
-                                .strokeColor(0xFF912338)
+                        .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // EV Building
@@ -107,6 +113,7 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.495596257454736, -73.57878818225912)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // FA Annex
@@ -118,6 +125,7 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.496852483504355, -73.57976176077061)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // FB Building
@@ -139,6 +147,7 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.494925445178275, -73.57778882975775)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // FG Building
@@ -154,6 +163,7 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.494294070038, -73.57851987042204)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // Grey Nuns Annex
@@ -169,6 +179,7 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.49413589177174, -73.57799268240119)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // GM Building
@@ -182,6 +193,7 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.49578340184228, -73.57915974941798)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // Grey Nuns Building
@@ -237,6 +249,7 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.49385507969457, -73.5773393841071)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
 
                 },
 
@@ -259,10 +272,11 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.49643497944257, -73.58097437475591)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // Hall Building
-                {"hallBuilding", new PolygonOptions()
+                {"Hall Building", new PolygonOptions()
                         .add(
                                 new LatLng(45.497792802486664, -73.57903920534217),
                                 new LatLng(45.49740094139054, -73.57823087975878),
@@ -270,6 +284,7 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.497165144871346, -73.5796611804168)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // K Annex
@@ -281,6 +296,7 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.49773458277374, -73.57964496295192)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // LB Building
@@ -316,6 +332,7 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.497014299104904, -73.57832383913468)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // LD Building
@@ -327,6 +344,7 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.49687186648203, -73.57746920180092)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // LS Building
@@ -340,6 +358,7 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.49641927741527, -73.57969854552952)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // M Annex
@@ -351,10 +370,11 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.49732229007144, -73.57985887861618)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // MB Building
-                {"mbBuilding", new PolygonOptions()
+                {"John Molson Building", new PolygonOptions()
                         .add(
                                 new LatLng(45.49553495679224, -73.57920819154843),
                                 new LatLng(45.495450588360725, -73.57895556708101),
@@ -367,6 +387,7 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.49536158416411, -73.57938807075037)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // MI Annex
@@ -378,6 +399,7 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.497736427874806, -73.57942039707504)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // MU Annex
@@ -389,6 +411,7 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                         new LatLng(45.49778058196705, -73.57971224746882)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // P Annex
@@ -400,6 +423,7 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.4967066434012, -73.57942900750686)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // PR Annex
@@ -411,6 +435,7 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.497015277555, -73.57998905992392)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // Q Annex
@@ -422,6 +447,7 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.496578046999616, -73.57918376667735)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // R Annex
@@ -437,6 +463,7 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.49683373993459, -73.57943052990589)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // RR Annex
@@ -448,6 +475,7 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                         new LatLng(45.49664877754939, -73.57949301466728)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // S Annex
@@ -461,6 +489,7 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.49736484856082, -73.57994150164632)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // SB Building
@@ -485,6 +514,7 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.49654065293867, -73.58622227401817)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // T Annex
@@ -496,6 +526,7 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.496750355594706, -73.57938743326561)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // TD Building
@@ -507,6 +538,7 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.49469842477087, -73.57889358468438)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // V Annex
@@ -518,6 +550,7 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.49698472616924, -73.58001990532871)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // VA Building
@@ -531,6 +564,7 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.49567197567456, -73.57433272819402)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // X Annex
@@ -542,6 +576,7 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.496852731463086, -73.57975872195307)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 },
 
                 // Z Annex
@@ -555,6 +590,7 @@ public class SGWCoordinatesResource_en_CA extends ListResourceBundle
                                 new LatLng(45.49690819409651, -73.5798190716581)
                         )
                         .strokeColor(0xFF912338)
+                        .fillColor(0xFF912338)
                 }
         };
     }
