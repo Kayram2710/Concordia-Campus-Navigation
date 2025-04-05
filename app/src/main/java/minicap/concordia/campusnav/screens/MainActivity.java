@@ -1,6 +1,8 @@
 package minicap.concordia.campusnav.screens;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.SwitchCompat;
 
 import android.content.Context;
 import android.content.Intent;
@@ -28,8 +30,32 @@ public class MainActivity extends AppCompatActivity {
 
         buildingManager = ConcordiaBuildingManager.getInstance();
 
+        setupDarkModeSwitch();
         subscribeButtons(this);
     }
+
+    private void setupDarkModeSwitch() {
+        SwitchCompat darkModeSwitch = findViewById(R.id.switch_darkmode);
+        darkModeSwitch.setChecked(states.isDarkModeOn());
+
+        darkModeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (states.isDarkModeOn() != isChecked) {
+                states.toggleDarkMode();
+                AppCompatDelegate.setDefaultNightMode(isChecked
+                        ? AppCompatDelegate.MODE_NIGHT_YES
+                        : AppCompatDelegate.MODE_NIGHT_NO);
+                recreate();
+            }
+        });
+
+        // Sync when change happens in main menu dialog
+        states.addDarkModeChangeListener(isDark -> {
+            if (darkModeSwitch.isChecked() != isDark) {
+                darkModeSwitch.setChecked(isDark);
+            }
+        });
+    }
+
     protected void subscribeButtons(Context appContext) {
 
         Button sgwCampusBtn = (Button)findViewById(R.id.viewSGWCampusButton);
