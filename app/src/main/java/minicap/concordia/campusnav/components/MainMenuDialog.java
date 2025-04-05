@@ -1,18 +1,16 @@
 package minicap.concordia.campusnav.components;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.SwitchCompat;
+
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.Switch;
-import android.widget.CompoundButton;
-
-import androidx.appcompat.app.AppCompatDelegate;
 
 import com.google.android.material.sidesheet.SideSheetDialog;
 
@@ -34,9 +32,8 @@ public class MainMenuDialog extends SideSheetDialog {
     ImageButton directionsRedirect;
     ImageButton campusMapRedirect;
     ImageButton busScheduleRedirect;
-    Switch switchDarkMode;
-    SharedPreferences sharedPreferences;
     Context context;
+    private SwitchCompat darkModeSwitch;
     private final States states = States.getInstance();
 
     public interface MainMenuListener {
@@ -45,7 +42,6 @@ public class MainMenuDialog extends SideSheetDialog {
     public MainMenuDialog(Context context) {
         super(context);
         this.context = context;
-        sharedPreferences = context.getSharedPreferences("Settings", Context.MODE_PRIVATE);
     }
 
     @Override
@@ -58,7 +54,6 @@ public class MainMenuDialog extends SideSheetDialog {
         setSheetEdge(Gravity.START);
 
         initializeViews(view);
-        setupDarkMode();
         populateButtons();
         states.toggleMenu(true);
     }
@@ -71,26 +66,10 @@ public class MainMenuDialog extends SideSheetDialog {
         directionsRedirect = view.findViewById(R.id.directionsRedirect);
         campusMapRedirect = view.findViewById(R.id.campusMapRedirect);
         busScheduleRedirect = view.findViewById(R.id.busScheduleRedirect);
-        switchDarkMode = view.findViewById(R.id.switch_darkmode);
+        darkModeSwitch = view.findViewById(R.id.switch_darkmode);
     }
 
-    private void setupDarkMode() {
-        boolean isDarkMode = sharedPreferences.getBoolean("DarkMode", false);
-        switchDarkMode.setChecked(isDarkMode);
 
-        switchDarkMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean("DarkMode", isChecked);
-                editor.apply();
-
-                AppCompatDelegate.setDefaultNightMode(isChecked
-                        ? AppCompatDelegate.MODE_NIGHT_YES
-                        : AppCompatDelegate.MODE_NIGHT_NO);
-            }
-        });
-    }
 
     //This passes
     public void populateButtons(){
