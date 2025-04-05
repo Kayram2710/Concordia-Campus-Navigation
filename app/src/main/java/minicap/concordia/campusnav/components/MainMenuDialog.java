@@ -15,13 +15,8 @@ import android.widget.ImageButton;
 import com.google.android.material.sidesheet.SideSheetDialog;
 
 import minicap.concordia.campusnav.R;
-import minicap.concordia.campusnav.buildingmanager.ConcordiaBuildingManager;
-import minicap.concordia.campusnav.buildingmanager.entities.Campus;
-import minicap.concordia.campusnav.buildingmanager.enumerations.CampusName;
-import minicap.concordia.campusnav.map.MapCoordinates;
 import minicap.concordia.campusnav.savedstates.States;
 import minicap.concordia.campusnav.screens.ClassScheduleActivity;
-import minicap.concordia.campusnav.screens.MainActivity;
 import minicap.concordia.campusnav.screens.MapsActivity;
 
 public class MainMenuDialog extends SideSheetDialog {

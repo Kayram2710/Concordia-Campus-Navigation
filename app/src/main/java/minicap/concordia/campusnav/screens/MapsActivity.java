@@ -3,6 +3,8 @@ package minicap.concordia.campusnav.screens;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+import static minicap.concordia.campusnav.map.MapCoordinates.fromGoogleMapsMarker;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.location.Address;
@@ -42,18 +44,13 @@ import minicap.concordia.campusnav.buildingshape.CampusBuildingShapes;
 import minicap.concordia.campusnav.components.MainMenuDialog;
 import minicap.concordia.campusnav.components.placeholder.ShuttleBusScheduleFragment;
 
-import minicap.concordia.campusnav.databinding.ActivityMapsBinding;
-import minicap.concordia.campusnav.map.FetchPathTask;
 import minicap.concordia.campusnav.map.InternalGoogleMaps;
 
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
-import org.json.JSONArray;
 
 import java.io.IOException;
 import java.util.List;
@@ -76,9 +73,6 @@ public class MapsActivity extends FragmentActivity
         implements AbstractMap.MapUpdateListener, BuildingInfoBottomSheetFragment.BuildingInfoListener, MainMenuDialog.MainMenuListener {
 
     private final String MAPS_ACTIVITY_TAG = "MapsActivity";
-    public static final String KEY_STARTING_COORDS = "starting_coords";
-    public static final String KEY_CAMPUS_NOT_SELECTED = "campus_not_selected";
-    public static final String KEY_SHOW_SGW = "show_sgw";
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
@@ -585,16 +579,20 @@ public class MapsActivity extends FragmentActivity
         if (fusedLocationClient == null) {
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         }
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             fusedLocationClient.getLastLocation()
                     .addOnSuccessListener(this, location -> {
                         if (location != null) {
                             //If you are emulating and need to change your current location, use the emulator controls.
                             origin = new MapCoordinates(location.getLatitude(), location.getLongitude());
                             hasUserLocationBeenSet = true;
-                            setStartingPoint(true, "", origin);
+
+                            String buildingName = CampusBuildingShapes.getBuildingNameAtLocation(origin.toGoogleMapsLatLng());
+                            if (buildingName != null) {
+                                Toast.makeText(this, "You're in: " + buildingName, Toast.LENGTH_LONG).show();
+                            } else {
+                                setStartingPoint(true, "", origin);
+                            }
                         }
                     });
         } else {
@@ -675,10 +673,7 @@ public class MapsActivity extends FragmentActivity
         if(currentMap == SupportedMaps.GOOGLE_MAPS){
             ((InternalGoogleMaps)map).getmMap().setOnMarkerClickListener(marker -> {
                 if (marker.getTag() != null && "POI".equals(marker.getTag())) {
-                    LatLng position = marker.getPosition();
-                    double latitude = position.latitude;
-                    double longitude = position.longitude;
-                    setDestination(marker.getTitle(),new MapCoordinates(latitude,longitude));
+                    setDestination(marker.getTitle(),fromGoogleMapsMarker(marker));
                     drawPath();
                 }
                 return false;
