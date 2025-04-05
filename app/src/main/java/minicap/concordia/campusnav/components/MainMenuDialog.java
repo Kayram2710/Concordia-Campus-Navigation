@@ -109,6 +109,27 @@ public class MainMenuDialog extends SideSheetDialog {
             }
         });
 
+        darkModeSwitch.setChecked(states.isDarkModeOn());
+
+        darkModeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (states.isDarkModeOn() != isChecked) {
+                states.toggleDarkMode();
+                AppCompatDelegate.setDefaultNightMode(isChecked
+                        ? AppCompatDelegate.MODE_NIGHT_YES
+                        : AppCompatDelegate.MODE_NIGHT_NO);
+                // Recreate the activity to apply the theme change
+                if (context instanceof AppCompatActivity) {
+                    ((AppCompatActivity) context).recreate();
+                }
+            }
+        });
+
+        // Sync if changed on main screen
+        states.addDarkModeChangeListener(isDark -> {
+            if (darkModeSwitch.isChecked() != isDark) {
+                darkModeSwitch.setChecked(isDark);
+            }
+        });
     }
 
     public Intent campusMapRoutine(){
