@@ -2,6 +2,8 @@ package minicap.concordia.campusnav.savedstates;
 
 import minicap.concordia.campusnav.buildingmanager.entities.Campus;
 import minicap.concordia.campusnav.map.MapCoordinates;
+import java.util.ArrayList;
+import java.util.List;
 
 public class States {
 
@@ -25,12 +27,28 @@ public class States {
         return instance;
     }
 
+    public interface OnDarkModeChangeListener {
+        void onDarkModeChanged(boolean isDark);
+    }
+
+    private final List<OnDarkModeChangeListener> listeners = new ArrayList<>();
+
     public void toggleDarkMode(){
         darkMode = !darkMode;
     }
 
     public boolean isDarkModeOn(){
         return darkMode;
+    }
+
+    public void addDarkModeChangeListener(OnDarkModeChangeListener listener) {
+        listeners.add(listener);
+    }
+
+    private void notifyDarkModeChanged() {
+        for (OnDarkModeChangeListener listener : listeners) {
+            listener.onDarkModeChanged(isDarkModeOn());
+        }
     }
 
     public Campus getCampus() {
