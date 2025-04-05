@@ -30,7 +30,7 @@
                 android:layout_height="74dp"
                 android:layout_marginStart="-50dp"
                 android:layout_marginBottom="100dp"
-                android:backgroundTint="#9F3353"
+                android:backgroundTint="@color/light_burgundy"
                 app:cornerRadius="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -203,4 +203,3 @@
     <include layout="@layout/poi_menu" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
-

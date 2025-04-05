@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="24dp"
-        android:backgroundTint="#9E3353"
+        android:backgroundTint="@color/light_burgundy"
         android:src="@drawable/close"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -122,5 +122,23 @@
         app:layout_constraintTop_toTopOf="@+id/viewLanguageButton"
         app:layout_constraintVertical_bias="0.538"
         tools:text="@string/english" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switch_darkmode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+    	android:thumbTint="@color/switch_thumb_color"
+    	android:trackTint="@color/switch_track_color"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="52dp"
+        android:backgroundTint="@color/white"
+        android:showText="false"
+        android:switchPadding="8dp"
+        android:text="@string/dark_mode"
+        android:textAlignment="textEnd"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

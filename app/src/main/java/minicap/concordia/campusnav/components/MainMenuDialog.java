@@ -1,7 +1,10 @@
 package minicap.concordia.campusnav.components;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.SwitchCompat;
+
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -12,13 +15,8 @@ import android.widget.ImageButton;
 import com.google.android.material.sidesheet.SideSheetDialog;
 
 import minicap.concordia.campusnav.R;
-import minicap.concordia.campusnav.buildingmanager.ConcordiaBuildingManager;
-import minicap.concordia.campusnav.buildingmanager.entities.Campus;
-import minicap.concordia.campusnav.buildingmanager.enumerations.CampusName;
-import minicap.concordia.campusnav.map.MapCoordinates;
 import minicap.concordia.campusnav.savedstates.States;
 import minicap.concordia.campusnav.screens.ClassScheduleActivity;
-import minicap.concordia.campusnav.screens.MainActivity;
 import minicap.concordia.campusnav.screens.MapsActivity;
 
 public class MainMenuDialog extends SideSheetDialog {
@@ -30,6 +28,7 @@ public class MainMenuDialog extends SideSheetDialog {
     ImageButton campusMapRedirect;
     ImageButton busScheduleRedirect;
     Context context;
+    private SwitchCompat darkModeSwitch;
     private final States states = States.getInstance();
 
     public interface MainMenuListener {
@@ -62,7 +61,10 @@ public class MainMenuDialog extends SideSheetDialog {
         directionsRedirect = view.findViewById(R.id.directionsRedirect);
         campusMapRedirect = view.findViewById(R.id.campusMapRedirect);
         busScheduleRedirect = view.findViewById(R.id.busScheduleRedirect);
+        darkModeSwitch = view.findViewById(R.id.switch_darkmode);
     }
+
+
 
     //This passes
     public void populateButtons(){
@@ -102,6 +104,27 @@ public class MainMenuDialog extends SideSheetDialog {
             }
         });
 
+        darkModeSwitch.setChecked(states.isDarkModeOn());
+
+        darkModeSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (states.isDarkModeOn() != isChecked) {
+                states.toggleDarkMode();
+                AppCompatDelegate.setDefaultNightMode(isChecked
+                        ? AppCompatDelegate.MODE_NIGHT_YES
+                        : AppCompatDelegate.MODE_NIGHT_NO);
+                // Recreate the activity to apply the theme change
+                if (context instanceof AppCompatActivity) {
+                    ((AppCompatActivity) context).recreate();
+                }
+            }
+        });
+
+        // Sync if changed on main screen
+        states.addDarkModeChangeListener(isDark -> {
+            if (darkModeSwitch.isChecked() != isDark) {
+                darkModeSwitch.setChecked(isDark);
+            }
+        });
     }
 
     public Intent campusMapRoutine(){

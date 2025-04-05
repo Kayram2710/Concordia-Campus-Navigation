@@ -20,8 +20,7 @@
         android:contentDescription="@string/menu"
         android:src="@drawable/ic_menu"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="@android:color/white" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Existing title -->
     <TextView
