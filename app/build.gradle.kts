@@ -3,6 +3,7 @@ plugins {
     id("com.google.gms.google-services")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     id("org.jetbrains.kotlin.android")
+
 }
 
 android {
@@ -24,6 +25,10 @@ android {
 
         buildConfigField("String", "MAPS_API_KEY", "\"${project.findProperty("MAPS_API_KEY")}\"")
         buildConfigField("String", "WEB_CLIENT_ID", "\"${project.findProperty("WEB_CLIENT_ID")}\"")
+    }
+
+    tasks.withType<Test> {
+        jvmArgs("-Dnet.bytebuddy.experimental=true")
     }
 
     buildTypes {
@@ -105,6 +110,8 @@ dependencies {
     testImplementation("com.google.android.gms:play-services-maps:18.1.0")
     testImplementation("com.squareup.okhttp3:mockwebserver:4.9.3")
     testImplementation("androidx.fragment:fragment-testing:1.5.7")
+
+
 
     // Android instrumented test dependencies
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

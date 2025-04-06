@@ -1,7 +1,8 @@
 package minicap.concordia.campusnav.savedstates;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+
+import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -12,12 +13,31 @@ public class StatesTest {
 
     private States states;
 
-    // Since States is a singleton, we retrieve its instance.
+    // Dummy subclass of Campus using dummy values for required constructor parameters.
+    private static class DummyCampus extends Campus {
+        private final String dummyCampusName;
+
+        public DummyCampus(String campusName) {
+            // Call the Campus constructor with:
+            // - campusName as provided
+            // - an empty ArrayList for BuildingName
+            // - two dummy double values (0.0, 0.0)
+            super(campusName, new ArrayList<>(), 0.0, 0.0);
+            this.dummyCampusName = campusName;
+        }
+
+        @Override
+        public String getCampusName() {
+            return dummyCampusName;
+        }
+    }
+
     @Before
     public void setUp() {
+        // Retrieve the singleton instance of States.
         states = States.getInstance();
+
         // Reset dark mode and menu state if needed.
-        // (Assuming tests run in sequence, we ensure a known starting state.)
         if (states.isDarkModeOn()) {
             states.toggleDarkMode();
         }
@@ -38,23 +58,25 @@ public class StatesTest {
     public void testToggleDarkMode() {
         // Initially dark mode should be off.
         assertFalse("Dark mode should be off initially", states.isDarkModeOn());
+
         states.toggleDarkMode();
         assertTrue("Dark mode should be on after toggle", states.isDarkModeOn());
+
         states.toggleDarkMode();
         assertFalse("Dark mode should be off after second toggle", states.isDarkModeOn());
     }
 
     @Test
     public void testSetCampusForLoyola() {
-        // Create a dummy Campus using Mockito.
-        Campus campusMock = mock(Campus.class);
-        when(campusMock.getCampusName()).thenReturn("Loyola campus");
+        // Use our dummy subclass instead of a Mockito mock.
+        Campus campus = new DummyCampus("Loyola campus");
 
-        states.setCampus(campusMock);
+        states.setCampus(campus);
+
         // Verify that the campus is set.
-        assertEquals(campusMock, states.getCampus());
-        // According to the logic, for "Loyola campus", campusName should be "LOYOLA"
-        // and the other campus (both full name and abbreviation) should be "SGW".
+        assertEquals("Campus should match the dummy campus object", campus, states.getCampus());
+        // According to the logic in States,
+        // for "Loyola campus", campusName should be "LOYOLA" and other campus should be "SGW".
         assertEquals("LOYOLA", states.getCampusName());
         assertEquals("SGW", states.getOtherCampusName());
         assertEquals("SGW", states.getOtherCampusAbrev());
@@ -62,13 +84,12 @@ public class StatesTest {
 
     @Test
     public void testSetCampusForSGW() {
-        Campus campusMock = mock(Campus.class);
-        when(campusMock.getCampusName()).thenReturn("Sir George William campus");
+        Campus campus = new DummyCampus("Sir George William campus");
 
-        states.setCampus(campusMock);
-        assertEquals(campusMock, states.getCampus());
+        states.setCampus(campus);
+        assertEquals("Campus should match the dummy campus object", campus, states.getCampus());
         // For "Sir George William campus", campusName should be "SGW",
-        // other campus should be "LOYOLA", and abbreviation "LOY".
+        // other campus should be "LOYOLA" and abbreviation "LOY".
         assertEquals("SGW", states.getCampusName());
         assertEquals("LOYOLA", states.getOtherCampusName());
         assertEquals("LOY", states.getOtherCampusAbrev());
