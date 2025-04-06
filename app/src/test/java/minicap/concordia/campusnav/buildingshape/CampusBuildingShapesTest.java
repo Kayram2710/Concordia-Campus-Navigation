@@ -1,171 +1,165 @@
 package minicap.concordia.campusnav.buildingshape;
 
 import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.PolygonOptions;
-import com.google.maps.android.PolyUtil;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.MockedStatic;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.ResourceBundle;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.mockito.MockedStatic;
 
-@RunWith(RobolectricTestRunner.class)
-@Config(manifest = Config.NONE)
+/**
+ * Single test class for CampusBuildingShapes.
+ *
+ * This test uses Mockito's static mocking to intercept calls to
+ * ResourceBundle.getBundle(...) and supply dummy resource bundles that
+ * contain all expected keys.
+ */
 public class CampusBuildingShapesTest {
 
-    @Before
-    public void setUp() throws Exception {
-        // The CampusBuildingShapes class’s static blocks load resource bundles.
-        // To avoid MissingResourceException (if the real bundles aren’t available in test),
-        // override the static lists with dummy data.
-        List<PolygonOptions> dummySgwList = new ArrayList<>();
-        dummySgwList.add(new PolygonOptions());
-        List<PolygonOptions> dummyLoyolaList = new ArrayList<>();
-        dummyLoyolaList.add(new PolygonOptions());
+    private static MockedStatic<ResourceBundle> mockedResourceBundle;
 
-        Field sgwField = CampusBuildingShapes.class.getDeclaredField("sgwBuildingCoordinates");
-        sgwField.setAccessible(true);
-        sgwField.set(null, dummySgwList);
+    // Expected keys for the SGW bundle.
+    private static final String[] SGW_KEYS = {
+            "bAnnex", "ciAnnex", "clAnnex", "dAnnex", "enAnnex", "erBuilding",
+            "evBuilding", "faAnnex", "fbBuilding", "fgBuilding", "greyNunsAnnex",
+            "gmBuilding", "gnBuilding", "gsBuilding", "Hall Building", "kAnnex",
+            "lbBuilding", "ldBuilding", "lsBuilding", "mAnnex", "John Molson Building",
+            "miAnnex", "muAnnex", "pAnnex", "prAnnex", "qAnnex", "rAnnex", "rrAnnex",
+            "sAnnex", "sbBuilding", "tAnnex", "tdBuilding", "vAnnex", "vaBuilding",
+            "xAnnex", "zAnnex"
+    };
 
-        Field loyolaField = CampusBuildingShapes.class.getDeclaredField("loyolaBuildingCoordinates");
-        loyolaField.setAccessible(true);
-        loyolaField.set(null, dummyLoyolaList);
+    // Expected keys for the Loyola bundle.
+    private static final String[] LOYOLA_KEYS = {
+            "adBuilding", "bbAnnex", "bhAnnex", "Loyola Central Building", "cjBuilding",
+            "doDome", "fcBuilding", "geBuilding", "haBuilding", "hbBuilding",
+            "hcBuilding", "huBuilding", "jrResidence", "pcBuilding", "psBuilding",
+            "Vanier Library/Extension Building", "pyBuilding", "raBuilding", "rfBuilding",
+            "siBuilding", "spBuilding", "taBuilding"
+    };
+
+    /**
+     * Helper method to create a square polygon given a start latitude/longitude and side length.
+     */
+    private static PolygonOptions createPolygon(double startLat, double startLng, double delta) {
+        return new PolygonOptions()
+                .add(new LatLng(startLat, startLng))
+                .add(new LatLng(startLat, startLng + delta))
+                .add(new LatLng(startLat + delta, startLng + delta))
+                .add(new LatLng(startLat + delta, startLng));
+    }
+
+    @BeforeClass
+    public static void setUpClass() throws Exception {
+        // Start static mocking for ResourceBundle.
+        mockedResourceBundle = mockStatic(ResourceBundle.class);
+
+        // Create a dummy SGW ResourceBundle.
+        ResourceBundle testSGWBundle = new ResourceBundle() {
+            @Override
+            protected Object handleGetObject(String key) {
+                // For key "bAnnex", return a polygon that covers (0,0)-(1,1) to match our test.
+                if ("bAnnex".equals(key)) {
+                    return createPolygon(0, 0, 1);
+                }
+                // For all other keys, return a polygon far away.
+                return createPolygon(100, 100, 1);
+            }
+
+            @Override
+            public Enumeration<String> getKeys() {
+                return Collections.enumeration(Arrays.asList(SGW_KEYS));
+            }
+        };
+
+        // Create a dummy Loyola ResourceBundle.
+        ResourceBundle testLoyolaBundle = new ResourceBundle() {
+            @Override
+            protected Object handleGetObject(String key) {
+                // For key "adBuilding", return a polygon covering (10,10)-(11,11).
+                if ("adBuilding".equals(key)) {
+                    return createPolygon(10, 10, 1);
+                }
+                // For all other keys, return a polygon far away.
+                return createPolygon(200, 200, 1);
+            }
+
+            @Override
+            public Enumeration<String> getKeys() {
+                return Collections.enumeration(Arrays.asList(LOYOLA_KEYS));
+            }
+        };
+
+        // Set up the mocked behavior for ResourceBundle.getBundle(...) calls.
+        mockedResourceBundle.when(() ->
+                        ResourceBundle.getBundle("minicap.concordia.campusnav.buildingshape.SGWCoordinatesResource_en_CA"))
+                .thenReturn(testSGWBundle);
+
+        mockedResourceBundle.when(() ->
+                        ResourceBundle.getBundle("minicap.concordia.campusnav.buildingshape.LoyolaCoordinatesResource_en_CA"))
+                .thenReturn(testLoyolaBundle);
+
+        // Clear cache to force our mocks to be used.
+        ResourceBundle.clearCache();
+
+        // Force initialization of CampusBuildingShapes (its static blocks use the ResourceBundle mocks).
+        Class.forName("minicap.concordia.campusnav.buildingshape.CampusBuildingShapes");
+    }
+
+    @AfterClass
+    public static void tearDownClass() {
+        if (mockedResourceBundle != null) {
+            mockedResourceBundle.close();
+        }
     }
 
     @Test
     public void testGetSgwBuildingCoordinates() {
         List<PolygonOptions> sgwCoords = CampusBuildingShapes.getSgwBuildingCoordinates();
-        assertNotNull("SGW coordinates should not be null", sgwCoords);
-        // Since we overrode the static list in setUp, it should contain exactly one element.
-        assertEquals("SGW coordinates size", 1, sgwCoords.size());
+        assertNotNull("SGW building coordinates list should not be null", sgwCoords);
+        // Expecting one polygon for each key in our SGW dummy bundle.
+        assertEquals("Expected 37 SGW building polygons", SGW_KEYS.length, sgwCoords.size());
     }
 
     @Test
     public void testGetLoyolaBuildingCoordinates() {
         List<PolygonOptions> loyolaCoords = CampusBuildingShapes.getLoyolaBuildingCoordinates();
-        assertNotNull("Loyola coordinates should not be null", loyolaCoords);
-        assertEquals("Loyola coordinates size", 1, loyolaCoords.size());
+        assertNotNull("Loyola building coordinates list should not be null", loyolaCoords);
+        // Expecting one polygon for each key in our Loyola dummy bundle.
+        assertEquals("Expected 22 Loyola building polygons", LOYOLA_KEYS.length, loyolaCoords.size());
     }
 
     @Test
-    public void testGetBuildingNameAtLocation_found() {
-        // Create a dummy ResourceBundle for SGW that returns one entry.
-        ResourceBundle dummySgwBundle = new ResourceBundle() {
-            @Override
-            protected Object handleGetObject(String key) {
-                if ("TestBuilding".equals(key)) {
-                    // Create a dummy polygon (triangle) that should contain our test location.
-                    PolygonOptions poly = new PolygonOptions();
-                    poly.add(new LatLng(0, 0));
-                    poly.add(new LatLng(0, 1));
-                    poly.add(new LatLng(1, 0));
-                    return poly;
-                }
-                return null;
-            }
-
-            @Override
-            public Enumeration<String> getKeys() {
-                return Collections.enumeration(Arrays.asList("TestBuilding"));
-            }
-        };
-
-        // Create a dummy (empty) ResourceBundle for Loyola.
-        ResourceBundle dummyLoyolaBundle = new ResourceBundle() {
-            @Override
-            protected Object handleGetObject(String key) {
-                return null;
-            }
-
-            @Override
-            public Enumeration<String> getKeys() {
-                return Collections.emptyEnumeration();
-            }
-        };
-
-        try (MockedStatic<ResourceBundle> rbMock = mockStatic(ResourceBundle.class);
-             MockedStatic<PolyUtil> polyUtilMock = mockStatic(PolyUtil.class)) {
-
-            // When the code calls ResourceBundle.getBundle, return our dummy bundles.
-            rbMock.when(() -> ResourceBundle.getBundle("minicap.concordia.campusnav.buildingshape.SGWCoordinatesResource_en_CA"))
-                    .thenReturn(dummySgwBundle);
-            rbMock.when(() -> ResourceBundle.getBundle("minicap.concordia.campusnav.buildingshape.LoyolaCoordinatesResource_en_CA"))
-                    .thenReturn(dummyLoyolaBundle);
-
-            // Simulate that PolyUtil.containsLocation returns true (i.e. the test location is inside the polygon).
-            polyUtilMock.when(() -> PolyUtil.containsLocation(any(LatLng.class), anyList(), eq(true)))
-                    .thenReturn(true);
-
-            // Use a location that should be contained in the dummy polygon.
-            LatLng testLocation = new LatLng(0.1, 0.1);
-            String buildingName = CampusBuildingShapes.getBuildingNameAtLocation(testLocation);
-            assertEquals("TestBuilding", buildingName);
-        }
+    public void testGetBuildingNameAtLocation_SGW() {
+        // A point inside the "bAnnex" polygon (covers (0,0)-(1,1)).
+        LatLng insideSgw = new LatLng(0.5, 0.5);
+        String buildingName = CampusBuildingShapes.getBuildingNameAtLocation(insideSgw);
+        // The SGW bundle is checked first; we expect "bAnnex" to be returned.
+        assertEquals("Expected SGW building name", "bAnnex", buildingName);
     }
 
     @Test
-    public void testGetBuildingNameAtLocation_notFound() {
-        // Create dummy ResourceBundles that simulate polygons which do NOT contain the test location.
-        ResourceBundle dummySgwBundle = new ResourceBundle() {
-            @Override
-            protected Object handleGetObject(String key) {
-                // Return a dummy polygon (triangle) for testing.
-                PolygonOptions poly = new PolygonOptions();
-                poly.add(new LatLng(0, 0));
-                poly.add(new LatLng(0, 1));
-                poly.add(new LatLng(1, 0));
-                return poly;
-            }
+    public void testGetBuildingNameAtLocation_Loyola() {
+        // A point not in any SGW polygon (since "bAnnex" covers (0,0)-(1,1) and others are far away)
+        // but inside the "adBuilding" polygon in the Loyola bundle (covers (10,10)-(11,11)).
+        LatLng insideLoyola = new LatLng(10.5, 10.5);
+        String buildingName = CampusBuildingShapes.getBuildingNameAtLocation(insideLoyola);
+        assertEquals("Expected Loyola building name", "adBuilding", buildingName);
+    }
 
-            @Override
-            public Enumeration<String> getKeys() {
-                return Collections.enumeration(Arrays.asList("TestBuilding"));
-            }
-        };
-
-        ResourceBundle dummyLoyolaBundle = new ResourceBundle() {
-            @Override
-            protected Object handleGetObject(String key) {
-                return null;
-            }
-
-            @Override
-            public Enumeration<String> getKeys() {
-                return Collections.emptyEnumeration();
-            }
-        };
-
-        try (MockedStatic<ResourceBundle> rbMock = mockStatic(ResourceBundle.class);
-             MockedStatic<PolyUtil> polyUtilMock = mockStatic(PolyUtil.class)) {
-
-            rbMock.when(() -> ResourceBundle.getBundle("minicap.concordia.campusnav.buildingshape.SGWCoordinatesResource_en_CA"))
-                    .thenReturn(dummySgwBundle);
-            rbMock.when(() -> ResourceBundle.getBundle("minicap.concordia.campusnav.buildingshape.LoyolaCoordinatesResource_en_CA"))
-                    .thenReturn(dummyLoyolaBundle);
-
-            // Simulate that PolyUtil.containsLocation always returns false (location not inside any polygon).
-            polyUtilMock.when(() -> PolyUtil.containsLocation(any(LatLng.class), anyList(), eq(true)))
-                    .thenReturn(false);
-
-            LatLng testLocation = new LatLng(10, 10);
-            String buildingName = CampusBuildingShapes.getBuildingNameAtLocation(testLocation);
-            assertNull("No building should be found", buildingName);
-        }
+    @Test
+    public void testGetBuildingNameAtLocation_NotFound() {
+        // A point that doesn't fall within any dummy polygon.
+        LatLng outside = new LatLng(50, 50);
+        String buildingName = CampusBuildingShapes.getBuildingNameAtLocation(outside);
+        assertNull("Expected null for location not in any building", buildingName);
     }
 }

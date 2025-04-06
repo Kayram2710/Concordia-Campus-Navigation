@@ -111,7 +111,8 @@ dependencies {
     testImplementation("com.squareup.okhttp3:mockwebserver:4.9.3")
     testImplementation("androidx.fragment:fragment-testing:1.5.7")
 
-
+    testImplementation("org.powermock:powermock-api-mockito2:2.0.9")
+    testImplementation("org.powermock:powermock-module-junit4:2.0.9")
 
     // Android instrumented test dependencies
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
@@ -122,4 +123,7 @@ dependencies {
     androidTestImplementation("androidx.test:core:1.5.0")
     androidTestImplementation("org.mockito:mockito-core:4.11.0")
     androidTestImplementation("org.mockito:mockito-android:4.11.0")
+
+
+
 }
