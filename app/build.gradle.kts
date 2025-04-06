@@ -84,7 +84,6 @@ dependencies {
     implementation("androidx.recyclerview:recyclerview:1.3.0")
     implementation("androidx.core:core-ktx:1.15.0")
     implementation("androidx.test.espresso:espresso-intents:3.6.1")
-    implementation("com.google.android.gms:play-services-location:21.3.0")
     implementation("com.google.android.gms:play-services-auth:21.3.0")
     implementation("com.google.apis:google-api-services-calendar:v3-rev411-1.25.0")
     implementation("com.google.api-client:google-api-client-android:1.33.0") {
@@ -93,7 +92,6 @@ dependencies {
     implementation("com.google.http-client:google-http-client-gson:1.42.3") {
         exclude(module = "httpclient")
     }
-    implementation("com.google.android.gms:play-services-maps:18.1.0")
 
     // Unit test dependencies
     testImplementation("junit:junit:4.13.2")
@@ -107,20 +105,6 @@ dependencies {
     testImplementation("com.google.android.gms:play-services-maps:18.1.0")
     testImplementation("com.squareup.okhttp3:mockwebserver:4.9.3")
     testImplementation("androidx.fragment:fragment-testing:1.5.7")
-    testImplementation("androidx.test:core:1.5.0")
-    testImplementation("org.robolectric:robolectric:4.14.1")
-    testImplementation("org.mockito:mockito-core:4.11.0")
-    testImplementation("org.mockito:mockito-inline:4.11.0")
-    testImplementation("junit:junit:4.13.2")
-    testImplementation("androidx.fragment:fragment-testing:1.5.7")
-    testImplementation("androidx.test:core:1.5.0")
-    testImplementation("org.robolectric:robolectric:4.14.1")
-    testImplementation("org.mockito:mockito-core:4.11.0")
-    testImplementation("org.mockito:mockito-inline:4.11.0")
-    testImplementation("junit:junit:4.13.2")
-    testImplementation("androidx.fragment:fragment-testing:1.5.7")
-
-
 
     // Android instrumented test dependencies
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
