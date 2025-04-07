@@ -33,6 +33,7 @@ import minicap.concordia.campusnav.map.AbstractMap;
 import minicap.concordia.campusnav.map.MapCoordinates;
 import minicap.concordia.campusnav.map.NavigationGoogleMaps;
 import minicap.concordia.campusnav.map.enums.MapColors;
+import minicap.concordia.campusnav.savedstates.States;
 
 public class NavigationActivity extends AppCompatActivity implements AbstractMap.MapUpdateListener, MainMenuDialog.MainMenuListener {
 
@@ -156,7 +157,11 @@ public class NavigationActivity extends AppCompatActivity implements AbstractMap
     public void onMapReady() {
         try {
             //Set map style
-            curMap.setStyle(this,R.raw.nav_map_style);
+            if(States.getInstance().isDarkModeOn()){
+                curMap.setStyle(this,R.raw.darkmode_style);
+            } else{
+                curMap.setStyle(this,R.raw.lightmode_style);
+            }
             //setup map markers
             setupMapMarkers();
 

@@ -102,6 +102,7 @@
         android:background="@color/light_burgundy"
         android:contentDescription="change_language"
         android:src="@drawable/lang_button"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/imageView3"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -115,6 +116,7 @@
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="20sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/viewLanguageButton"
         app:layout_constraintEnd_toEndOf="@+id/viewLanguageButton"
         app:layout_constraintHorizontal_bias="0.487"
@@ -127,7 +129,7 @@
         android:id="@+id/switch_darkmodeMainMenu"
         android:layout_width="144dp"
         android:layout_height="78dp"
-        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="16dp"
         android:backgroundTint="@color/white"
         android:checked="false"
         android:showText="false"
@@ -138,9 +140,10 @@
         android:textStyle="bold"
         android:theme="@style/CustomSwitchTheme"
         android:thumbTint="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/viewLanguageButton"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/viewLanguageButton"
+        app:layout_constraintHorizontal_bias="0.85"
+        app:layout_constraintStart_toStartOf="parent"
         tools:checked="false" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

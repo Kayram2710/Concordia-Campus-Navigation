@@ -149,7 +149,6 @@ public class MapsActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.e("DARKMODE", "Creating Maps Activity");
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_maps);
@@ -784,6 +783,12 @@ public class MapsActivity extends AppCompatActivity
         if(isFirstTimeLoad) {
             isFirstTimeLoad = false;
             map.centerOnCoordinates(startingCoords);
+        }
+
+        if(states.isDarkModeOn()){
+            map.setStyle(this,R.raw.darkmode_style);
+        } else{
+            map.setStyle(this,R.raw.lightmode_style);
         }
 
         enableMyLocation();
