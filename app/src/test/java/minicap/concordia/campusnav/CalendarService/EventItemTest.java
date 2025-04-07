@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 import com.google.api.client.util.DateTime;
-import minicap.concordia.campusnav.calendarservice.EventItem;
+
 
 public class EventItemTest {
 

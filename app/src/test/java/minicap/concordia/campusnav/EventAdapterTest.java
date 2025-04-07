@@ -22,8 +22,9 @@ import org.robolectric.annotation.Config;
 import java.util.ArrayList;
 import java.util.List;
 
-import minicap.concordia.campusnav.calendarservice.EventAdapter;
-import minicap.concordia.campusnav.calendarservice.EventItem;
+import minicap.concordia.campusnav.CalendarService.EventAdapter;
+import minicap.concordia.campusnav.CalendarService.EventItem;
+
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 33)
