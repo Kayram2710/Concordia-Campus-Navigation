@@ -14,27 +14,9 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class ShuttleScraperTest {
+import minicap.concordia.campusnav.components.ShuttleSchedule;
 
-    /**
-     * Helper method that tries to retrieve a field value from an object using one of the possible field names.
-     */
-    private Object getFieldValue(Object instance, String... possibleFieldNames) {
-        for (String fieldName : possibleFieldNames) {
-            Class<?> clazz = instance.getClass();
-            while (clazz != null) {
-                try {
-                    Field field = clazz.getDeclaredField(fieldName);
-                    field.setAccessible(true);
-                    return field.get(instance);
-                } catch (NoSuchFieldException | IllegalAccessException e) {
-                    clazz = clazz.getSuperclass();
-                }
-            }
-        }
-        throw new RuntimeException("None of the fields " + Arrays.toString(possibleFieldNames)
-                + " found in instance of " + instance.getClass().getName());
-    }
+public class ShuttleScraperTest {
 
     @Test
     public void testFetchScheduleSuccess() throws Exception {
@@ -60,7 +42,7 @@ public class ShuttleScraperTest {
             Mockito.when(mockConnection.get()).thenReturn(dummyDoc);
 
             // Call the method under test.
-            List<?> schedules = ShuttleScraper.fetchSchedule();
+            List<ShuttleSchedule> schedules = ShuttleScraper.fetchSchedule();
 
             // Expect 4 ShuttleSchedule objects:
             // Monday-Thursday: Loyola and SGW (two departure times each).
@@ -75,46 +57,34 @@ public class ShuttleScraperTest {
             // For times: try "times", "mTimes"
 
             // Schedule 0: Monday-Thursday, Loyola
-            Object schedule0 = schedules.get(0);
-            String day0 = (String) getFieldValue(schedule0, "day", "mDay");
-            String location0 = (String) getFieldValue(schedule0, "location", "mLocation");
-            List<?> times0 = (List<?>) getFieldValue(schedule0, "times", "mTimes");
-            assertEquals("Monday-Thursday", day0);
-            assertEquals("Loyola", location0);
-            assertEquals(2, times0.size());
-            assertEquals("08:00", times0.get(0));
-            assertEquals("09:00", times0.get(1));
+            ShuttleSchedule schedule0 = schedules.get(0);
+            assertEquals("Monday-Thursday", schedule0.getDay());
+            assertEquals("Loyola", schedule0.getCampus());
+            assertEquals(2, schedule0.getDepartureTimes().size());
+            assertEquals("08:00", schedule0.getDepartureTimes().get(0));
+            assertEquals("09:00", schedule0.getDepartureTimes().get(1));
 
             // Schedule 1: Monday-Thursday, SGW
-            Object schedule1 = schedules.get(1);
-            String day1 = (String) getFieldValue(schedule1, "day", "mDay");
-            String location1 = (String) getFieldValue(schedule1, "location", "mLocation");
-            List<?> times1 = (List<?>) getFieldValue(schedule1, "times", "mTimes");
-            assertEquals("Monday-Thursday", day1);
-            assertEquals("SGW", location1);
-            assertEquals(2, times1.size());
-            assertEquals("08:15", times1.get(0));
-            assertEquals("09:15", times1.get(1));
+            ShuttleSchedule schedule1 = schedules.get(1);
+            assertEquals("Monday-Thursday", schedule1.getDay());
+            assertEquals("SGW", schedule1.getCampus());
+            assertEquals(2, schedule1.getDepartureTimes().size());
+            assertEquals("08:15", schedule1.getDepartureTimes().get(0));
+            assertEquals("09:15", schedule1.getDepartureTimes().get(1));
 
             // Schedule 2: Friday, Loyola
-            Object schedule2 = schedules.get(2);
-            String day2 = (String) getFieldValue(schedule2, "day", "mDay");
-            String location2 = (String) getFieldValue(schedule2, "location", "mLocation");
-            List<?> times2 = (List<?>) getFieldValue(schedule2, "times", "mTimes");
-            assertEquals("Friday", day2);
-            assertEquals("Loyola", location2);
-            assertEquals(1, times2.size());
-            assertEquals("10:00", times2.get(0));
+            ShuttleSchedule schedule2 = schedules.get(2);
+            assertEquals("Friday", schedule2.getDay());
+            assertEquals("Loyola", schedule2.getCampus());
+            assertEquals(1, schedule2.getDepartureTimes().size());
+            assertEquals("10:00", schedule2.getDepartureTimes().get(0));
 
             // Schedule 3: Friday, SGW
-            Object schedule3 = schedules.get(3);
-            String day3 = (String) getFieldValue(schedule3, "day", "mDay");
-            String location3 = (String) getFieldValue(schedule3, "location", "mLocation");
-            List<?> times3 = (List<?>) getFieldValue(schedule3, "times", "mTimes");
-            assertEquals("Friday", day3);
-            assertEquals("SGW", location3);
-            assertEquals(1, times3.size());
-            assertEquals("10:15", times3.get(0));
+            ShuttleSchedule schedule3 = schedules.get(3);
+            assertEquals("Friday", schedule3.getDay());
+            assertEquals("SGW", schedule3.getCampus());
+            assertEquals(1, schedule3.getDepartureTimes().size());
+            assertEquals("10:15", schedule3.getDepartureTimes().get(0));
         }
     }
 
