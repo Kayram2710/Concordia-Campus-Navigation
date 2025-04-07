@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>MappedIn Map</title>
+    <link href="https://cdn.jsdelivr.net/npm/@mappedin/mappedin-js@beta/lib/index.css" rel="stylesheet" />
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        .full-screen {
+            height: 100%;
+        }
+
+        .marker {
+            border-radius: 10px;
+            border: 1px solid #293136;
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            padding: 3px;
+            font-family: sans-serif;
+            box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.25);
+        }
+
+        .marker:before {
+            content: '';
+            width: 0;
+            height: 0;
+            top: calc(50% - 10px);
+            left: -10px;
+            z-index: 1;
+            position: absolute;
+            border-bottom: 10px solid transparent;
+            border-top: 10px solid transparent;
+        }
+
+        .mappedin-marker[data-anchor="left"] .marker:before {
+            left: auto;
+            right: -5px;
+            border-left: 10px solid #333333;
+        }
+
+        .mappedin-marker[data-anchor="right"] .marker:before {
+            left: -5px;
+            right: auto;
+            border-right: 10px solid #333333;
+        }
+
+        .mappedin-marker[data-anchor="top"] .marker:before {
+            left: calc(50% - 10px);
+            top: calc(100% - 5px);
+            right: auto;
+            border-bottom: 10px solid transparent;
+            border-top: 10px solid #333333;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+        }
+
+        .mappedin-marker[data-anchor="bottom"] .marker:before {
+            left: calc(50% - 10px);
+            top: -15px;
+            right: auto;
+            border-bottom: 10px solid #333333;
+            border-top: 10px solid transparent;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+        }
+
+        .mappedin-marker[data-anchor="bottom-left"] .marker:before {
+            left: auto;
+            right: -10px;
+            top: -10px;
+            border-bottom: 10px solid #333333;
+            border-top: 10px solid transparent;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            transform: rotate(45deg);
+        }
+
+        .mappedin-marker[data-anchor="bottom-right"] .marker:before {
+            left: -10px;
+            right: auto;
+            top: -10px;
+            border-bottom: 10px solid #333333;
+            border-top: 10px solid transparent;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            transform: rotate(-45deg);
+        }
+
+        .mappedin-marker[data-anchor="top-left"] .marker:before {
+            left: auto;
+            right: -10px;
+            top: calc(100% - 10px);
+            border-bottom: 10px solid transparent;
+            border-top: 10px solid #333333;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            transform: rotate(-45deg);
+        }
+
+        .mappedin-marker[data-anchor="top-right"] .marker:before {
+            left: -10px;
+            right: auto;
+            top: calc(100% - 10px);
+            border-bottom: 10px solid transparent;
+            border-top: 10px solid #333333;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            transform: rotate(45deg);
+        }
+    </style>
+</head>
+<body>
+    <div id="mappedin-map" class="full-screen" >
+        <script type="module" >
+            import { getMapData, show3dMap } from 'https://cdn.jsdelivr.net/npm/@mappedin/mappedin-js@beta/lib/esm/index.js';
+            var mapView;
+            var mapData;
+            const KEY = '<MAPPED_IN_KEY>';
+            const SECRET = '<MAPPED_IN_SECRET>';
+            var lastKnownLat;
+            var lastKnownLng;
+
+            function loadMap(mapId, floorId) {
+                const options = {
+                    key: KEY,
+                    secret: SECRET,
+                    mapId: mapId
+                };
+
+                getMapData(options).then(async (data) => {
+                    mapView = await show3dMap(document.getElementById('mappedin-map'), data, {
+                        initialFloor: floorId
+                    });
+                    mapData = data;
+                    mapView.Labels.all();
+
+                    mapData.getByType('space').forEach(space => {
+                        mapView.updateState(space, {
+                            interactive: true,
+                        });
+                    });
+
+                    mapView.on('click', async (e) => {
+                        mapClicked(e);
+                    });
+
+                    Android.mapReady();
+                });
+            }
+            window.loadMap = (mapId, floorId) => loadMap(mapId, floorId);
+
+            function switchFloor(floorId) {
+                mapView.setFloor(floorId);
+            }
+            window.switchFloor = (floorId) => switchFloor(floorId);
+
+            function mapClicked(e) {
+                var name = "Location"
+                if(e.spaces[0]?.name) {
+                    name = e.spaces[0].name;
+                }
+
+                Android.mapClicked(name, e.coordinate.latitude, e.coordinate.longitude);
+            }
+
+            function addMarker(coordinate, name) {
+                const markerContent = '<div class="marker">' + name + '</div>';
+                mapView.Markers.add(coordinate, markerContent);
+            }
+
+            function addMarkerFromAndroid(lat, lng, name) {
+                const latAsNumber = Number(lat);
+                const lngAsNumber = Number(lng);
+                const coord = mapView.createCoordinate(latAsNumber, lngAsNumber);
+                addMarker(coord, name);
+            }
+            window.addMarkerFromAndroid = (lat, lng, name) => addMarkerFromAndroid(lat, lng, name);
+
+            function drawPath(start, end) {
+                const firstSpace = mapData.getByType('space').find((s) => s.name === start);
+                const secondSpace = mapData.getByType('space').find((s) => s.name === end);
+
+                if(firstSpace && secondSpace) {
+                    const dir = mapData.getDirections(firstSpace, secondSpace);
+
+                    if(dir) {
+                        mapView.Navigation.draw(dir);
+                    }
+                }
+            }
+            window.drawPath = (start, end) => drawPath(start, end);
+
+            function drawPathFromBlueDot(end) {
+                const coord = mapView.createCoordinate(lastKnownLat, lastKnownLng);
+                const destination = mapData.getByType('space').find((s) => s.name === end);
+
+                if(destination) {
+                    const dir = mapData.getDirections(coord, destination);
+
+                    if(dir) {
+                        mapView.Navigation.draw(dir);
+                    }
+                }
+            }
+            window.drawPathFromBlueDot = (end) => drawPathFromBlueDot(end);
+
+            function drawPathWithCoordinates(startLat, startLng, startFloorId, endLat, endLng, endFloorId, isAccessible) {
+                const startLatAsNumber = Number(startLat);
+                const startLngAsNumber = Number(startLng);
+                var startCoord;
+                if(startFloorId != 'null') {
+                    const floor = mapData.getByType('floor').find((s) => s.id === startFloorId);
+                    startCoord = mapView.createCoordinate(startLatAsNumber, startLngAsNumber, floor);
+                }
+                else {
+                    startCoord = mapView.createCoordinate(startLatAsNumber, startLngAsNumber);
+                }
+
+                const endLatAsNumber = Number(endLat);
+                const endLngAsNumber = Number(endLng);
+                var endCoord;
+                if(endFloorId != 'null') {
+                    const endFloor = mapData.getByType('floor').find((s) => s.id === endFloorId);
+                    endCoord = mapView.createCoordinate(endLatAsNumber, endLngAsNumber, endFloor);
+                }
+                else {
+                    endCoord = mapView.createCoordinate(endLatAsNumber, endLngAsNumber);
+                }
+
+                var dir;
+                const acccessible = isAccessible == 'true';
+                if(acccessible) {
+                    dir = mapData.getDirections(startCoord, endCoord, { accessible: true });
+                }
+                else {
+                    dir = mapData.getDirections(startCoord, endCoord);
+                }
+
+                if(dir) {
+                    mapView.Navigation.draw(dir);
+                }
+            }
+            window.drawPathWithCoordinates = (startLat, startLng, startFloorId, endLat, endLng, endFloorId, isAccessible) => drawPathWithCoordinates(startLat, startLng, startFloorId, endLat, endLng, endFloorId, isAccessible);
+
+            function updateBlueDotPosition(lat, lng) {
+                const latAsNumber = Number(lat);
+                const lngAsNumber = Number(lng);
+                lastKnownLat = latAsNumber;
+                lastKnownLng = lngAsNumber;
+                mapView.BlueDot.update({ latitude: latAsNumber, longitude: lngAsNumber })
+            }
+            window.updateBlueDotPosition = (lat, lng) => updateBlueDotPosition(lat, lng);
+
+            function toggleBlueDot(isEnabled) {
+                const enabled = isEnabled == 'true';
+                if(enabled) {
+                    mapView.BlueDot.enable();
+                }
+                else {
+                    mapView.BlueDot.disable();
+                }
+            }
+            window.toggleBlueDot = (isEnabled) => toggleBlueDot(isEnabled);
+
+            function removeAllMarkers() {
+                mapView.Markers.removeAll();
+            }
+            window.removeAllMarkers = () => removeAllMarkers();
+
+            function clearPath() {
+                mapView.Navigation.clear()
+            }
+            window.clearPath = () => clearPath();
+
+        </script>
+    </div>
+</body>
+</html>

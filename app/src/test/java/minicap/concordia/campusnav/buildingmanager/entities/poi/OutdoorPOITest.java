@@ -5,7 +5,9 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import minicap.concordia.campusnav.buildingmanager.enumerations.BuildingName;
 import minicap.concordia.campusnav.buildingmanager.enumerations.POIType;
+import minicap.concordia.campusnav.map.MapCoordinates;
 
 public class OutdoorPOITest {
 
@@ -14,7 +16,7 @@ public class OutdoorPOITest {
     @Before
     public void setUp() {
         // OutdoorPOI instance with sample data.
-        outdoorPOI = new OutdoorPOI("Outdoor Test POI", POIType.RESTAURANT, true, 45.0f, -73.0f);
+        outdoorPOI = new OutdoorPOI(new MapCoordinates(45, -73, "Outdoor Test POI"), POIType.RESTAURANT, true);
     }
 
     @Test

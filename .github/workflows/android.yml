@@ -26,6 +26,8 @@ jobs:
       run: |
         cat <<EOF > local.properties
         MAPS_API_KEY="${{secrets.MAPS_API_KEY}}"
+        MAPPED_IN_KEY="${{secrets.MAPPED_IN_KEY}}"
+        MAPPED_IN_SECRET="${{secrets.MAPPED_IN_SECRET}}"
     - name: Build with Gradle
       run: ./gradlew build
     - name: Run tests with Gradle

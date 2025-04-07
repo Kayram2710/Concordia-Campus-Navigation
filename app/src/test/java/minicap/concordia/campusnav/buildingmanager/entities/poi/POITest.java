@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import minicap.concordia.campusnav.buildingmanager.enumerations.POIType;
+import minicap.concordia.campusnav.map.MapCoordinates;
 
 public class POITest {
 
@@ -14,7 +15,7 @@ public class POITest {
     // Dummy subclass to allow instantiation since POI's constructor is protected.
     private static class DummyPOI extends POI {
         public DummyPOI(String name, POIType type, boolean isAccessibilityFeature, double latitude, double longitude) {
-            super(name, type, isAccessibilityFeature, latitude, longitude);
+            super(new MapCoordinates(latitude,longitude,name), type, isAccessibilityFeature);
         }
     }
 

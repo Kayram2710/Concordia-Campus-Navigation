@@ -5,13 +5,9 @@ import minicap.concordia.campusnav.map.MapCoordinates;
 public class Location
 {
     private MapCoordinates coordinates;
-    private final double latitude;
-    private final double longitude;
 
-    protected Location(double latitude, double longitude){
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.coordinates = new MapCoordinates(latitude, longitude);
+    protected Location(MapCoordinates coordinates){
+        this.coordinates = coordinates;
     }
 
     /**
@@ -27,7 +23,7 @@ public class Location
      * @return double representing latitude
      */
     public double getLatitude() {
-        return latitude;
+        return coordinates.getLat();
     }
 
     /**
@@ -35,6 +31,14 @@ public class Location
      * @return double representing longitude
      */
     public double getLongitude() {
-        return longitude;
+        return coordinates.getLng();
+    }
+
+    /**
+     * Gets the associated name of the location
+     * @return String name
+     */
+    public String getLocationName() {
+        return coordinates.getName();
     }
 }

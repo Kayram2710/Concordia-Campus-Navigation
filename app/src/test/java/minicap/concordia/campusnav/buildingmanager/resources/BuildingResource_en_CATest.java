@@ -25,8 +25,7 @@ public class BuildingResource_en_CATest {
     @Test
     public void testContentsCount() {
         Object[][] contents = resource.getContents();
-        // There should be 7 keys defined: 2 campuses and 5 buildings.
-        assertEquals(7, contents.length);
+        assertEquals(65, contents.length);
     }
 
     @Test
@@ -37,8 +36,43 @@ public class BuildingResource_en_CATest {
         Campus campus = (Campus) obj;
         assertEquals("Sir George William campus", campus.getCampusName());
         List<BuildingName> expectedBuildings = Arrays.asList(
+                BuildingName.CI_ANNEX,
+                BuildingName.GREY_NUNS_ANNEX,
                 BuildingName.HALL,
-                BuildingName.MOLSON_SCHOOL_OF_BUSINESS);
+                BuildingName.LD_BUILDING,
+                BuildingName.MI_ANNEX,
+                BuildingName.P_ANNEX,
+                BuildingName.FAUBOURG_BUILDING,
+                BuildingName.LEARNING_SQUARE,
+                BuildingName.GUY_DE_MAISONNEUVE_BUILDING,
+                BuildingName.Q_ANNEX,
+                BuildingName.TORONTO_DOMINION_BUILDING,
+                BuildingName.PR_ANNEX,
+                BuildingName.RR_ANNEX,
+                BuildingName.FA_ANNEX,
+                BuildingName.M_ANNEX,
+                BuildingName.MOLSON_SCHOOL_OF_BUSINESS,
+                BuildingName.ER_BUILDING,
+                BuildingName.K_ANNEX,
+                BuildingName.T_ANNEX,
+                BuildingName.CL_ANNEX,
+                BuildingName.R_ANNEX,
+                BuildingName.VISUAL_ARTS_BUILDING,
+                BuildingName.X_ANNEX,
+                BuildingName.B_ANNEX,
+                BuildingName.SAMUEL_BRONFMAN_BUILDING,
+                BuildingName.GS_BUILDING,
+                BuildingName.FAUBOURG_STE_CATHERINE_BUILDING,
+                BuildingName.GREY_NUNS_BUILDING,
+                BuildingName.MU_ANNEX,
+                BuildingName.Z_ANNEX,
+                BuildingName.EN_ANNEX,
+                BuildingName.V_ANNEX,
+                BuildingName.ENGINEERING_COMPUTER_SCIENCE_AND_VISUAL_ARTS_INTEGRATED_COMPLEX,
+                BuildingName.S_ANNEX,
+                BuildingName.D_ANNEX,
+                BuildingName.JW_MCCONNELL_BUILDING
+        );
         assertEquals(expectedBuildings, campus.getAssociatedBuildings());
         assertEquals(45.49701, campus.getLatitude(), 0.00001);
         assertEquals(-73.57877, campus.getLongitude(), 0.00001);
@@ -53,8 +87,32 @@ public class BuildingResource_en_CATest {
         assertEquals("Loyola campus", campus.getCampusName());
         List<BuildingName> expectedBuildings = Arrays.asList(
                 BuildingName.LOYOLA_CENTRAL_BUILDING,
+                BuildingName.ST_IGNATIUS_OF_LOYOLA_CHURCH,
+                BuildingName.CENTRE_FOR_STRUCTURAL_AND_FUNCTIONAL_GENOMICS,
+                BuildingName.PERFORM_CENTRE,
+                BuildingName.HINGSTON_HALL_WING_HC,
+                BuildingName.LOYOLA_JESUIT_HALL_AND_CONFERENCE_CENTRE,
+                BuildingName.RECREATION_AND_ATHLETICS_COMPLEX,
+                BuildingName.QUADRANGLE,
+                BuildingName.TERREBONNE_BUILDING,
+                BuildingName.HINGSTON_HALL_WING_HA,
+                BuildingName.APPLIED_SCIENCE_HUB,
+                BuildingName.OSCAR_PETERSON_CONCERT_HALL,
+                BuildingName.STUDENT_CENTRE,
+                BuildingName.BB_ANNEX,
+                BuildingName.HINGSTON_HALL_WING_HB,
+                BuildingName.RICHARD_J_RENAUD_SCIENCE_COMPLEX,
+                BuildingName.PHYSICAL_SERVICES_BUILDING,
+                BuildingName.SOLAR_HOUSE,
                 BuildingName.VANIER_EXTENSION,
-                BuildingName.VANIER_LIBRARY);
+                BuildingName.VANIER_LIBRARY,
+                BuildingName.JESUIT_RESIDENCE,
+                BuildingName.STINGER_DOME,
+                BuildingName.ADMINISTRATION_BUILDING,
+                BuildingName.F_C_SMITH_BUILDING,
+                BuildingName.BH_ANNEX,
+                BuildingName.COMMUNICATION_STUDIES_AND_JOURNALISM_BUILDING,
+                BuildingName.PSYCHOLOGY_BUILDING);
         assertEquals(expectedBuildings, campus.getAssociatedBuildings());
         assertEquals(45.45863, campus.getLatitude(), 0.00001);
         assertEquals(-73.64188, campus.getLongitude(), 0.00001);
@@ -77,7 +135,7 @@ public class BuildingResource_en_CATest {
         assertEquals(45.49701, building.getLatitude(), 0.00001);
         assertEquals(-73.57877, building.getLongitude(), 0.00001);
         // Verify image resource and address
-        assertEquals(R.drawable.hallbuilding, building.getBuildingImageRes());
+        assertEquals(2131231075, building.getBuildingImageRes());
         assertEquals("1455 De Maisonneuve Blvd W, Montreal, QC H3G 1M8", building.getBuildingAddress());
         // Verify the associated building enum
         assertEquals(BuildingName.HALL, building.getBuildingIdentifier());
@@ -96,7 +154,7 @@ public class BuildingResource_en_CATest {
         assertEquals(17, building.getFloors().size());
         assertEquals(45.495323, building.getLatitude(), 0.00001);
         assertEquals(-73.579229, building.getLongitude(), 0.00001);
-        assertEquals(R.drawable.jmsb, building.getBuildingImageRes());
+        assertEquals(2131231081, building.getBuildingImageRes());
         assertEquals("1450 Guy Street Montreal, QC H3H 0A1", building.getBuildingAddress());
         assertEquals(BuildingName.MOLSON_SCHOOL_OF_BUSINESS, building.getBuildingIdentifier());
     }
@@ -114,7 +172,7 @@ public class BuildingResource_en_CATest {
         assertEquals(1, building.getFloors().size());
         assertEquals(45.45863, building.getLatitude(), 0.00001);
         assertEquals(-73.64066, building.getLongitude(), 0.00001);
-        assertEquals(R.drawable.loy_central, building.getBuildingImageRes());
+        assertEquals(2131230947, building.getBuildingImageRes());
         assertEquals("7141 Sherbrooke St W, Montreal, Quebec H4B 2A7", building.getBuildingAddress());
         assertEquals(BuildingName.LOYOLA_CENTRAL_BUILDING, building.getBuildingIdentifier());
     }
@@ -132,7 +190,7 @@ public class BuildingResource_en_CATest {
         assertEquals(3, building.getFloors().size());
         assertEquals(45.45891, building.getLatitude(), 0.00001);
         assertEquals(-73.63888, building.getLongitude(), 0.00001);
-        assertEquals(R.drawable.vanier_library, building.getBuildingImageRes());
+        assertEquals(2131230970, building.getBuildingImageRes());
         assertEquals("7141 Sherbrooke St W, Montreal, Quebec H4B 1R6", building.getBuildingAddress());
         assertEquals(BuildingName.VANIER_LIBRARY, building.getBuildingIdentifier());
     }
@@ -151,7 +209,7 @@ public class BuildingResource_en_CATest {
         assertEquals(45.45891, building.getLatitude(), 0.00001);
         assertEquals(-73.63888, building.getLongitude(), 0.00001);
         // Note: Vanier Extension uses the same drawable as Vanier Library.
-        assertEquals(R.drawable.vanier_library, building.getBuildingImageRes());
+        assertEquals(2131230969, building.getBuildingImageRes());
         assertEquals("7141 Rue Sherbrooke O, Montréal, QC H4B 1R6", building.getBuildingAddress());
         assertEquals(BuildingName.VANIER_EXTENSION, building.getBuildingIdentifier());
     }

@@ -1,7 +1,6 @@
 package minicap.concordia.campusnav.screens;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -37,6 +36,7 @@ import minicap.concordia.campusnav.map.enums.MapColors;
 
 public class NavigationActivity extends AppCompatActivity implements AbstractMap.MapUpdateListener, MainMenuDialog.MainMenuListener {
 
+    private static final String NAVIGATION_TAG = "Navigation";
     private static final int LOCATION_REQUEST_CODE = 101;
     public static final float DEFAULT_ZOOM = 18f;
     private static final float ROUTE_UPDATE_DISTANCE_THRESHOLD = 50;
@@ -79,7 +79,7 @@ public class NavigationActivity extends AppCompatActivity implements AbstractMap
      * Initializing the UI components
      */
     private void initializeViews() {
-        //Grabing UI elements from the layout
+        //Grabbing UI elements from the layout
         etaText = findViewById(R.id.eta_text);
         statsText = findViewById(R.id.statsText);
         mainMenu = findViewById(R.id.mainMenu);
@@ -105,7 +105,7 @@ public class NavigationActivity extends AppCompatActivity implements AbstractMap
             travelMode = extras.getString("travel_mode", "WALK");
 
         } catch (Exception e) {
-            Log.e("Navigation", "Error parsing intent data", e);
+            Log.e(NAVIGATION_TAG, "Error parsing intent data", e);
             Toast.makeText(this, "Invalid navigation data", Toast.LENGTH_SHORT).show();
             finish();
         }
@@ -143,6 +143,11 @@ public class NavigationActivity extends AppCompatActivity implements AbstractMap
 
     }
 
+    @Override
+    public void onMapElementLoaded() {
+        //Not used
+    }
+
     /**
      * Callback method invoked when the map is ready.
      * It sets up the map style, markers, route, and checks location permissions.
@@ -159,7 +164,7 @@ public class NavigationActivity extends AppCompatActivity implements AbstractMap
             checkLocationPermissions();
 
         } catch (Exception e) {
-            Log.e("Navigation", "Map ready error", e);
+            Log.e(NAVIGATION_TAG, "Map ready error", e);
             Toast.makeText(this, "Map setup failed", Toast.LENGTH_SHORT).show();
         }
     }
@@ -229,7 +234,6 @@ public class NavigationActivity extends AppCompatActivity implements AbstractMap
     /**
      * Determines whether the route should be updated based on the distance threshold.
      * @param position The current position.
-     * @return True if the distance from the last update exceeds the threshold; false otherwise.
      */
     private void updateCameraPosition(MapCoordinates position, float bearing) {
         float markerRotation = (bearing + 110) % 360;
@@ -268,14 +272,14 @@ public class NavigationActivity extends AppCompatActivity implements AbstractMap
                 return "";
             }
 
-            int minutes = Integer.parseInt(etaDuration.replaceAll("[^0-9]", ""));
+            int minutes = Integer.parseInt(etaDuration.replaceAll("\\D", ""));
             long arrivalMillis = System.currentTimeMillis() + (minutes * 60 * 1000L);
 
             SimpleDateFormat sdf = new SimpleDateFormat("h:mm a", Locale.getDefault());
             return sdf.format(new Date(arrivalMillis));
 
         } catch (Exception e) {
-            Log.e("Navigation", "Error formatting arrival time", e);
+            Log.e(NAVIGATION_TAG, "Error formatting arrival time", e);
             return etaDuration;
         }
     }
@@ -324,7 +328,7 @@ public class NavigationActivity extends AppCompatActivity implements AbstractMap
                 locationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
             }
         } catch (Exception e) {
-            Log.e("Navigation", "Location updates error", e);
+            Log.e(NAVIGATION_TAG, "Location updates error", e);
         }
     }
 
@@ -335,7 +339,7 @@ public class NavigationActivity extends AppCompatActivity implements AbstractMap
         try {
             locationClient.removeLocationUpdates(locationCallback);
         } catch (Exception e) {
-            Log.e("Navigation", "Stop updates error", e);
+            Log.e(NAVIGATION_TAG, "Stop updates error", e);
         }
     }
 
@@ -418,11 +422,11 @@ public class NavigationActivity extends AppCompatActivity implements AbstractMap
 
     @Override
     public void onMapError(String errorString) {
-
+        //Not used in navigation
     }
 
     @Override
     public void onMapClicked(MapCoordinates coordinates) {
-
+        //Clicks are not used in navigation
     }
 }

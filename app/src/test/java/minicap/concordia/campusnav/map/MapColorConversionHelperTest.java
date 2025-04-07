@@ -30,24 +30,4 @@ public class MapColorConversionHelperTest {
         Assert.assertEquals(expectedColor, actual, 0.0001);
     }
 
-    @Test
-    public void testGetMappedInMarkerHTML_DefaultColor() {
-        String expectedTitle = "test";
-        String expectedHTML = "<div style=\"background-color:white; border: 2px solid red; padding: 0.4rem; border-radius: 0.4rem;\">" + expectedTitle + "</div>";
-
-        String actual = MapColorConversionHelper.getMappedInMarkerHTML(MapColors.DEFAULT, expectedTitle);
-
-        Assert.assertEquals(expectedHTML, actual);
-    }
-
-    @Test
-    public void testGetMappedInMarkerHTML_NonDefaultColor() {
-        String expectedTitle = "test";
-        String expectedHTML = "<div style=\"background-color:white; border: 2px solid blue; padding: 0.4rem; border-radius: 0.4rem;\">" + expectedTitle + "</div>";
-
-        String actual = MapColorConversionHelper.getMappedInMarkerHTML(MapColors.BLUE, expectedTitle);
-
-        Assert.assertEquals(expectedHTML, actual);
-    }
-
 }

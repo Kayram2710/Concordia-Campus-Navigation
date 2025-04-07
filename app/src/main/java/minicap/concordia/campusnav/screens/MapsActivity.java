@@ -14,11 +14,11 @@ import androidx.annotation.NonNull;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -27,23 +27,25 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import android.widget.EditText;
 
 import minicap.concordia.campusnav.R;
+import minicap.concordia.campusnav.buildingmanager.entities.BuildingFloor;
 import minicap.concordia.campusnav.buildingmanager.enumerations.POIType;
-import minicap.concordia.campusnav.buildingshape.CampusBuildingShapes;
 import minicap.concordia.campusnav.components.MainMenuDialog;
 import minicap.concordia.campusnav.components.placeholder.ShuttleBusScheduleFragment;
 
+import minicap.concordia.campusnav.helpers.UserLocationService;
 import minicap.concordia.campusnav.map.InternalGoogleMaps;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -51,8 +53,9 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
-
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
@@ -69,12 +72,14 @@ import minicap.concordia.campusnav.components.BuildingSelectorFragment;
 import minicap.concordia.campusnav.map.enums.SupportedMaps;
 import minicap.concordia.campusnav.savedstates.States;
 
-public class MapsActivity extends FragmentActivity
-        implements AbstractMap.MapUpdateListener, BuildingInfoBottomSheetFragment.BuildingInfoListener, MainMenuDialog.MainMenuListener {
+public class MapsActivity extends AppCompatActivity
+        implements AbstractMap.MapUpdateListener, BuildingInfoBottomSheetFragment.BuildingInfoListener, MainMenuDialog.MainMenuListener, UserLocationService.UserLocationUpdatedListener {
 
-    private final String MAPS_ACTIVITY_TAG = "MapsActivity";
+    private static final String MAPS_ACTIVITY_TAG = "MapsActivity";
 
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+
+    private static final String DEFAULT_FLOOR = "1";
 
     private AbstractMap map;
 
@@ -83,8 +88,6 @@ public class MapsActivity extends FragmentActivity
     private MapCoordinates startingCoords;
 
     private boolean isDestinationSet;
-
-    private boolean hasUserLocationBeenSet;
 
     private boolean runBus;
     private boolean runDir;
@@ -109,13 +112,13 @@ public class MapsActivity extends FragmentActivity
     private ImageButton transitButton;
     private ImageButton startRouteButton;
 
+    private Spinner floorSpinner;
+
     private Button buildingViewButton;
     private int buildingViewButtonMargin;
 
 
     private BottomSheetBehavior<ConstraintLayout> bottomSheetBehavior;
-
-    private FusedLocationProviderClient fusedLocationClient;
 
     private String travelMode = "DRIVE";
 
@@ -127,13 +130,17 @@ public class MapsActivity extends FragmentActivity
 
     private Fragment curMapFragment;
 
+    private boolean hasUserLocationBeenSet;
+
     private String eventAddress;
+
+    private String currentBuildingName;
+
+    private String currentFloorName;
 
     private final States states = States.getInstance();
 
     private ConstraintLayout.LayoutParams buildingViewParams;
-
-
 
     // We use this to launch and capture the results of the search location activity
     private ActivityResultLauncher<Intent> searchLocationLauncher;
@@ -142,6 +149,7 @@ public class MapsActivity extends FragmentActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.e("DARKMODE", "Creating Maps Activity");
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_maps);
@@ -152,6 +160,7 @@ public class MapsActivity extends FragmentActivity
         isSwitchingMap = false;
         buildingManager = ConcordiaBuildingManager.getInstance();
         currentMap = SupportedMaps.GOOGLE_MAPS;
+        currentFloorName = DEFAULT_FLOOR;
 
         //Check bundle for any additional requests
         Bundle bundle = getIntent().getExtras();
@@ -240,9 +249,7 @@ public class MapsActivity extends FragmentActivity
         carButton.setSelected(true);
 
         walkButton.setOnClickListener(v -> changeSelectedTravelMethod(walkButton, "WALK"));
-
-        //google maps does not support "wheelchair" for now, travelMode is the same as walking
-        wheelchairButton.setOnClickListener(v -> changeSelectedTravelMethod(wheelchairButton, "WALK"));
+        wheelchairButton.setOnClickListener(v -> changeSelectedTravelMethod(wheelchairButton, "WHEELCHAIR"));
         carButton.setOnClickListener(v -> changeSelectedTravelMethod(carButton, "DRIVE"));
         transitButton.setOnClickListener(v -> changeSelectedTravelMethod(transitButton, "TRANSIT"));
 
@@ -279,13 +286,13 @@ public class MapsActivity extends FragmentActivity
         // Register your activity result launcher
         searchLocationLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
-                this::HandleSearchLocationResult);
+                this::handleSearchLocationResult);
 
         navigationActivityLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
-                this::HandleNavigationActivityResult);
+                this::handleNavigationActivityResult);
 
-        getUserLocationPath();
+        setStartingPoint(true, "", new MapCoordinates(0, 0));
 
         if(runBus){
             showShuttleScheduleFragment();
@@ -306,9 +313,22 @@ public class MapsActivity extends FragmentActivity
         // Set click listeners for each button
         restaurantButton.setOnClickListener(view -> map.displayPOI(origin, POIType.RESTAURANT));
         coffeeButton.setOnClickListener(view -> map.displayPOI(origin, POIType.COFFEE_SHOP));
-        //TODO handle Fountain, elevator and washroom (Indoor POI)
+        fountainButton.setOnClickListener(view -> map.displayPOI(origin, POIType.WATER_FOUNTAIN));
+        elevatorButton.setOnClickListener(view -> map.displayPOI(origin, POIType.ELEVATOR));
+        washroomButton.setOnClickListener(view -> map.displayPOI(origin, POIType.WASHROOM));
+        floorSpinner = findViewById(R.id.floorSpinner);
     }
 
+    @Override
+    protected void onResume(){
+        super.onResume();
+    }
+
+    /**
+     * Updates the button margins on the bottom sheet
+     * @param bottomSheet The bottom sheet to update
+     * @param slideOffset The offset for sliding the menu
+     */
     private void updateButtonMargin(View bottomSheet, float slideOffset){
         int progress = (int)(slideOffset * bottomSheet.getHeight());
         int finalProgress = (int)(progress * 0.8f);
@@ -337,7 +357,11 @@ public class MapsActivity extends FragmentActivity
 
     }
 
-    private void HandleNavigationActivityResult(ActivityResult result) {
+    /**
+     * Handles the result from the navigation activity
+     * @param result The result from the navigation activity
+     */
+    private void handleNavigationActivityResult(ActivityResult result) {
         //Empty since no result is being passed
     }
 
@@ -345,7 +369,7 @@ public class MapsActivity extends FragmentActivity
      * Handles the result of the SearchLocationActivity
      * @param result The result received from the activity
      */
-    private void HandleSearchLocationResult(ActivityResult result) {
+    private void handleSearchLocationResult(ActivityResult result) {
         runOnUiThread(() -> {
             searchText.clearFocus();
             destinationEditText.clearFocus();
@@ -369,12 +393,24 @@ public class MapsActivity extends FragmentActivity
         }
 
         boolean isIndoors = returnData.getBoolean(LocationSearchActivity.KEY_RETURN_BOOL_IS_INDOORS);
+        boolean useCurrentLocation = returnData.getBoolean(LocationSearchActivity.KEY_RETURN_IS_CURRENT_LOCATION_BOOL);
+        String buildingName;
+        String floor;
 
-        if(isIndoors) {
-            switchToMap(SupportedMaps.MAPPED_IN);
+        if(!useCurrentLocation) {
+            if(isIndoors) {
+                buildingName = returnData.getString(LocationSearchActivity.KEY_RETURN_STRING_BUILDING_NAME);
+                floor = returnData.getString(LocationSearchActivity.KEY_RETURN_STRING_FLOOR_ID);
+                evaluateShouldSwitchFloor(buildingName, floor);
+                switchToMap(SupportedMaps.MAPPED_IN);
+            }
+            else {
+                switchToMap(SupportedMaps.GOOGLE_MAPS);
+            }
         }
         else {
-            switchToMap(SupportedMaps.GOOGLE_MAPS);
+            //Force the user location to update
+            hasUserLocationBeenSet = false;
         }
 
         boolean isDestination = returnData.getBoolean(LocationSearchActivity.KEY_RETURN_BOOL_IS_DESTINATION);
@@ -385,10 +421,58 @@ public class MapsActivity extends FragmentActivity
             setDestination(returnedLocation, newCoords);
         }
         else {
-            boolean useCurrentLocation = returnData.getBoolean(LocationSearchActivity.KEY_RETURN_IS_CURRENT_LOCATION_BOOL);
             setStartingPoint(useCurrentLocation, returnedLocation, newCoords);
         }
 
+    }
+
+    /**
+     * Checks if the map needs to switch building/floors
+     * @param buildingName The name of the building
+     * @param floor The requested floor
+     */
+    private void evaluateShouldSwitchFloor(String buildingName, String floor) {
+        if(isSwitchingMap || !map.getIsIndoor()) {
+            currentBuildingName = buildingName;
+            currentFloorName = floor;
+            return;
+        }
+
+        if(currentBuildingName.equals(buildingName)) {
+            if(!currentFloorName.equals(floor)) {
+                currentFloorName = floor;
+                switchFloors();
+            }
+        }
+        else {
+            currentBuildingName = buildingName;
+            currentFloorName = floor;
+            switchBuilding();
+        }
+    }
+
+    /**
+     * Switches the map to another building
+     */
+    private void switchBuilding() {
+        if(!map.getIsIndoor() || isSwitchingMap) {
+            return;
+        }
+
+        Building newBuilding = buildingManager.searchBuildingsByName(currentBuildingName).get(0);
+        map.loadBuilding(newBuilding, currentFloorName);
+        configureIndoorFloorSpinner();
+    }
+
+    /**
+     * Switches the map to another floor
+     */
+    private void switchFloors() {
+        if(!map.getIsIndoor() || isSwitchingMap) {
+            return;
+        }
+
+        map.switchFloor(currentFloorName);
     }
 
     /**
@@ -413,18 +497,17 @@ public class MapsActivity extends FragmentActivity
         Log.d(MAPS_ACTIVITY_TAG, "Set starting location to: " + locationString + " with coords: (" + coordinates.getLat() + ", " + coordinates.getLng() + "), is current location: " + useCurrentLocation);
 
         if(useCurrentLocation && !hasUserLocationBeenSet) {
-            //getUserLocationPath will set the starting point and then call this again
-            getUserLocationPath();
+            UserLocationService.getLastKnownLocation(this, this);
             return;
         }
+
         String yourLocationText;
         if(useCurrentLocation) {
             yourLocationText = getString(R.string.your_location);
         }
         else {
-            //Reset this flag in case the user wants to use their own location in the future
             hasUserLocationBeenSet = false;
-            origin = coordinates;
+            origin = new MapCoordinates(coordinates.getLat(), coordinates.getLng(), currentFloorName);
             yourLocationText = locationString;
         }
 
@@ -445,7 +528,8 @@ public class MapsActivity extends FragmentActivity
     private void setDestination(String locationString, MapCoordinates coordinates) {
         Log.d(MAPS_ACTIVITY_TAG, "Set destination to: " + locationString + " with coords: (" + coordinates.getLat() + ", " + coordinates.getLng() + ")");
 
-        destination = coordinates;
+        MapCoordinates coordinatesWithFloor = new MapCoordinates(coordinates.getLat(), coordinates.getLng(), currentFloorName);
+        destination = coordinatesWithFloor;
         runOnUiThread(() -> {
             destinationEditText.setText(locationString);
         });
@@ -542,12 +626,12 @@ public class MapsActivity extends FragmentActivity
     private void initializeMap(boolean replace) {
         if(currentMap == SupportedMaps.GOOGLE_MAPS) {
             map = new InternalGoogleMaps(this);
-            campusSwitchBtn.setVisibility(VISIBLE);
         }
         else {
             map = new InternalMappedIn(this);
-            campusSwitchBtn.setVisibility(GONE);
         }
+
+        configureActivityForMap();
 
         curMapFragment = map.initialize();
         FragmentManager fm = getSupportFragmentManager();
@@ -564,41 +648,79 @@ public class MapsActivity extends FragmentActivity
     }
 
     /**
+     * Configures UI elements for the current map
+     */
+    private void configureActivityForMap() {
+        if(map.getIsIndoor()) {
+            campusSwitchBtn.setVisibility(GONE);
+
+            if(floorSpinner != null) {
+                floorSpinner.setVisibility(VISIBLE);
+            }
+
+            configureIndoorFloorSpinner();
+        }
+        else {
+            campusSwitchBtn.setVisibility(VISIBLE);
+
+            if(floorSpinner != null) {
+                floorSpinner.setVisibility(GONE);
+            }
+        }
+    }
+
+    /**
+     * Configures the floor spinner for the current building
+     */
+    private void configureIndoorFloorSpinner() {
+        Building currentBuilding = buildingManager.searchBuildingsByName(currentBuildingName).get(0);
+        Collection<BuildingFloor> allFloors = currentBuilding.getFloors();
+        List<BuildingFloor> validFloors = new ArrayList<>();
+        int currentSelectedFloor = 0;
+        int initialFloorForSpinner = 0;
+
+        for(BuildingFloor floor : allFloors) {
+            if(!floor.getFloorId().equals(BuildingFloor.NO_FLOOR_ID)) {
+                validFloors.add(floor);
+
+                if(floor.getFloorName().equals(currentFloorName)) {
+                    initialFloorForSpinner = currentSelectedFloor;
+                }
+
+                currentSelectedFloor++;
+            }
+        }
+
+        ArrayAdapter<BuildingFloor> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, validFloors);
+
+        floorSpinner.setAdapter(adapter);
+
+        floorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                BuildingFloor selectedFloor = (BuildingFloor) parent.getItemAtPosition(position);
+
+                if(selectedFloor != null) {
+                    currentFloorName = selectedFloor.getFloorName();
+                    switchFloors();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                //Not needed, the menu will just close
+            }
+        });
+
+        floorSpinner.setSelection(initialFloorForSpinner);
+    }
+
+    /**
      * Enables location tracking on the map
      */
     private void enableMyLocation() {
         if (!map.toggleLocationTracking(true)) {
             Toast.makeText(this, "Location permission not granted", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    /**
-     * Gets the User Location and invokes drawPath
-     */
-    private void getUserLocationPath() {
-        if (fusedLocationClient == null) {
-            fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        }
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            fusedLocationClient.getLastLocation()
-                    .addOnSuccessListener(this, location -> {
-                        if (location != null) {
-                            //If you are emulating and need to change your current location, use the emulator controls.
-                            origin = new MapCoordinates(location.getLatitude(), location.getLongitude());
-                            hasUserLocationBeenSet = true;
-
-                            String buildingName = CampusBuildingShapes.getBuildingNameAtLocation(origin.toGoogleMapsLatLng());
-                            if (buildingName != null) {
-                                Toast.makeText(this, "You're in: " + buildingName, Toast.LENGTH_LONG).show();
-                            } else {
-                                setStartingPoint(true, "", origin);
-                            }
-                        }
-                    });
-        } else {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    LOCATION_PERMISSION_REQUEST_CODE);
         }
     }
 
@@ -646,6 +768,16 @@ public class MapsActivity extends FragmentActivity
         bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
+    @Override
+    public void onMapElementLoaded() {
+        if(!map.getIsIndoor()) {
+            return;
+        }
+
+        Building currentBuilding = buildingManager.searchBuildingsByName(currentBuildingName).get(0);
+        map.loadBuilding(currentBuilding, currentFloorName);
+    }
+
     @SuppressLint("PotentialBehaviorOverride")
     @Override
     public void onMapReady() {
@@ -654,10 +786,7 @@ public class MapsActivity extends FragmentActivity
             map.centerOnCoordinates(startingCoords);
         }
 
-        //By default, origin is user location
         enableMyLocation();
-        getUserLocationPath();
-
 
         if(isSwitchingMap) {
             isSwitchingMap = false;
@@ -680,6 +809,11 @@ public class MapsActivity extends FragmentActivity
             });
         }
     }
+
+    /**
+     * Gets coordinates associated with an address
+     * @param addressString The address to get coordinates for
+     */
     private void geocodeAndSetDestination(String addressString) {
         Geocoder geocoder = new Geocoder(this, Locale.getDefault());
         try {
@@ -716,6 +850,9 @@ public class MapsActivity extends FragmentActivity
         setDestination(address, coordinates);
     }
 
+    /**
+     * Shows the main menu
+     */
     public void showMainMenuDialog() {
         if(!states.isMenuOpen()) {
             MainMenuDialog dialog = new MainMenuDialog(this);
@@ -723,14 +860,17 @@ public class MapsActivity extends FragmentActivity
         }
     }
 
-
-    // Show building selector fragment
+    /**
+     * Shows the building selector fragment
+     */
     private void showBuildingSelectorFragment() {
         BuildingSelectorFragment fragment = new BuildingSelectorFragment();
         fragment.show(getSupportFragmentManager(), "BuildingSelectorFragment");
     }
 
-    // Show shuttle schedule fragment
+    /**
+     * Shows the shuttle schedule fragment
+     */
     private void showShuttleScheduleFragment(){
         ShuttleBusScheduleFragment shuttleBusScheduleFragment = new ShuttleBusScheduleFragment();
         shuttleBusScheduleFragment.show(getSupportFragmentManager(), "ShuttleBusScheduleFragment");
@@ -744,14 +884,28 @@ public class MapsActivity extends FragmentActivity
         setDestination(building.getBuildingName(), location);
     }
 
-    // Replacing default Maps center location button functionality
+    /**
+     * Centers the map on the user's location
+     */
     private void centerOnUserLocation() {
         if (origin != null) {
             map.centerOnCoordinates(origin);
         } else {
-            getUserLocationPath();
+            setStartingPoint(true, "", new MapCoordinates(0, 0));
             Toast.makeText(this, "Getting your location...", Toast.LENGTH_SHORT).show();
         }
     }
 
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        states.toggleMenu(false);
+    }
+
+    @Override
+    public void onUserLocationUpdated(MapCoordinates newPosition) {
+        hasUserLocationBeenSet = true;
+        origin = new MapCoordinates(newPosition.getLat(), newPosition.getLng(), DEFAULT_FLOOR);
+        setStartingPoint(true, "", new MapCoordinates(0, 0));
+    }
 }

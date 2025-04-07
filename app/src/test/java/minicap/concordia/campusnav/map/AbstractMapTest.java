@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,6 +29,11 @@ public class AbstractMapTest {
         String estimatedTime = null;
         String errorString = null;
         MapCoordinates clickedCoordinates = null;
+
+        @Override
+        public void onMapElementLoaded() {
+
+        }
 
         @Override
         public void onMapReady() {
@@ -113,11 +119,6 @@ public class AbstractMapTest {
         }
 
         @Override
-        public void switchToFloor(String floorName) {
-            // Dummy implementation.
-        }
-
-        @Override
         public boolean toggleLocationTracking(boolean isEnabled) {
             return true;
         }
@@ -183,8 +184,8 @@ public class AbstractMapTest {
         // addPolyline: no return.
         testMap.addPolyline(Collections.emptyList(), 5, 0, false);
 
-        // decodePolyline: should return null.
-        assertNull(testMap.decodePolyline("dummy"));
+        // decodePolyline: should be empty.
+        assertEquals(new ArrayList<>(),testMap.decodePolyline("dummy"));
 
         // calculateRemainingDistance: should return 0.
         assertEquals(0f, testMap.calculateRemainingDistance(new MapCoordinates(1.0, 2.0)), 0.001f);

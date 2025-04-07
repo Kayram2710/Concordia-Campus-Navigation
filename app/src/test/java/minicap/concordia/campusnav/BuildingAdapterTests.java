@@ -6,97 +6,75 @@ import android.widget.FrameLayout;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-import org.robolectric.RuntimeEnvironment;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import minicap.concordia.campusnav.buildingmanager.entities.Building;
-import minicap.concordia.campusnav.buildingmanager.entities.BuildingFloor;
-import minicap.concordia.campusnav.buildingmanager.enumerations.CampusName;
-import minicap.concordia.campusnav.buildingmanager.enumerations.BuildingName;
 import minicap.concordia.campusnav.components.BuildingAdapter;
+import org.robolectric.RuntimeEnvironment;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 33)
 public class BuildingAdapterTests {
 
-    private Building dummyBuilding;
+    private Building mockBuilding;
     private BuildingAdapter adapter;
-
-    // Dummy subclass of Building using dummy values for required constructor parameters.
-    // We override getBuildingName() to return the desired name.
-    private static class DummyBuilding extends Building {
-        private final String dummyBuildingName;
-
-        public DummyBuilding(String buildingName) {
-            // Call the superclass constructor with dummy values.
-            // The second parameter might be used internally, but we override getBuildingName().
-            super("dummyId", buildingName, CampusName.SGW,
-                    new HashMap<String, BuildingFloor>(), 0.0, 0.0, 0, "dummy", BuildingName.HALL);
-            this.dummyBuildingName = buildingName;
-        }
-
-        @Override
-        public String getBuildingName() {
-            return dummyBuildingName;
-        }
-    }
 
     @Before
     public void setUp() {
-        // Create a dummy building instance with the building name "Mock Building".
-        dummyBuilding = new DummyBuilding("Mock Building");
+        // Create a mock Building using Mockito
+        mockBuilding = Mockito.mock(Building.class);
+        Mockito.when(mockBuilding.getBuildingName()).thenReturn("Mock Building");
 
-        // Create an adapter with one dummy building.
-        List<Building> buildingList = Arrays.asList(dummyBuilding);
+        // Create an adapter with one mock building
+        List<Building> buildingList = Arrays.asList(mockBuilding);
         adapter = new BuildingAdapter(buildingList);
     }
 
     @Test
     public void testAdapter_BindsBuildingName() {
-        // Prepare a parent view to inflate item layouts.
+        // Prepare a parent view to inflate item layouts
         ViewGroup parent = new FrameLayout(RuntimeEnvironment.getApplication());
 
-        // Create a ViewHolder by inflating the item layout.
+        // Create a ViewHolder
         BuildingAdapter.BuildingViewHolder vh = adapter.onCreateViewHolder(parent, 0);
 
-        // Bind the item at position 0.
+        // Bind the (only) item in position 0
         adapter.onBindViewHolder(vh, 0);
 
-        // Verify that the TextView displays "Mock Building".
-        String actualText = vh.tvBuildingName.getText().toString();
+        // The text in tvBuildingName should match "Mock Building"
+        String actualText = vh.getTvBuildingName().getText().toString();
         assertEquals("Mock Building", actualText);
     }
 
     @Test
     public void testAdapter_ClickListener() {
-        // Track if the callback was invoked.
+        // track if the callback was invoked
         final boolean[] clickInvoked = { false };
 
-        // Set a click listener that marks clickInvoked true and asserts the building name.
+        // Provide a listener that sets clickInvoked[0] = true
         adapter.setOnBuildingClickListener(building -> {
             clickInvoked[0] = true;
+            // assert which building was clicked
             assertEquals("Mock Building", building.getBuildingName());
         });
 
-        // Prepare a parent view.
+        // simulate binding a ViewHolder for position 0
         ViewGroup parent = new FrameLayout(RuntimeEnvironment.getApplication());
-
-        // Create and bind a ViewHolder.
         BuildingAdapter.BuildingViewHolder vh = adapter.onCreateViewHolder(parent, 0);
         adapter.onBindViewHolder(vh, 0);
 
-        // Simulate a click on the item view.
+        // Simulate a click on that item
         vh.itemView.performClick();
 
-        // Verify the click listener was invoked.
+        // Verify that the click listener was called
         assertTrue("Click listener should have been invoked", clickInvoked[0]);
     }
 }

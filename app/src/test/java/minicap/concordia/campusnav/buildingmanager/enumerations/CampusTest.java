@@ -4,11 +4,13 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import minicap.concordia.campusnav.buildingmanager.entities.Campus;
+import minicap.concordia.campusnav.map.MapCoordinates;
 
 public class CampusTest {
 
@@ -18,12 +20,12 @@ public class CampusTest {
     @Before
     public void setUp() {
         buildingNames = new ArrayList<>(Arrays.asList(BuildingName.HALL, BuildingName.HALL));
-        campus = new Campus("Test Campus", buildingNames, 45.0, -73.0);
+        campus = new Campus(new MapCoordinates(45,-73,"Test Campus"), buildingNames);
     }
 
     @Test
     public void testGetAssociatedBuildings() {
-        ArrayList<BuildingName> retrieved = campus.getAssociatedBuildings();
+        List<BuildingName> retrieved = campus.getAssociatedBuildings();
         assertNotNull("Associated buildings list should not be null", retrieved);
         assertEquals("There should be 2 associated buildings", 2, retrieved.size());
         // Both entries are HALL.

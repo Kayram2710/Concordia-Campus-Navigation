@@ -1,10 +1,11 @@
 package minicap.concordia.campusnav.buildingmanager.entities.poi;
 
 import minicap.concordia.campusnav.buildingmanager.enumerations.POIType;
+import minicap.concordia.campusnav.map.MapCoordinates;
 
 public class OutdoorPOI extends POI{
 
-    public OutdoorPOI(String name, POIType type, boolean isAccessibilityFeature, float latitude, float longitude) {
-        super(name, type, isAccessibilityFeature, latitude, longitude);
+    public OutdoorPOI(MapCoordinates coordinates, POIType type, boolean isAccessibilityFeature) {
+        super(coordinates, type, isAccessibilityFeature);
     }
 }

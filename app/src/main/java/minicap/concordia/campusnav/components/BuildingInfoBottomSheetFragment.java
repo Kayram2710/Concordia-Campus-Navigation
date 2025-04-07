@@ -1,6 +1,5 @@
 package minicap.concordia.campusnav.components;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
@@ -27,7 +26,9 @@ public class BuildingInfoBottomSheetFragment extends BottomSheetDialogFragment {
     private static final String ARG_BUILDING_NAME = "building_name";
     private static final String TAG = "BuildingInfoBottomSheet";
 
-    private TextView buildingNameText, buildingAddress, buildingDetails;
+    private TextView buildingNameText;
+    private TextView buildingAddress;
+    private TextView buildingDetails;
     private ImageView buildingImage;
     private ImageButton directionsButton;
 
@@ -42,8 +43,8 @@ public class BuildingInfoBottomSheetFragment extends BottomSheetDialogFragment {
         super.onAttach(context);
 
         // Set listener only if the activity implements BuildingInfoListener
-        if (context instanceof BuildingInfoListener) {
-            listener = (BuildingInfoListener) context;
+        if (context instanceof BuildingInfoListener buildingInfoListener) {
+            listener = buildingInfoListener;
         }
     }
 
@@ -77,6 +78,7 @@ public class BuildingInfoBottomSheetFragment extends BottomSheetDialogFragment {
 
     /**
      * Initializes UI elements.
+     * @param view The view being initialized
      */
     private void initializeViews(View view) {
         buildingNameText = view.findViewById(R.id.building_name);
@@ -114,6 +116,7 @@ public class BuildingInfoBottomSheetFragment extends BottomSheetDialogFragment {
 
     /**
      * Populates UI elements with building data.
+     * @param building The building used to populate information
      */
     private void populateBuildingData(Building building) {
         buildingNameText.setText(building.getBuildingName());

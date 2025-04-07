@@ -11,25 +11,11 @@ import org.junit.Test;
 import minicap.concordia.campusnav.buildingmanager.entities.poi.IndoorPOI;
 import minicap.concordia.campusnav.buildingmanager.enumerations.BuildingName;
 import minicap.concordia.campusnav.buildingmanager.enumerations.POIType;
+import minicap.concordia.campusnav.map.MapCoordinates;
 
 public class BuildingFloorTest {
 
     private BuildingFloor floor;
-
-    // Dummy implementation of IndoorPOI that calls the real parent constructor.
-    private static class DummyIndoorPOI extends IndoorPOI {
-        public DummyIndoorPOI(String name, POIType type, boolean accessibility) {
-            super(
-                    name,
-                    type,
-                    BuildingName.HALL,
-                    "TestFloor",
-                    accessibility,
-                    0.0,
-                    0.0
-            );
-        }
-    }
 
     @Before
     public void setUp() {
@@ -40,11 +26,6 @@ public class BuildingFloorTest {
     @Test
     public void testGetFloorName() {
         assertEquals("First Floor", floor.getFloorName());
-    }
-
-    @Test
-    public void testGetFloorPlanResource() {
-        assertEquals("floorPlanResource", floor.getFloorPlanResource());
     }
 
     @Test
@@ -60,8 +41,8 @@ public class BuildingFloorTest {
     @Test
     public void testSetFloorPOIsAndGetAllPOIsForFloor() {
         List<IndoorPOI> poiList = new ArrayList<>();
-        DummyIndoorPOI poi1 = new DummyIndoorPOI("Restaurant A", POIType.RESTAURANT, true);
-        DummyIndoorPOI poi2 = new DummyIndoorPOI("Coffee B", POIType.COFFEE_SHOP, false);
+        IndoorPOI poi1 = new IndoorPOI(new MapCoordinates(0,0,"Washroom"), POIType.WASHROOM, BuildingName.HALL,"first",true);
+        IndoorPOI poi2 = new IndoorPOI(new MapCoordinates(0,0,"Cafe"), POIType.COFFEE_SHOP, BuildingName.HALL,"first",true);
         poiList.add(poi1);
         poiList.add(poi2);
 
@@ -76,9 +57,9 @@ public class BuildingFloorTest {
     @Test
     public void testGetPOIsOfType() {
         List<IndoorPOI> poiList = new ArrayList<>();
-        DummyIndoorPOI poi1 = new DummyIndoorPOI("Resto X", POIType.RESTAURANT, true);
-        DummyIndoorPOI poi2 = new DummyIndoorPOI("Resto Y", POIType.RESTAURANT, false);
-        DummyIndoorPOI poi3 = new DummyIndoorPOI("Coffee Z", POIType.COFFEE_SHOP, true);
+        IndoorPOI poi1 = new IndoorPOI(new MapCoordinates(0,0,"Resto X"), POIType.RESTAURANT, BuildingName.HALL,"first",true);
+        IndoorPOI poi2 = new IndoorPOI(new MapCoordinates(0,0,"Resto Y"), POIType.RESTAURANT, BuildingName.HALL,"first",true);
+        IndoorPOI poi3 = new IndoorPOI(new MapCoordinates(0,0,"Coffee Z"), POIType.COFFEE_SHOP, BuildingName.HALL,"first",true);
         poiList.add(poi1);
         poiList.add(poi2);
         poiList.add(poi3);
@@ -98,9 +79,9 @@ public class BuildingFloorTest {
     @Test
     public void testGetAccessibilityPOIs() {
         List<IndoorPOI> poiList = new ArrayList<>();
-        DummyIndoorPOI poi1 = new DummyIndoorPOI("Accessible Resto", POIType.RESTAURANT, true);
-        DummyIndoorPOI poi2 = new DummyIndoorPOI("Inaccessible Resto", POIType.RESTAURANT, false);
-        DummyIndoorPOI poi3 = new DummyIndoorPOI("Accessible Coffee", POIType.COFFEE_SHOP, true);
+        IndoorPOI poi1 = new IndoorPOI(new MapCoordinates(0,0,"Resto X"), POIType.RESTAURANT, BuildingName.HALL,"first",true);
+        IndoorPOI poi2 = new IndoorPOI(new MapCoordinates(0,0,"Resto Y"), POIType.RESTAURANT, BuildingName.HALL,"first",false);
+        IndoorPOI poi3 = new IndoorPOI(new MapCoordinates(0,0,"Coffee Z"), POIType.COFFEE_SHOP, BuildingName.HALL,"first",true);
         poiList.add(poi1);
         poiList.add(poi2);
         poiList.add(poi3);

@@ -2,14 +2,19 @@ package minicap.concordia.campusnav.buildingmanager.entities;
 
 import static org.junit.Assert.*;
 
+import static java.util.Map.entry;
+
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import minicap.concordia.campusnav.R;
 import minicap.concordia.campusnav.buildingmanager.enumerations.BuildingName;
 import minicap.concordia.campusnav.buildingmanager.enumerations.CampusName;
+import minicap.concordia.campusnav.map.MapCoordinates;
 
 public class BuildingTest {
 
@@ -28,15 +33,14 @@ public class BuildingTest {
         floors.put("2nd", floor2);
 
         building = new Building(
-                "Test Building",          // buildingName
-                "A test building",        // description
-                CampusName.SGW,           // associatedCampus
-                floors,                   // floors
-                45.0,                     // latitude
-                -73.0,                    // longitude
-                123,                      // buildingImageRes
-                "123 Test St",            // buildingAddress
-                BuildingName.HALL         // buildingIdentifier
+                new MapCoordinates(45.49701, -73.57877, "Hall building"),
+                "A test building",
+                CampusName.SGW,
+                floors,
+                R.drawable.sgw_h,
+                "1455 De Maisonneuve Blvd W, Montreal, QC H3G 1M8",
+                BuildingName.HALL,
+                "67df02d0aa7c59000baf8d83"
         );
     }
 
@@ -48,17 +52,17 @@ public class BuildingTest {
 
     @Test
     public void testGetBuildingAddress() {
-        assertEquals("123 Test St", building.getBuildingAddress());
+        assertEquals("1455 De Maisonneuve Blvd W, Montreal, QC H3G 1M8", building.getBuildingAddress());
     }
 
     @Test
     public void testGetBuildingImageRes() {
-        assertEquals(123, building.getBuildingImageRes());
+        assertEquals(2131231075, building.getBuildingImageRes());
     }
 
     @Test
     public void testGetBuildingName() {
-        assertEquals("Test Building", building.getBuildingName());
+        assertEquals("Hall building", building.getBuildingName());
     }
 
     @Test
@@ -89,6 +93,6 @@ public class BuildingTest {
 
     @Test
     public void testToString() {
-        assertEquals("Test Building", building.toString());
+        assertEquals("Hall building", building.toString());
     }
 }

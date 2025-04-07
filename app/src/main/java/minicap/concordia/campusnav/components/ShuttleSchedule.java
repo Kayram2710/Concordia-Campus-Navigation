@@ -15,14 +15,26 @@ public class ShuttleSchedule {
         this.departureTimes = departureTimes;
     }
 
+    /**
+     * Gets the day for this schedule
+     * @return String version of the day
+     */
     public String getDay() {
         return day;
     }
 
+    /**
+     * Gets the campus name associated with this schedule
+     * @return String campus name
+     */
     public String getCampus() {
         return campus;
     }
 
+    /**
+     * Gets the departure times for this schedule
+     * @return List of String departure times
+     */
     public List<String> getDepartureTimes() {
         return departureTimes;
     }

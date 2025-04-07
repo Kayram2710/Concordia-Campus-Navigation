@@ -14,7 +14,7 @@ public class LocationTest {
     // Dummy subclass to allow instantiation of the abstract (protected constructor) class.
     private static class DummyLocation extends Location {
         public DummyLocation(double latitude, double longitude) {
-            super(latitude, longitude);
+            super(new MapCoordinates(latitude, longitude));
         }
     }
 

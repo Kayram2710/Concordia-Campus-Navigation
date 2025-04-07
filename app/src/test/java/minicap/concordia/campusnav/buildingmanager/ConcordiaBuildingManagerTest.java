@@ -2,14 +2,19 @@ package minicap.concordia.campusnav.buildingmanager;
 
 import static org.junit.Assert.*;
 
+import static java.util.Map.entry;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import minicap.concordia.campusnav.R;
 import minicap.concordia.campusnav.buildingmanager.entities.Building;
 import minicap.concordia.campusnav.buildingmanager.entities.BuildingFloor;
 import minicap.concordia.campusnav.buildingmanager.entities.Campus;
@@ -17,6 +22,7 @@ import minicap.concordia.campusnav.buildingmanager.entities.poi.OutdoorPOI;
 import minicap.concordia.campusnav.buildingmanager.enumerations.BuildingName;
 import minicap.concordia.campusnav.buildingmanager.enumerations.CampusName;
 import minicap.concordia.campusnav.buildingmanager.enumerations.POIType;
+import minicap.concordia.campusnav.map.MapCoordinates;
 
 public class ConcordiaBuildingManagerTest {
 
@@ -35,15 +41,26 @@ public class ConcordiaBuildingManagerTest {
         // Replace the buildings map with our test data.
         HashMap<BuildingName, Building> buildings = new HashMap<>();
         Building dummyBuilding = new Building(
-                "Hall",                // building name
-                "Dummy description",   // description
-                CampusName.SGW,        // campus name
-                new HashMap<String, BuildingFloor>(), // floors (empty for test)
-                0.0,                   // latitude
-                0.0,                   // longitude
-                1,                     // number of floors (dummy value)
-                "Dummy address",       // address
-                BuildingName.HALL      // building enum value
+                new MapCoordinates(45.49701, -73.57877, "Hall building"),
+                "The Henry F. Hall Building is a high-density hub, located on De Maisonneuve Boulevard, on Concordia’s downtown Sir-George-Williams Campus.\nThe cube-like structure was completed in 1966. Its exterior is made of pre-fabricated, stressed concrete, a feature of the brutalist movement, often associated with French architect Le Corbusier.",
+                CampusName.SGW,
+                new HashMap<String, BuildingFloor>(Map.ofEntries(
+                        entry("1", new BuildingFloor("1", BuildingName.HALL, "m_c456d3c72998c98c")),
+                        entry("2", new BuildingFloor("2", BuildingName.HALL, "m_a64b0271f6702bf1")),
+                        entry("3", new BuildingFloor("3", BuildingName.HALL, BuildingFloor.NO_FLOOR_ID)),
+                        entry("4", new BuildingFloor("4", BuildingName.HALL, BuildingFloor.NO_FLOOR_ID)),
+                        entry("5", new BuildingFloor("5", BuildingName.HALL, BuildingFloor.NO_FLOOR_ID)),
+                        entry("6", new BuildingFloor("6", BuildingName.HALL, BuildingFloor.NO_FLOOR_ID)),
+                        entry("7", new BuildingFloor("7", BuildingName.HALL, BuildingFloor.NO_FLOOR_ID)),
+                        entry("8", new BuildingFloor("8", BuildingName.HALL, "m_60db7dff71a44370")),
+                        entry("9", new BuildingFloor("9", BuildingName.HALL, "m_20a3f55cfa5df04e")),
+                        entry("10", new BuildingFloor("10", BuildingName.HALL, BuildingFloor.NO_FLOOR_ID)),
+                        entry("11", new BuildingFloor("11", BuildingName.HALL, BuildingFloor.NO_FLOOR_ID))
+                )),
+                R.drawable.sgw_h,
+                "1455 De Maisonneuve Blvd W, Montreal, QC H3G 1M8",
+                BuildingName.HALL,
+                "67df02d0aa7c59000baf8d83"
         ) {
             @Override
             public String getBuildingName() {
@@ -59,7 +76,7 @@ public class ConcordiaBuildingManagerTest {
         // Replace the campuses map with our test data.
         HashMap<CampusName, Campus> campuses = new HashMap<>();
         // Supply dummy latitude and longitude values (0.0, 0.0) as required.
-        Campus dummyCampus = new Campus("SGW", new ArrayList<>(Arrays.asList(BuildingName.HALL)), 0.0, 0.0) {
+        Campus dummyCampus = new Campus(  new MapCoordinates(45.49701, -73.57877, "Sir George William campus"), new ArrayList<>(Arrays.asList(BuildingName.HALL))) {
             @Override
             public ArrayList<BuildingName> getAssociatedBuildings() {
                 return new ArrayList<>(Arrays.asList(BuildingName.HALL));
@@ -75,7 +92,7 @@ public class ConcordiaBuildingManagerTest {
         ArrayList<OutdoorPOI> outdoorPOIs = new ArrayList<>();
 
         // Create a dummy POI that simulates an accessible POI using POIType.WASHROOM.
-        OutdoorPOI poi1 = new OutdoorPOI("POI1", POIType.WASHROOM, true, 0f, 0f) {
+        OutdoorPOI poi1 = new OutdoorPOI(new MapCoordinates(0,0,"POI1"), POIType.WASHROOM, true) {
             @Override
             public POIType getPOIType() {
                 return POIType.WASHROOM;
@@ -87,7 +104,7 @@ public class ConcordiaBuildingManagerTest {
         };
 
         // Create a dummy POI with a different type (simulate non-accessible) using POIType.ELEVATOR.
-        OutdoorPOI poi2 = new OutdoorPOI("POI2", POIType.ELEVATOR, false, 0f, 0f) {
+        OutdoorPOI poi2 = new OutdoorPOI(new MapCoordinates(0,0,"POI2"), POIType.ELEVATOR, false) {
             @Override
             public POIType getPOIType() {
                 return POIType.ELEVATOR;
@@ -99,7 +116,7 @@ public class ConcordiaBuildingManagerTest {
         };
 
         // Create a dummy POI with type WASHROOM but with accessibility flag false.
-        OutdoorPOI poi3 = new OutdoorPOI("POI3", POIType.WASHROOM, false, 0f, 0f) {
+        OutdoorPOI poi3 = new OutdoorPOI(new MapCoordinates(0,0,"POI3"), POIType.WASHROOM, false) {
             @Override
             public POIType getPOIType() {
                 return POIType.WASHROOM;
@@ -114,9 +131,6 @@ public class ConcordiaBuildingManagerTest {
         outdoorPOIs.add(poi2);
         outdoorPOIs.add(poi3);
 
-        Field outdoorPOIsField = ConcordiaBuildingManager.class.getDeclaredField("outdoorPOIs");
-        outdoorPOIsField.setAccessible(true);
-        outdoorPOIsField.set(manager, outdoorPOIs);
     }
 
     @Test
@@ -144,7 +158,7 @@ public class ConcordiaBuildingManagerTest {
 
     @Test
     public void testGetBuildingsForCampus() {
-        ArrayList<Building> buildingsForCampus = manager.getBuildingsForCampus(CampusName.SGW);
+        List<Building> buildingsForCampus = manager.getBuildingsForCampus(CampusName.SGW);
         assertEquals("There should be 1 building for campus SGW", 1, buildingsForCampus.size());
         assertEquals("Hall", buildingsForCampus.get(0).getBuildingName());
 
@@ -166,46 +180,8 @@ public class ConcordiaBuildingManagerTest {
     }
 
     @Test
-    public void testGetAllOutdoorPOIs() {
-        ArrayList<OutdoorPOI> pois = manager.getAllOutdoorPOIs();
-        assertEquals("There should be 3 outdoor POIs", 3, pois.size());
-    }
-
-    @Test
-    public void testGetAllOutdoorPOIsOfType() {
-        // For type WASHROOM, poi1 and poi3 have that type.
-        ArrayList<OutdoorPOI> washroomPOIs = manager.getAllOutdoorPOIsOfType(POIType.WASHROOM);
-        assertEquals("There should be 2 POIs of type WASHROOM", 2, washroomPOIs.size());
-
-        // For type ELEVATOR, only poi2 should be returned.
-        ArrayList<OutdoorPOI> elevatorPOIs = manager.getAllOutdoorPOIsOfType(POIType.ELEVATOR);
-        assertEquals("There should be 1 POI of type ELEVATOR", 1, elevatorPOIs.size());
-    }
-
-    @Test
-    public void testGetOutdoorAccessibilityPOIs() {
-        ArrayList<OutdoorPOI> accessibilityPOIs = manager.getOutdoorAccessibilityPOIs();
-        // Only poi1 has its accessibility flag set to true.
-        assertEquals("There should be 1 accessible outdoor POI", 1, accessibilityPOIs.size());
-        // Verify that the returned POI is poi1.
-        assertTrue("The accessible POIs should contain poi1",
-                accessibilityPOIs.contains(manager.getAllOutdoorPOIs().get(0)));
-    }
-
-    @Test
-    public void testGetOutdoorAccessibilityPOIsWithType() {
-        // For type WASHROOM and accessibility true, only poi1 qualifies.
-        ArrayList<OutdoorPOI> result = manager.getOutdoorAccessibilityPOIs(POIType.WASHROOM);
-        assertEquals("There should be 1 accessible POI of type WASHROOM", 1, result.size());
-
-        // For type ELEVATOR and accessibility true, none should be returned.
-        result = manager.getOutdoorAccessibilityPOIs(POIType.ELEVATOR);
-        assertTrue("There should be no accessible POI of type ELEVATOR", result.isEmpty());
-    }
-
-    @Test
     public void testGetAllBuildings() {
-        ArrayList<Building> allBuildings = manager.getAllBuildings();
+        List<Building> allBuildings = manager.getAllBuildings();
         assertEquals("There should be 1 building in total", 1, allBuildings.size());
         assertEquals("The building should be 'Hall'", "Hall", allBuildings.get(0).getBuildingName());
     }

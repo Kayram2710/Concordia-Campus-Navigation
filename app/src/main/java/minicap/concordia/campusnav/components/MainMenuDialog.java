@@ -1,24 +1,20 @@
 package minicap.concordia.campusnav.components;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Switch;
 
 import com.google.android.material.sidesheet.SideSheetDialog;
 
 import minicap.concordia.campusnav.R;
-import minicap.concordia.campusnav.buildingmanager.ConcordiaBuildingManager;
-import minicap.concordia.campusnav.buildingmanager.entities.Campus;
-import minicap.concordia.campusnav.buildingmanager.enumerations.CampusName;
-import minicap.concordia.campusnav.map.MapCoordinates;
 import minicap.concordia.campusnav.savedstates.States;
 import minicap.concordia.campusnav.screens.ClassScheduleActivity;
-import minicap.concordia.campusnav.screens.MainActivity;
 import minicap.concordia.campusnav.screens.MapsActivity;
 
 public class MainMenuDialog extends SideSheetDialog {
@@ -29,6 +25,8 @@ public class MainMenuDialog extends SideSheetDialog {
     ImageButton directionsRedirect;
     ImageButton campusMapRedirect;
     ImageButton busScheduleRedirect;
+    Switch switchDarkMode;
+    SharedPreferences sharedPreferences;
     Context context;
     private final States states = States.getInstance();
 
@@ -38,6 +36,7 @@ public class MainMenuDialog extends SideSheetDialog {
     public MainMenuDialog(Context context) {
         super(context);
         this.context = context;
+        sharedPreferences = context.getSharedPreferences("Settings", Context.MODE_PRIVATE);
     }
 
     @Override
@@ -54,7 +53,10 @@ public class MainMenuDialog extends SideSheetDialog {
         states.toggleMenu(true);
     }
 
-
+    /**
+     * Initializes this menu's UI elements
+     * @param view The view used to initialize the private variables
+     */
     private void initializeViews(View view) {
         slidingMenu = view.findViewById(R.id.sliding_menu);
         closeMenuButton = view.findViewById(R.id.closeMenu);
@@ -62,9 +64,12 @@ public class MainMenuDialog extends SideSheetDialog {
         directionsRedirect = view.findViewById(R.id.directionsRedirect);
         campusMapRedirect = view.findViewById(R.id.campusMapRedirect);
         busScheduleRedirect = view.findViewById(R.id.busScheduleRedirect);
+        switchDarkMode = view.findViewById(R.id.switch_darkmodeMainMenu);
     }
 
-    //This passes
+    /**
+     * Initializes buttons and sets listeners
+     */
     public void populateButtons(){
 
         closeMenuButton.setOnClickListener(new View.OnClickListener() {
@@ -102,13 +107,24 @@ public class MainMenuDialog extends SideSheetDialog {
             }
         });
 
+        switchDarkMode.setChecked(states.isDarkModeOn());
+        switchDarkMode.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            states.toggleDarkMode(isChecked);
+        });
     }
 
+    /**
+     * Creates an intent for launching the MapsActivity
+     * @return Intent for launching MapsActivity
+     */
     public Intent campusMapRoutine(){
         states.toggleMenu(false);
         return new Intent(context, MapsActivity.class);
     }
 
+    /**
+     * Opens the MapsActivity and then opens the bus schedule on that page
+     */
     public void openBusSchedule(){
         Intent intent = campusMapRoutine();
 
@@ -117,6 +133,9 @@ public class MainMenuDialog extends SideSheetDialog {
         context.startActivity(intent);
     }
 
+    /**
+     * Opens the MapsActivity and then opens the Directions menu on launch
+     */
     public void openDirections(){
         Intent intent = campusMapRoutine();
 
@@ -125,17 +144,26 @@ public class MainMenuDialog extends SideSheetDialog {
         context.startActivity(intent);
     }
 
+    /**
+     * Opens the ClassScheduleActivity
+     */
     public void openClassSchedule() {
         states.toggleMenu(false);
         Intent intent = new Intent(context, ClassScheduleActivity.class);
         context.startActivity(intent);
     }
 
+    /**
+     * Opens the MapsActivity
+     */
     public void openCampusMap(){
         Intent intent = campusMapRoutine();
         context.startActivity(intent);
     }
 
+    /**
+     * Closes the menu
+     */
     public void close(){
         cancel();
     }

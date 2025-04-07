@@ -60,6 +60,11 @@ public class NavigationGoogleMapsTest {
         MapCoordinates mapClicked = null;
 
         @Override
+        public void onMapElementLoaded() {
+
+        }
+
+        @Override
         public void onMapReady() { mapReadyCalled = true; }
         @Override
         public void onEstimatedTimeUpdated(String newTime) { estimatedTime = newTime; }

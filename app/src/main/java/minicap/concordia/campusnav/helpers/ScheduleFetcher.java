@@ -14,7 +14,11 @@ public class ScheduleFetcher {
     public interface ScheduleFetchListener {
         void onScheduleFetched(List<ShuttleSchedule> schedules);
     }
-    // Fetches schedule in background thread
+
+    /**
+     * Fetches the schedule in a background thread
+     * @param listener The listener who receives the schedule
+     */
     public static void fetch(ScheduleFetchListener listener) {
         ExecutorService executor = Executors.newSingleThreadExecutor(); // Uses ExecutorService for threading
         Handler handler = new Handler(Looper.getMainLooper()); // Handler for main thread callback

@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:nestedScrollingEnabled="true"
+    android:overScrollMode="never">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/buildingSelectorRoot"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:alpha="0.95"
         android:background="@color/light_burgundy"
         tools:context=".components.BuildingSelectorFragment">
@@ -24,7 +27,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
-
 
             <!-- EditText for Search -->
             <EditText
@@ -126,4 +128,4 @@
             app:layout_constraintTop_toBottomOf="@id/tv_loyola_title" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>
+</ScrollView>

@@ -116,12 +116,12 @@ public class GoogleMapsAPITest {
         requestBody.add("origin", origin);
 
         JsonObject destination = new JsonObject();
-        JsonObject destinationLocation = new JsonObject();
+        JsonObject destinationLoc = new JsonObject();
         JsonObject destinationLatLng = new JsonObject();
         destinationLatLng.addProperty("latitude", 37.417670);
         destinationLatLng.addProperty("longitude", -122.079595);
-        destinationLocation.add("latLng", destinationLatLng);
-        destination.add("location", destinationLocation);
+        destinationLoc.add("latLng", destinationLatLng);
+        destination.add("location", destinationLoc);
         requestBody.add("destination", destination);
         try{
             URL url = new URL(urlString);
@@ -159,27 +159,28 @@ public class GoogleMapsAPITest {
     @Test
     public void testParseRoute_withValidJson() {
         try{
-            String jsonResponse = "{\n" +
-                    "   \"routes\": [\n" +
-                    "      {\n" +
-                    "         \"legs\": [\n" +
-                    "            {\n" +
-                    "               \"duration\": \"503s\",\n" +
-                    "               \"steps\": [\n" +
-                    "                  {\n" +
-                    "                     \"polyline\": {\n" +
-                    "                        \"encodedPolyline\": \"austGztc`MHIJ?Zj@H^TZJLPDB?LI\\\\{@JQJ@bAbA[`AgA`Dq@xBcCuCsB}B{BcCu@{@QUc@s@eAyAg@}@w@{Aa@y@IOe@_AcBeDOYYe@Ua@KKMM][m@i@aBwA}AsAAA}@s@gA}@e@a@e@a@_@Y_Au@_AaAMMQSYYuAqAcAcAs@s@[[}AyAGEUUt@mB~BkG|@x@`A|@bBvA\"\n" +
-                    "                     }\n" +
-                    "                  }\n" +
-                    "               ]\n" +
-                    "            }\n" +
-                    "         ]\n" +
-                    "      }\n" +
-                    "   ]\n" +
-                    "}";
+            String jsonResponse = """
+                    {
+                       "routes": [
+                          {
+                             "legs": [
+                                {
+                                   "duration": "503s",
+                                   "steps": [
+                                      {
+                                         "polyline": {
+                                            "encodedPolyline": "austGztc`MHIJ?Zj@H^TZJLPDB?LI\\\\{@JQJ@bAbA[`AgA`Dq@xBcCuCsB}B{BcCu@{@QUc@s@eAyAg@}@w@{Aa@y@IOe@_AcBeDOYYe@Ua@KKMM][m@i@aBwA}AsAAA}@s@gA}@e@a@e@a@_@Y_Au@_AaAMMQSYYuAqAcAcAs@s@[[}AyAGEUUt@mB~BkG|@x@`A|@bBvA"
+                                         }
+                                      }
+                                   ]
+                                }
+                             ]
+                          }
+                       ]
+                    }""";
 
-            FetchPathTask fetchPathTask = new FetchPathTask(null);
-            JSONArray steps = fetchPathTask.parseRoute(jsonResponse).getJSONArray(0);
+            FetchPathTask task = new FetchPathTask(null);
+            JSONArray steps = task.parseRoute(jsonResponse).getJSONArray(0);
             assertNotNull("The steps should not be null", steps);
             String encodedPolyline = steps.getJSONObject(0).getJSONObject("polyline").getString("encodedPolyline");
             List<LatLng> decodedPoints = PolyUtil.decode(encodedPolyline);
@@ -195,8 +196,8 @@ public class GoogleMapsAPITest {
     @Test
     public void testParseRoute_withInvalidJson() {
         String invalidJson = "{ invalid json response }";
-        FetchPathTask fetchPathTask = new FetchPathTask(null);
-        JSONArray steps = fetchPathTask.parseRoute(invalidJson);
+        FetchPathTask task = new FetchPathTask(null);
+        JSONArray steps = task.parseRoute(invalidJson);
         assertNull("The path should be null", steps);
     }
 }

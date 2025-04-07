@@ -1,50 +1,36 @@
 package minicap.concordia.campusnav.map;
 
 import android.content.Context;
-import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-
-import com.mappedin.sdk.MPIMapView;
-import com.mappedin.sdk.listeners.MPIMapClickListener;
-import com.mappedin.sdk.listeners.MPIMapViewListener;
-import com.mappedin.sdk.models.MPIBlueDotPositionUpdate;
-import com.mappedin.sdk.models.MPIBlueDotStateChange;
-import com.mappedin.sdk.models.MPIData;
-import com.mappedin.sdk.models.MPIMap;
-import com.mappedin.sdk.models.MPIMapClickEvent;
-import com.mappedin.sdk.models.MPINavigatable;
-import com.mappedin.sdk.models.MPIState;
-import com.mappedin.sdk.web.MPIOptions;
-
+import minicap.concordia.campusnav.buildingmanager.entities.Building;
+import minicap.concordia.campusnav.buildingmanager.entities.BuildingFloor;
 import minicap.concordia.campusnav.buildingmanager.entities.poi.OutdoorPOI;
 import minicap.concordia.campusnav.buildingmanager.enumerations.POIType;
-import minicap.concordia.campusnav.components.MappedInFragment;
+import minicap.concordia.campusnav.components.MappedInWebViewFragment;
 import minicap.concordia.campusnav.map.enums.MapColors;
-import minicap.concordia.campusnav.map.helpers.MapColorConversionHelper;
 
-public class InternalMappedIn extends AbstractMap implements MPIMapViewListener, MPIMapClickListener {
+public class InternalMappedIn extends AbstractMap implements MappedInWebViewFragment.MappedInMapEventListener {
 
-    private MappedInFragment mappedInFragment;
-
-    private MPIMapView curMap;
+    private Building currentBuilding;
+    private MappedInWebViewFragment mappedInFragment;
 
     public InternalMappedIn(MapUpdateListener listener) {
         super(listener);
+        this.isIndoor = true;
     }
 
     @Override
     public Fragment initialize() {
-        mappedInFragment = MappedInFragment.newInstance(this, this);
+        mappedInFragment = MappedInWebViewFragment.newInstance(this);
 
         return mappedInFragment;
     }
 
     @Override
     public void addMarker(OutdoorPOI opoi) {
-        //TODO
+        //Not used in Indoor
     }
 
     @Override
@@ -53,13 +39,7 @@ public class InternalMappedIn extends AbstractMap implements MPIMapViewListener,
             clearAllMarkers();
         }
 
-        String markerHTML = MapColorConversionHelper.getMappedInMarkerHTML(color, title);
-
-        MPIMap.MPICoordinate coord = position.toMappedInCoordinate(curMap.getCurrentMap());
-        curMap.getMarkerManager().addByCoordinate(coord,
-                markerHTML,
-                new MPIOptions.Marker(),
-                null);
+        mappedInFragment.addMarker(position, title);
     }
 
     @Override
@@ -79,42 +59,61 @@ public class InternalMappedIn extends AbstractMap implements MPIMapViewListener,
 
     @Override
     public void clearAllMarkers() {
-        curMap.getMarkerManager().removeAll();
+        mappedInFragment.removeAllMarkers();
     }
 
     @Override
     public void clearPathFromMap() {
-
+        mappedInFragment.clearPath();
     }
 
     @Override
     public void displayRoute(MapCoordinates origin, MapCoordinates destination, String travelMode) {
+        boolean isAccessibility = travelMode.equals("WHEELCHAIR");
 
+        BuildingFloor startFloor = currentBuilding.getFloor(origin.getName());
+        BuildingFloor endFloor = currentBuilding.getFloor(destination.getName());
+
+        String startFloorId = startFloor == null ? null : startFloor.getFloorId();
+        String endFloorId = endFloor == null ? null : endFloor.getFloorId();
+
+        MapCoordinates startWithFloor = new MapCoordinates(origin.getLat(), origin.getLng(), startFloorId);
+        MapCoordinates endWithFloor = new MapCoordinates(destination.getLat(), destination.getLng(), endFloorId);
+
+        mappedInFragment.drawPath(startWithFloor, endWithFloor, isAccessibility);
     }
 
     @Override
     public void displayPOI(MapCoordinates origin, POIType type) {
-
+        //Not used
     }
 
     @Override
     public void centerOnCoordinates(MapCoordinates newCameraPosition) {
-
+        //Not used
     }
 
     @Override
-    public void switchToFloor(String floorName) {
+    public void loadBuilding(Building building, String initialFloor) {
+        currentBuilding = building;
+        String buildingId = building.getMapId();
+        BuildingFloor floor = building.getFloor(initialFloor);
+        String floorId = floor.getFloorId();
 
+        mappedInFragment.loadMap(buildingId, floorId);
+    }
+
+    @Override
+    public void switchFloor(String floor) {
+        BuildingFloor newFloor = currentBuilding.getFloor(floor);
+        String newFloorId = newFloor.getFloorId();
+
+        mappedInFragment.switchFloor(newFloorId);
     }
 
     @Override
     public boolean toggleLocationTracking(boolean isEnabled) {
-        if(isEnabled) {
-            curMap.getBlueDotManager().enable(new MPIOptions.BlueDot());
-        }
-        else {
-            curMap.getBlueDotManager().disable();
-        }
+        mappedInFragment.toggleLocationTracking(isEnabled);
         return true;
     }
 
@@ -124,53 +123,17 @@ public class InternalMappedIn extends AbstractMap implements MPIMapViewListener,
     }
 
     @Override
-    public void onBlueDotPositionUpdate(@NonNull MPIBlueDotPositionUpdate mpiBlueDotPositionUpdate) {
-        //To be updated
+    public void mapPageLoaded() {
+        listener.onMapElementLoaded();
     }
 
     @Override
-    public void onDataLoaded(@NonNull MPIData mpiData) {
-        //Not used
-    }
-
-    @Override
-    public void onMapChanged(@NonNull MPIMap mpiMap) {
-        //To be implemented when switching floors
-    }
-
-    @Override
-    public void onPolygonClicked(@NonNull MPINavigatable.MPIPolygon mpiPolygon) {
-        //Maybe used in the future
-    }
-
-    @Override
-    public void onNothingClicked() {
-        //Not used
-    }
-
-    @Override
-    public void onFirstMapLoaded() {
-        Log.d("InternalMappedIn", "First map loaded");
-
-        curMap = mappedInFragment.getMap();
-
+    public void mapLoaded() {
         listener.onMapReady();
     }
 
     @Override
-    public void onStateChanged(@NonNull MPIState mpiState) {
-        //Not used
-    }
-
-    @Override
-    public void onBlueDotStateChange(@NonNull MPIBlueDotStateChange mpiBlueDotStateChange) {
-        //Not used
-    }
-
-    @Override
-    public void onClick(@NonNull MPIMapClickEvent mpiMapClickEvent) {
-        MPIMap.MPICoordinate coordinate = mpiMapClickEvent.getPosition();
-
-        listener.onMapClicked(MapCoordinates.fromMappedInCoordinate(coordinate));
+    public void mapClicked(MapCoordinates coords) {
+        listener.onMapClicked(coords);
     }
 }

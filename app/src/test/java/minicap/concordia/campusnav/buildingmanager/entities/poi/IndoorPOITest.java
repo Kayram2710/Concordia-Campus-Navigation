@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import minicap.concordia.campusnav.buildingmanager.enumerations.BuildingName;
 import minicap.concordia.campusnav.buildingmanager.enumerations.POIType;
+import minicap.concordia.campusnav.map.MapCoordinates;
 
 public class IndoorPOITest {
 
@@ -15,15 +16,8 @@ public class IndoorPOITest {
     @Before
     public void setUp() {
         //IndoorPOI instance with test values.
-        poi = new IndoorPOI(
-                "Test POI",                // name
-                POIType.RESTAURANT,        // POI type
-                BuildingName.HALL,         // associated building (example)
-                "First Floor",             // floor name
-                true,                      // accessibility flag
-                45.0,                      // latitude
-                -73.0                      // longitude
-        );
+        poi = new IndoorPOI(new MapCoordinates(45.49724976, -73.57868389, "H196"), POIType.CLASS_ROOM, BuildingName.HALL, "First Floor", false);
+
     }
 
     @Test

@@ -2,6 +2,7 @@ package minicap.concordia.campusnav.buildingmanager.enumerations;
 
 public enum POIType {
     WASHROOM("washroom"),
+    STAIRS("stairs"),
     WATER_FOUNTAIN("water_fountain"),
     ELEVATOR("elevator"),
     RESTAURANT("restaurant"),

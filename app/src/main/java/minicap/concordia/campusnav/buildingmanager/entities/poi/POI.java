@@ -2,17 +2,15 @@ package minicap.concordia.campusnav.buildingmanager.entities.poi;
 
 import minicap.concordia.campusnav.buildingmanager.entities.Location;
 import minicap.concordia.campusnav.buildingmanager.enumerations.POIType;
+import minicap.concordia.campusnav.map.MapCoordinates;
 
 public class POI extends Location {
-
-    private String poiName;
     private POIType poiType;
     private boolean isAccessibilityFeature;
 
     //This constructor is protected because it should only be called deriving classes
-    protected POI(String name, POIType type, boolean isAccessibilityFeature, double latitude, double longitude){
-        super(latitude, longitude);
-        this.poiName = name;
+    protected POI(MapCoordinates coordinates, POIType type, boolean isAccessibilityFeature){
+        super(coordinates);
         this.poiType = type;
         this.isAccessibilityFeature = isAccessibilityFeature;
     }
@@ -38,6 +36,6 @@ public class POI extends Location {
      * @return The string name of the POI
      */
     public String getPoiName(){
-        return poiName;
+        return this.getLocationName();
     }
 }

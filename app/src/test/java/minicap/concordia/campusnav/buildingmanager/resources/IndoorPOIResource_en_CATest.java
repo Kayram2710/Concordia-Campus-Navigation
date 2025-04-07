@@ -47,7 +47,7 @@ public class IndoorPOIResource_en_CATest {
                 // For HALL_Floor1, the value is created with 3 IndoorPOI objects.
                 assertTrue("Value should be an ArrayList", entry[1] instanceof ArrayList);
                 ArrayList<?> list = (ArrayList<?>) entry[1];
-                assertEquals("HALL Floor1 should have 3 IndoorPOIs", 3, list.size());
+                assertEquals("HALL Floor1 should have 74 IndoorPOIs", 74, list.size());
                 break;
             }
         }
@@ -71,7 +71,7 @@ public class IndoorPOIResource_en_CATest {
     }
 
     @Test
-    public void testMolsonFloorS2EntryIsEmpty() {
+    public void testMolsonFloorS2EntryIsNotEmpty() {
         String expectedKey = BuildingName.MOLSON_SCHOOL_OF_BUSINESS.getResourceName() + "_FloorS2";
         boolean found = false;
         for (Object[] entry : contents) {
@@ -79,7 +79,7 @@ public class IndoorPOIResource_en_CATest {
                 found = true;
                 assertTrue("MOLSON FloorS2 value should be an ArrayList", entry[1] instanceof ArrayList);
                 ArrayList<?> list = (ArrayList<?>) entry[1];
-                assertEquals("MOLSON FloorS2 should have 0 IndoorPOIs", 0, list.size());
+                assertEquals("MOLSON FloorS2 should have 2 IndoorPOIs", 2, list.size());
                 break;
             }
         }
@@ -87,7 +87,7 @@ public class IndoorPOIResource_en_CATest {
     }
 
     @Test
-    public void testLoyolaCentralBuildingFloor1EntryIsEmpty() {
+    public void testLoyolaCentralBuildingFloor1EntryIsNotEmpty() {
         String expectedKey = BuildingName.LOYOLA_CENTRAL_BUILDING.getResourceName() + "_Floor1";
         boolean found = false;
         for (Object[] entry : contents) {
@@ -95,7 +95,7 @@ public class IndoorPOIResource_en_CATest {
                 found = true;
                 assertTrue("Loyola Central Building Floor1 value should be an ArrayList", entry[1] instanceof ArrayList);
                 ArrayList<?> list = (ArrayList<?>) entry[1];
-                assertEquals("Loyola Central Building Floor1 should have 0 IndoorPOIs", 0, list.size());
+                assertEquals("Loyola Central Building Floor1 should have 2 IndoorPOIs", 2, list.size());
                 break;
             }
         }

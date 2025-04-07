@@ -30,6 +30,7 @@ import java.util.List;
 import minicap.concordia.campusnav.R;
 import minicap.concordia.campusnav.screens.MapsActivity;
 
+
 /**
  * This instrumented test verifies the behavior of the EventAdapter.
  *

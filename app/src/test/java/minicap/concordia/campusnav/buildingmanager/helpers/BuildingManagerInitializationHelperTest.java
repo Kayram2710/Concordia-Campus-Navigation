@@ -8,6 +8,7 @@ import static org.mockito.Mockito.mockStatic;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -26,7 +27,7 @@ public class BuildingManagerInitializationHelperTest {
             mockedBundle.when(() -> ResourceBundle.getBundle(anyString(), (Locale) any()))
                     .thenThrow(new MissingResourceException("Not found", "Dummy", "key"));
 
-            HashMap<CampusName, ?> campuses = BuildingManagerInitializationHelper.createCampuses();
+            Map<CampusName, ?> campuses = BuildingManagerInitializationHelper.createCampuses();
             assertNotNull("Returned map should not be null", campuses);
             assertTrue("Returned map should be empty when resources are missing", campuses.isEmpty());
         }
@@ -39,17 +40,9 @@ public class BuildingManagerInitializationHelperTest {
             mockedBundle.when(() -> ResourceBundle.getBundle(anyString(), (Locale) any()))
                     .thenThrow(new MissingResourceException("Not found", "Dummy", "key"));
 
-            HashMap<BuildingName, ?> buildings = BuildingManagerInitializationHelper.createBuildings();
+            Map<BuildingName, ?> buildings = BuildingManagerInitializationHelper.createBuildings();
             assertNotNull("Returned map should not be null", buildings);
             assertTrue("Returned map should be empty when resources are missing", buildings.isEmpty());
         }
-    }
-
-    @Test
-    public void testCreateOutdoorPOIs() {
-        // This method always returns an empty ArrayList.
-        ArrayList<?> outdoorPOIs = BuildingManagerInitializationHelper.createOutdoorPOIs();
-        assertNotNull("Returned list should not be null", outdoorPOIs);
-        assertTrue("Returned list should be empty", outdoorPOIs.isEmpty());
     }
 }

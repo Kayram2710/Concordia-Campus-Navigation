@@ -2,14 +2,15 @@ package minicap.concordia.campusnav.buildingmanager.entities.poi;
 
 import minicap.concordia.campusnav.buildingmanager.enumerations.BuildingName;
 import minicap.concordia.campusnav.buildingmanager.enumerations.POIType;
+import minicap.concordia.campusnav.map.MapCoordinates;
 
 public class IndoorPOI extends POI {
 
     private BuildingName associatedBuilding;
     private String floorName;
 
-    public IndoorPOI(String name, POIType type, BuildingName associatedBuilding, String floorName, boolean isAccessibilityFeature, double latitude, double longitude) {
-        super(name, type, isAccessibilityFeature, latitude, longitude);
+    public IndoorPOI(MapCoordinates coordinates, POIType type, BuildingName associatedBuilding, String floorName, boolean isAccessibilityFeature) {
+        super(coordinates, type, isAccessibilityFeature);
         this.associatedBuilding = associatedBuilding;
         this.floorName = floorName;
     }

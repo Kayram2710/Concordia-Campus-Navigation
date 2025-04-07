@@ -17,6 +17,8 @@ public class BuildingAdapter extends RecyclerView.Adapter<BuildingAdapter.Buildi
 
     private List<Building> buildingList;
 
+    private OnBuildingClickListener onBuildingClickListener;
+
     /**
      * Callback interface for building item clicks.
      */
@@ -28,8 +30,6 @@ public class BuildingAdapter extends RecyclerView.Adapter<BuildingAdapter.Buildi
      * Provide a listener that can be set from outside.
      * The fragment or activity sets this to get notified of clicks.
      */
-    private OnBuildingClickListener onBuildingClickListener;
-
     public BuildingAdapter(List<Building> buildingList) {
         this.buildingList = buildingList;
     }
@@ -68,17 +68,26 @@ public class BuildingAdapter extends RecyclerView.Adapter<BuildingAdapter.Buildi
         return buildingList.size();
     }
 
-    public void updateBuildings(List<Building> newList) {
-        this.buildingList = newList;
+    public void updateData(List<Building> newBuildings) {
+        this.buildingList.clear();
+        this.buildingList.addAll(newBuildings);
         notifyDataSetChanged();
     }
 
     public static class BuildingViewHolder extends RecyclerView.ViewHolder {
-        public TextView tvBuildingName;
+        private TextView tvBuildingName;
 
         public BuildingViewHolder(@NonNull View itemView) {
             super(itemView);
             tvBuildingName = itemView.findViewById(R.id.tvBuildingName);
+        }
+
+        /**
+         * Gets the UI element for the building name
+         * @return TextView for building name
+         */
+        public TextView getTvBuildingName() {
+            return tvBuildingName;
         }
     }
 }

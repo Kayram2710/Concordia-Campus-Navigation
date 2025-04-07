@@ -4,8 +4,6 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import com.google.maps.android.PolyUtil;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,12 +24,16 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import minicap.concordia.campusnav.BuildConfig;
-import minicap.concordia.campusnav.buildingmanager.entities.Building;
 import minicap.concordia.campusnav.buildingmanager.entities.poi.OutdoorPOI;
 import minicap.concordia.campusnav.buildingmanager.enumerations.POIType;
 
 // Callback Interface
 public class FetchPathTask {
+    private static final String LATITUDE = "latitude";
+    private static final String LONGITUDE = "longitude";
+    private static final String LOCATION = "location";
+    private static final String FETCH_POI_TAG = "FetchPOI()";
+
     private final OnRouteFetchedListener listener;
     ExecutorService executorService = Executors.newSingleThreadExecutor();
     private final Handler mainThreadHandler = new Handler(Looper.getMainLooper());
@@ -59,19 +61,19 @@ public class FetchPathTask {
             JSONObject origin = new JSONObject();
             JSONObject originLocation = new JSONObject();
             JSONObject originLatLng = new JSONObject();
-            originLatLng.put("latitude", originObj.latitude);
-            originLatLng.put("longitude", originObj.longitude);
+            originLatLng.put(LATITUDE, originObj.latitude);
+            originLatLng.put(LONGITUDE, originObj.longitude);
             originLocation.put("latLng", originLatLng);
-            origin.put("location", originLocation);
+            origin.put(LOCATION, originLocation);
             requestBody.put("origin", origin);
 
             JSONObject destination = new JSONObject();
             JSONObject destinationLocation = new JSONObject();
             JSONObject destinationLatLng = new JSONObject();
-            destinationLatLng.put("latitude", destinationObj.latitude);
-            destinationLatLng.put("longitude", destinationObj.longitude);
+            destinationLatLng.put(LATITUDE, destinationObj.latitude);
+            destinationLatLng.put(LONGITUDE, destinationObj.longitude);
             destinationLocation.put("latLng", destinationLatLng);
-            destination.put("location", destinationLocation);
+            destination.put(LOCATION, destinationLocation);
             requestBody.put("destination", destination);
 
             requestBody.put("travelMode", travelModeStr);
@@ -127,7 +129,6 @@ public class FetchPathTask {
      * @return List of LatLng points
      */
     public JSONArray parseRoute(String json) {
-        List<LatLng> path = new ArrayList<>();
         try {
             JSONObject jsonObject = new JSONObject(json);
             JSONArray routes = jsonObject.getJSONArray("routes");
@@ -147,10 +148,14 @@ public class FetchPathTask {
         return null;
     }
 
-
+    /**
+     * Fetches information about nearby POIs that match the given type
+     * @param originObj The origin of the search radius
+     * @param type The type of POI that is desired
+     */
     public void fetchPOI(LatLng originObj, POIType type) {
         String urlString = "https://places.googleapis.com/v1/places:searchNearby?key=" + BuildConfig.MAPS_API_KEY;
-        Log.d("FetchPOI(): ",urlString);
+        Log.d(FETCH_POI_TAG,urlString);
 
         JSONObject requestBody = new JSONObject();
         try {
@@ -161,15 +166,15 @@ public class FetchPathTask {
             JSONObject locationRestriction = new JSONObject();
             JSONObject circle = new JSONObject();
             JSONObject center = new JSONObject();
-            center.put("latitude", originObj.latitude);
-            center.put("longitude", originObj.longitude);
+            center.put(LATITUDE, originObj.latitude);
+            center.put(LONGITUDE, originObj.longitude);
             circle.put("center", center);
             circle.put("radius", 500);
             locationRestriction.put("circle", circle);
             requestBody.put("locationRestriction", locationRestriction);
 
         } catch (JSONException e) {
-            Log.e("FetchPOI(): ", e.toString());
+            Log.e(FETCH_POI_TAG, e.toString());
         }
 
         executorService.execute(() -> {
@@ -188,7 +193,7 @@ public class FetchPathTask {
                 }
 
                 int responseCode = connection.getResponseCode();
-                Log.d("FetchPOI(): ", "Response Code: " + responseCode);
+                Log.d(FETCH_POI_TAG, "Response Code: " + responseCode);
                 InputStream stream;
                 if (responseCode >= 200 && responseCode < 300) {
                     stream = connection.getInputStream();
@@ -207,16 +212,22 @@ public class FetchPathTask {
                     List<OutdoorPOI> outdoorPOIS = parsePOI(response.toString(), type);
                     mainThreadHandler.post(() -> {
                         if (listener != null) {
-                            listener.onPlacesFetched(outdoorPOIS, new MapCoordinates(originObj.latitude,originObj.longitude));
+                            listener.onPlacesFetched(outdoorPOIS, new MapCoordinates(originObj.latitude,originObj.longitude), type);
                         }
                     });
                 }
             } catch (IOException e) {
-                Log.e("FetchPOI(): ", "Exception: " + e.toString());
+                Log.e(FETCH_POI_TAG, "Exception: " + e.toString());
             }
         });
     }
 
+    /**
+     * Parses JSON response for desired POIs
+     * @param json The json response from the query
+     * @param type The type of POI that is wanted
+     * @return List of OutdoorPOI that match the query
+     */
     public List<OutdoorPOI> parsePOI(String json, POIType type) {
         List<OutdoorPOI> placesList = new ArrayList<>();
         try {
@@ -228,9 +239,9 @@ public class FetchPathTask {
                 String displayName = place.has("displayName")
                         ? place.getJSONObject("displayName").getString("text")
                         : "Unknown Place";
-                JSONObject location = place.getJSONObject("location");
-                float lat = (float)location.getDouble("latitude");
-                float lng = (float)location.getDouble("longitude");
+                JSONObject location = place.getJSONObject(LOCATION);
+                float lat = (float)location.getDouble(LATITUDE);
+                float lng = (float)location.getDouble(LONGITUDE);
 
                 boolean wheelchairAccessible = true;
                 if (place.has("accessibilityOptions")) {
@@ -244,7 +255,8 @@ public class FetchPathTask {
                         }
                     }
                 }
-                placesList.add(new OutdoorPOI(displayName, type, wheelchairAccessible, lat, lng));
+                MapCoordinates coords = new MapCoordinates(lat, lng, displayName);
+                placesList.add(new OutdoorPOI(coords, type, wheelchairAccessible));
             }
         } catch (JSONException e) {
             Log.e("parsePOI()", "Exception: " + e.toString());
@@ -252,6 +264,11 @@ public class FetchPathTask {
         return placesList;
     }
 
+    /**
+     * Converts seconds into a standard time format
+     * @param secondsStr The seconds as a string
+     * @return Formatted string of time
+     */
     public String convertSecondsToTime(String secondsStr) {
         long seconds = Long.parseLong(secondsStr.replace("s", ""));
         long minutes = seconds / 60;
@@ -268,7 +285,18 @@ public class FetchPathTask {
      * Listener for Google Api
      */
     public interface OnRouteFetchedListener {
+        /**
+         * Invoked when a route is fetched for the map
+         * @param steps The steps of the route
+         */
         void onRouteFetched(JSONArray steps);
-        void onPlacesFetched(List<OutdoorPOI> outdoorPOIS,  MapCoordinates location);
+
+        /**
+         * Invoked when POIs of the given type are parsed
+         * @param outdoorPOIS The list of pois
+         * @param location The location of the origin
+         * @param type The type of POI
+         */
+        void onPlacesFetched(List<OutdoorPOI> outdoorPOIS,  MapCoordinates location, POIType type);
     }
 }

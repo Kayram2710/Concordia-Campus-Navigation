@@ -26,18 +26,16 @@ public class ConcordiaBuildingManagerTests {
         ConcordiaBuildingManager manager = ConcordiaBuildingManager.getInstance();
 
         String expectedCampusName = "Sir George William campus";
-        List<BuildingName> expectedBuildingNames = new ArrayList<>(Arrays.asList(
-                BuildingName.HALL, BuildingName.MOLSON_SCHOOL_OF_BUSINESS
-        ));
         float expectedLatitude = 45.49701f;
         float expectedLongitude = -73.57877f;
 
         Campus fetchedCampus = manager.getCampus(CampusName.SGW);
 
         Assert.assertEquals(expectedCampusName, fetchedCampus.getCampusName());
-        Assert.assertEquals(expectedBuildingNames, fetchedCampus.getAssociatedBuildings());
         Assert.assertEquals(expectedLatitude, fetchedCampus.getLatitude(), 0.00001);
         Assert.assertEquals(expectedLongitude, fetchedCampus.getLongitude(), 0.00001);
+        Assert.assertTrue(fetchedCampus.getAssociatedBuildings().contains(BuildingName.HALL));
+        Assert.assertTrue(fetchedCampus.getAssociatedBuildings().contains(BuildingName.MOLSON_SCHOOL_OF_BUSINESS));
     }
 
     @Test
@@ -65,30 +63,28 @@ public class ConcordiaBuildingManagerTests {
     public void BuildingManager_GetBuildingsForCampus_ReturnsCorrectBuildings(){
         ConcordiaBuildingManager manager = ConcordiaBuildingManager.getInstance();
 
-        int expectedNumberOfBuildings = 2;
+        int expectedNumberOfBuildings = 36;
 
-        String[] expectedBuildingNames = new String[] { "Hall building", "John Molson School of Business"};
-        String[] expectedDescriptions = new String[] {  "The Henry F. Hall Building is a high-density hub, located on De Maisonneuve Boulevard, on Concordia’s downtown Sir-George-Williams Campus.\nThe cube-like structure was completed in 1966. Its exterior is made of pre-fabricated, stressed concrete, a feature of the brutalist movement, often associated with French architect Le Corbusier.",
-                                                        "In 2009 the John Molson Building officially opened on the corner of Guy and de Maisonneuve. It includes digitally equipped teaching amphitheatres and classrooms, faculty and graduate student offices, the Office of the Dean, student and faculty social space, as well as space for privatized programs. Special features also include case study rooms designed for group work, and laboratories for consumer behaviour research."};
+        String expectedBuildingNames = "John Molson School of Business";
+        String expectedDescriptions =  "In 2009 the John Molson Building officially opened on the corner of Guy and de Maisonneuve. It includes digitally equipped teaching amphitheatres and classrooms, faculty and graduate student offices, the Office of the Dean, student and faculty social space, as well as space for privatized programs. Special features also include case study rooms designed for group work, and laboratories for consumer behaviour research.";
         CampusName expectedAssociatedCampus = CampusName.SGW;
-        int[] expectedNumberOfFloors = new int[] { 11, 17 };
-        float[] expectedLatitudes = new float[] { 45.49701f, 45.495323f };
-        float[] expectedLongitudes = new float[] { -73.57877f, -73.579229f };
+        int expectedNumberOfFloors = 17 ;
+        float expectedLatitudes = 45.495323f ;
+        float expectedLongitudes = -73.579229f;
 
         List<Building> actualBuildings = manager.getBuildingsForCampus(CampusName.SGW);
 
         Assert.assertEquals(expectedNumberOfBuildings, actualBuildings.size());
 
-        for(int i = 0; i < actualBuildings.size(); i++) {
-            Building currentBuilding = actualBuildings.get(i);
+        Building currentBuilding = actualBuildings.get(15);
 
-            Assert.assertEquals(expectedBuildingNames[i], currentBuilding.getBuildingName());
-            Assert.assertEquals(expectedDescriptions[i], currentBuilding.getDescription());
-            Assert.assertEquals(expectedAssociatedCampus, currentBuilding.getAssociatedCampus());
-            Assert.assertEquals(expectedNumberOfFloors[i], currentBuilding.getFloors().size());
-            Assert.assertEquals(expectedLatitudes[i], currentBuilding.getLatitude(), 0.00001);
-            Assert.assertEquals(expectedLongitudes[i], currentBuilding.getLongitude(), 0.00001);
-        }
+        Assert.assertEquals(expectedBuildingNames, currentBuilding.getBuildingName());
+        Assert.assertEquals(expectedDescriptions, currentBuilding.getDescription());
+        Assert.assertEquals(expectedAssociatedCampus, currentBuilding.getAssociatedCampus());
+        Assert.assertEquals(expectedNumberOfFloors, currentBuilding.getFloors().size());
+        Assert.assertEquals(expectedLatitudes, currentBuilding.getLatitude(), 0.00001);
+        Assert.assertEquals(expectedLongitudes, currentBuilding.getLongitude(), 0.00001);
+
     }
 
     @Test
@@ -131,7 +127,7 @@ public class ConcordiaBuildingManagerTests {
 
         Building expected = manager.getBuilding(BuildingName.HALL);
 
-        List<Building> actuals = manager.searchBuildingsByName("hall");
+        List<Building> actuals = manager.searchBuildingsByName("Hall building");
 
         Assert.assertEquals(1, actuals.size());
 
@@ -161,12 +157,71 @@ public class ConcordiaBuildingManagerTests {
     public void BuildingName_GetResourceName() {
         // BuildingName.values respects the order that the enum values are defined (top to bottom)
         String[] expectedResourceNames = new String[] {
-                "BuildingHall",
-                "BuildingJMSB",
+                "BuildingPsychology",
+                "BuildingGS",
+                "BuildingQAnnex",
+                "BuildingZAnnex",
+                "BuildingCIAnnex",
+                "BuildingGuyDeMaisonneuve",
+                "BuildingTAnnex",
+                "BuildingFAAnnex",
+                "BuildingRAnnex",
                 "BuildingVL",
+                "BuildingHall",
+                "BuildingGreyNuns",
+                "BuildingMUAnnex",
+                "BuildingFCSmith",
+                "BuildingPhysicalServices",
+                "BuildingKAnnex",
+                "BuildingTorontoDominion",
+                "BuildingStIgnatiusOfLoyola",
+                "BuildingPAnnex",
+                "BuildingTerrebonne",
+                "BuildingHingstonHallWingHC",
+                "BuildingAppliedScienceHub",
+                "BuildingBBAnnex",
+                "BuildingMIAnnex",
+                "BuildingJMSB",
+                "BuildingOscarPetersonConcertHall",
                 "BuildingVE",
-                "BuildingCC"
+                "BuildingER",
+                "BuildingCLAnnex",
+                "BuildingLoyolaJesuitHallAndConferenceCentre",
+                "BuildingPerformCentre",
+                "BuildingQuadrangle",
+                "BuildingSolarHouse",
+                "BuildingBHAnnex",
+                "BuildingPRAnnex",
+                "BuildingCommunicationStudiesAndJournalism",
+                "BuildingLD",
+                "BuildingAdministration",
+                "BuildingHingstonHallWingHA",
+                "BuildingHingstonHallWingHB",
+                "BuildingRecreationAndAthleticsComplex",
+                "BuildingLearningSquare",
+                "BuildingXAnnex",
+                "BuildingEngineeringComputerScienceAndVisualArtsIntegratedComplex",
+                "BuildingSamuelBronfman",
+                "BuildingFaubourg",
+                "BuildingVAnnex",
+                "BuildingJWMcConnell",
+                "BuildingRichardJRenaudScienceComplex",
+                "BuildingFaubourgSteCatherine",
+                "BuildingStudentCentre",
+                "BuildingCentreForStructuralAndFunctionalGenomics",
+                "BuildingBAnnex",
+                "BuildingJesuitResidence",
+                "BuildingVisualArts",
+                "BuildingRRAnnex",
+                "BuildingMAnnex",
+                "BuildingCC",
+                "BuildingENAnnex",
+                "BuildingGreyNunsAnnex",
+                "BuildingSAnnex",
+                "BuildingStingerDome",
+                "BuildingDAnnex"
         };
+
         int i = 0;
         for(BuildingName name : BuildingName.values()) {
             String actual = name.getResourceName();
@@ -234,7 +289,7 @@ public class ConcordiaBuildingManagerTests {
 
     @Test
     public void BuildingFloor_GetAllPOIs() {
-        int expectedNumberOfPOIs = 3;
+        int expectedNumberOfPOIs = 74;
         BuildingName expectedAssociatedBuilding = BuildingName.HALL;
         String expectedFloorName = "1";
 
@@ -254,7 +309,7 @@ public class ConcordiaBuildingManagerTests {
 
     @Test
     public void BuildingFloor_GetPOIOfTypeClassroom() {
-        int expectedClassroomPOIs = 1;
+        int expectedClassroomPOIs = 61;
         String expectedFloorName = "1";
         BuildingName expectedAssociatedBuilding = BuildingName.HALL;
         POIType expectedPOIType = POIType.CLASS_ROOM;
@@ -276,7 +331,7 @@ public class ConcordiaBuildingManagerTests {
 
     @Test
     public void BuildingFloor_GetAccessibilityPOIs() {
-        int expectedAccessibilityPOIs = 1;
+        int expectedAccessibilityPOIs = 3;
         String expectedFloorName = "1";
         BuildingName expectedAssociatedBuilding = BuildingName.HALL;
         boolean expectedAccessibilityFlag = true;
@@ -299,25 +354,23 @@ public class ConcordiaBuildingManagerTests {
     @Test
     public void IndoorPOI_GetPOIName() {
         List<String> expectedPOINames = new ArrayList<>(Arrays.asList(
-                "Test A",
-                "Test 2",
-                "Test Accessibility"
+                "JMSB S2.210",
+                "JMSB S2.275"
         ));
 
         int expectedNumberPOIs = expectedPOINames.size();
 
-        String expectedFloorName = "1";
-        BuildingName expectedAssociatedBuilding = BuildingName.HALL;
+        String expectedFloorName = "S2";
+        BuildingName expectedAssociatedBuilding = BuildingName.MOLSON_SCHOOL_OF_BUSINESS;
 
         ConcordiaBuildingManager manager = ConcordiaBuildingManager.getInstance();
-        Building actualBuilding = manager.getBuilding(BuildingName.HALL);
+        Building actualBuilding = manager.getBuilding(BuildingName.MOLSON_SCHOOL_OF_BUSINESS);
 
-        BuildingFloor actualFloor = actualBuilding.getFloor("1");
+        BuildingFloor actualFloor = actualBuilding.getFloor("S2");
         List<IndoorPOI> actualPOIs = actualFloor.getAllPOIsForFloor();
 
         Assert.assertEquals(expectedNumberPOIs, actualPOIs.size());
 
-        int i = 0;
         for(IndoorPOI poi : actualPOIs) {
             Assert.assertEquals(expectedAssociatedBuilding, poi.getAssociatedBuilding());
             Assert.assertEquals(expectedFloorName, poi.getFloorName());

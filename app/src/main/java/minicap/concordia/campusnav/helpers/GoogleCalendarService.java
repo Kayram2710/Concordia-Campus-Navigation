@@ -12,6 +12,13 @@ public class GoogleCalendarService {
     private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
 
+    private GoogleCalendarService() {}
+
+    /**
+     * Gets the Google calendar service
+     * @param context The context for who wants the calendar
+     * @return Calendar instance for this app
+     */
     public static Calendar getCalendarService(Context context) {
         GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(
                 context, java.util.Collections.singleton("https://www.googleapis.com/auth/calendar.readonly"));
